@@ -1,0 +1,17 @@
+name: redisinsight
+image: docker.io/redis/redisinsight:latest
+description: RedisInsight web UI for the lerd Redis service
+ports:
+  - "8085:5540"
+environment:
+  RI_APP_PORT: "5540"
+  # Pre-populate the lerd Redis connection so the UI opens already wired up.
+  RI_REDIS_HOST: lerd-redis
+  RI_REDIS_PORT: "6379"
+  RI_REDIS_ALIAS: lerd-redis
+depends_on:
+  - redis
+dashboard: http://localhost:8085
+# RedisInsight sets first-run consent cookies the iframe can't carry across
+# origins, so lerd-ui proxies it same-origin (see dashboard_external handling).
+dashboard_external: true

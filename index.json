@@ -1,0 +1,119 @@
+{
+  "services": [
+    {
+      "name": "beanstalkd",
+      "description": "Beanstalkd work queue"
+    },
+    {
+      "name": "elasticsearch",
+      "description": "Elasticsearch single-node search and analytics engine"
+    },
+    {
+      "name": "elasticvue",
+      "description": "Elasticvue web UI for the lerd Elasticsearch service",
+      "dashboard": "http://localhost:8083",
+      "depends_on": [
+        "elasticsearch"
+      ]
+    },
+    {
+      "name": "gotenberg",
+      "description": "Gotenberg API for PDF generation and document conversion"
+    },
+    {
+      "name": "mariadb",
+      "description": "MariaDB (MySQL-compatible) versions",
+      "family": "mariadb"
+    },
+    {
+      "name": "memcached",
+      "description": "Memcached in-memory key/value cache"
+    },
+    {
+      "name": "mongo",
+      "description": "MongoDB document database"
+    },
+    {
+      "name": "mongo-express",
+      "description": "Mongo Express web UI for the lerd MongoDB service",
+      "dashboard": "http://localhost:8082",
+      "depends_on": [
+        "mongo"
+      ]
+    },
+    {
+      "name": "opensearch",
+      "description": "OpenSearch single-node search and analytics engine"
+    },
+    {
+      "name": "pgadmin",
+      "description": "pgAdmin web UI for the lerd Postgres service",
+      "dashboard": "http://localhost:8081",
+      "depends_on": [
+        "postgres"
+      ]
+    },
+    {
+      "name": "phpmyadmin",
+      "description": "phpMyAdmin web UI for every installed lerd MySQL service",
+      "dashboard": "http://localhost:8080",
+      "depends_on": [
+        "mysql"
+      ]
+    },
+    {
+      "name": "postgres-pgvector",
+      "description": "PostgreSQL with pgvector (vector embeddings, no PostGIS)",
+      "family": "postgres"
+    },
+    {
+      "name": "postgres-timescaledb",
+      "description": "PostgreSQL with TimescaleDB (time-series extension)",
+      "family": "postgres"
+    },
+    {
+      "name": "rabbitmq",
+      "description": "RabbitMQ message broker with management UI",
+      "dashboard": "http://localhost:15672"
+    },
+    {
+      "name": "redisinsight",
+      "description": "RedisInsight web UI for the lerd Redis service",
+      "dashboard": "http://localhost:8085",
+      "depends_on": [
+        "redis"
+      ]
+    },
+    {
+      "name": "selenium",
+      "description": "Selenium + Chromium for browser testing (Laravel Dusk, Symfony Panther, etc.)",
+      "dashboard": "http://localhost:7900/?autoconnect=1\u0026resize=scale"
+    },
+    {
+      "name": "soketi",
+      "description": "Soketi realtime WebSocket server (Pusher-compatible)"
+    },
+    {
+      "name": "stripe-mock",
+      "description": "Local Stripe API mock for Cashier and webhook testing"
+    },
+    {
+      "name": "typesense",
+      "description": "Typesense search engine",
+      "family": "typesense"
+    },
+    {
+      "name": "typesense-dashboard",
+      "description": "Typesense Dashboard web UI for the lerd Typesense service",
+      "dashboard": "http://localhost:8084",
+      "depends_on": [
+        "typesense"
+      ]
+    },
+    {
+      "name": "valkey",
+      "description": "Valkey in-memory store (Redis-compatible)",
+      "family": "valkey"
+    }
+  ]
+}

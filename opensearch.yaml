@@ -1,0 +1,30 @@
+name: opensearch
+image: docker.io/opensearchproject/opensearch:2.19.5
+description: OpenSearch single-node search and analytics engine
+# Container listens on 9200; published on 9201 so it coexists with the
+# elasticsearch preset (also 9200) on the host.
+ports:
+  - "9201:9200"
+environment:
+  discovery.type: single-node
+  DISABLE_SECURITY_PLUGIN: "true"
+  DISABLE_INSTALL_DEMO_CONFIG: "true"
+  OPENSEARCH_JAVA_OPTS: "-Xms512m -Xmx512m"
+  http.cors.enabled: "true"
+  # OpenSearch parses env vars as YAML, so a bare '*' becomes an alias and
+  # crashes the scanner on boot. Wrap in literal quotes to force a string.
+  http.cors.allow-origin: '"*"'
+  http.cors.allow-headers: X-Requested-With,Content-Type,Content-Length,Authorization
+  http.cors.allow-methods: OPTIONS,HEAD,GET,POST,PUT,DELETE
+data_dir: /usr/share/opensearch/data
+# Map host user 1:1 to container UID 1000 and chown the data dir to it so the
+# indices are writable in rootless podman, same as the elasticsearch preset.
+userns: keep-id:uid=1000,gid=0
+chown_data: true
+env_vars:
+  - OPENSEARCH_HOST=lerd-opensearch
+  - OPENSEARCH_PORT=9200
+  - OPENSEARCH_URL=http://lerd-opensearch:9200
+env_detect:
+  composer: opensearch-project/opensearch-php
+connection_url: http://127.0.0.1:9201

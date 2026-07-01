@@ -1,0 +1,14 @@
+name: beanstalkd
+description: Beanstalkd work queue
+# schickling/beanstalkd is the de-facto image and is amd64-only; on arm64
+# (Apple Silicon) it runs under podman's linux/amd64 emulation.
+image: docker.io/schickling/beanstalkd:latest
+ports:
+  - "11300:11300"
+env_vars:
+  - QUEUE_CONNECTION=beanstalkd
+  - BEANSTALKD_QUEUE_HOST=lerd-beanstalkd
+  - BEANSTALKD_QUEUE_PORT=11300
+env_detect:
+  composer: pda/pheanstalk
+connection_url: beanstalkd://127.0.0.1:11300
