@@ -10,6 +10,12 @@ data_dir: /data/db
 connection_url: mongodb://root:lerd@127.0.0.1:27017/?authSource=admin
 env_vars:
   - MONGO_DSN=mongodb://root:lerd@lerd-mongo:27017/{{site}}?authSource=admin
+client_shims:
+  - mongosh
+  - mongodump
+  - mongorestore
+  - mongoexport
+  - mongoimport
 env_detect:
   key: MONGO_DSN
   value_prefix: mongodb://

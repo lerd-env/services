@@ -27,5 +27,10 @@ env_vars:
   - DB_USERNAME=postgres
   - DB_PASSWORD=lerd
 connection_url: postgresql://postgres:lerd@127.0.0.1:{{host_port}}/lerd
+client_shims:
+  - psql
+  - pg_dump
+  - pg_dumpall
+  - pg_restore
 site_init:
   exec: psql -U postgres -d {{site}} -c "CREATE EXTENSION IF NOT EXISTS timescaledb CASCADE"
