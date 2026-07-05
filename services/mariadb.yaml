@@ -42,3 +42,8 @@ env_vars:
   - DB_USERNAME=root
   - DB_PASSWORD=lerd
 connection_url: mysql://root:lerd@127.0.0.1:{{host_port}}/lerd
+client_shims:
+  - name: mysql
+    binary: [mariadb, mysql]
+  - name: mysqldump
+    binary: [mariadb-dump, mysqldump]
