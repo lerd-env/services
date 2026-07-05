@@ -1,10 +1,10 @@
 # Lerd Service Store
 
 > The community-driven store of service presets that powers
-> [Lerd](https://github.com/geodro/lerd) — add a database, cache, search engine,
+> [Lerd](https://github.com/lerd-env/lerd) — add a database, cache, search engine,
 > or admin dashboard by editing YAML, no binary release required.
 
-[![Part of Lerd](https://img.shields.io/badge/part%20of-lerd-ff2d20)](https://github.com/geodro/lerd)
+[![Part of Lerd](https://img.shields.io/badge/part%20of-lerd-ff2d20)](https://github.com/lerd-env/lerd)
 [![Docs](https://img.shields.io/badge/docs-lerd.sh-blue)](https://lerd.sh/usage/service-presets)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
