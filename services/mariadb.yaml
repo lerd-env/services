@@ -31,6 +31,11 @@ versions:
 ports:
   - "{{host_port}}:3306"
 data_dir: /var/lib/mysql
+files:
+  - target: /etc/mysql/conf.d/lerd.cnf
+    content: |
+      [mysqld]
+      max_allowed_packet=256M
 environment:
   MARIADB_ROOT_PASSWORD: lerd
   MARIADB_DATABASE: lerd
