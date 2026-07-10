@@ -47,6 +47,7 @@ All of it is data. None of it ships in the binary.
 | `redisinsight` | Redis |
 | `elasticvue` | Elasticsearch |
 | `typesense-dashboard` | Typesense |
+| `opensearch-dashboards` | OpenSearch |
 
 **Search & analytics**
 
