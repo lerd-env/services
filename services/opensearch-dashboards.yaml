@@ -13,3 +13,7 @@ environment:
 depends_on:
   - opensearch
 dashboard: http://localhost:8086
+category: admin
+icon: search
+admin_for:
+  - opensearch

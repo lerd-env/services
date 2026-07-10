@@ -17,3 +17,5 @@ env_vars:
 connection_url: redis://127.0.0.1:6380
 client_shims:
   - valkey-cli
+category: cache
+icon: bolt
