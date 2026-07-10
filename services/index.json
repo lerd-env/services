@@ -3,12 +3,16 @@
     {
       "name": "beanstalkd",
       "description": "Beanstalkd work queue",
-      "image": "docker.io/schickling/beanstalkd:latest"
+      "image": "docker.io/schickling/beanstalkd:latest",
+      "category": "messaging",
+      "icon": "queue"
     },
     {
       "name": "elasticsearch",
       "description": "Elasticsearch single-node search and analytics engine",
-      "image": "docker.elastic.co/elasticsearch/elasticsearch:8.13.4"
+      "image": "docker.elastic.co/elasticsearch/elasticsearch:8.13.4",
+      "category": "search",
+      "icon": "search"
     },
     {
       "name": "elasticvue",
@@ -17,12 +21,19 @@
       "depends_on": [
         "elasticsearch"
       ],
-      "image": "docker.io/cars10/elasticvue:latest"
+      "image": "docker.io/cars10/elasticvue:latest",
+      "category": "admin",
+      "icon": "search",
+      "admin_for": [
+        "elasticsearch"
+      ]
     },
     {
       "name": "gotenberg",
       "description": "Gotenberg API for PDF generation and document conversion",
-      "image": "docker.io/gotenberg/gotenberg:8"
+      "image": "docker.io/gotenberg/gotenberg:8",
+      "category": "mail",
+      "icon": "mail"
     },
     {
       "name": "mariadb",
@@ -66,17 +77,23 @@
           "host_port": 3306
         }
       ],
-      "default_version": "11.8"
+      "default_version": "11.8",
+      "category": "databases",
+      "icon": "database"
     },
     {
       "name": "memcached",
       "description": "Memcached in-memory key/value cache",
-      "image": "docker.io/library/memcached:1.6-alpine"
+      "image": "docker.io/library/memcached:1.6-alpine",
+      "category": "cache",
+      "icon": "bolt"
     },
     {
       "name": "mongo",
       "description": "MongoDB document database",
-      "image": "docker.io/library/mongo:7"
+      "image": "docker.io/library/mongo:7",
+      "category": "databases",
+      "icon": "leaf"
     },
     {
       "name": "mongo-express",
@@ -85,12 +102,19 @@
       "depends_on": [
         "mongo"
       ],
-      "image": "docker.io/library/mongo-express:latest"
+      "image": "docker.io/library/mongo-express:latest",
+      "category": "admin",
+      "icon": "leaf",
+      "admin_for": [
+        "mongo"
+      ]
     },
     {
       "name": "opensearch",
       "description": "OpenSearch single-node search and analytics engine",
-      "image": "docker.io/opensearchproject/opensearch:2.19.5"
+      "image": "docker.io/opensearchproject/opensearch:2.19.5",
+      "category": "search",
+      "icon": "search"
     },
     {
       "name": "opensearch-dashboards",
@@ -99,7 +123,12 @@
       "depends_on": [
         "opensearch"
       ],
-      "image": "docker.io/opensearchproject/opensearch-dashboards:2.19.5"
+      "image": "docker.io/opensearchproject/opensearch-dashboards:2.19.5",
+      "category": "admin",
+      "icon": "search",
+      "admin_for": [
+        "opensearch"
+      ]
     },
     {
       "name": "pgadmin",
@@ -108,7 +137,14 @@
       "depends_on": [
         "postgres"
       ],
-      "image": "docker.io/dpage/pgadmin4:latest"
+      "image": "docker.io/dpage/pgadmin4:latest",
+      "category": "admin",
+      "icon": "elephant",
+      "admin_for": [
+        "postgres",
+        "postgres-pgvector",
+        "postgres-timescaledb"
+      ]
     },
     {
       "name": "phpmyadmin",
@@ -117,7 +153,13 @@
       "depends_on": [
         "mysql"
       ],
-      "image": "docker.io/library/phpmyadmin:latest"
+      "image": "docker.io/library/phpmyadmin:latest",
+      "category": "admin",
+      "icon": "database",
+      "admin_for": [
+        "mysql",
+        "mariadb"
+      ]
     },
     {
       "name": "postgres-pgvector",
@@ -144,7 +186,9 @@
           "host_port": 5432
         }
       ],
-      "default_version": "18"
+      "default_version": "18",
+      "category": "databases",
+      "icon": "elephant"
     },
     {
       "name": "postgres-timescaledb",
@@ -165,13 +209,17 @@
           "host_port": 5432
         }
       ],
-      "default_version": "17"
+      "default_version": "17",
+      "category": "databases",
+      "icon": "elephant"
     },
     {
       "name": "rabbitmq",
       "description": "RabbitMQ message broker with management UI",
       "dashboard": "http://localhost:15672",
-      "image": "docker.io/library/rabbitmq:3-management-alpine"
+      "image": "docker.io/library/rabbitmq:3-management-alpine",
+      "category": "messaging",
+      "icon": "queue"
     },
     {
       "name": "redisinsight",
@@ -180,29 +228,43 @@
       "depends_on": [
         "redis"
       ],
-      "image": "docker.io/redis/redisinsight:latest"
+      "image": "docker.io/redis/redisinsight:latest",
+      "category": "admin",
+      "icon": "database",
+      "admin_for": [
+        "redis",
+        "valkey"
+      ]
     },
     {
       "name": "selenium",
       "description": "Selenium + Chromium for browser testing (Laravel Dusk, Symfony Panther, etc.)",
-      "dashboard": "http://localhost:7900/?autoconnect=1\u0026resize=scale",
-      "image": "docker.io/selenium/standalone-chromium:latest"
+      "dashboard": "http://localhost:7900/?autoconnect=1&resize=scale",
+      "image": "docker.io/selenium/standalone-chromium:latest",
+      "category": "testing",
+      "icon": "browserPlay"
     },
     {
       "name": "soketi",
       "description": "Soketi realtime WebSocket server (Pusher-compatible)",
-      "image": "quay.io/soketi/soketi:1.6-16-alpine"
+      "image": "quay.io/soketi/soketi:1.6-16-alpine",
+      "category": "messaging",
+      "icon": "broadcast"
     },
     {
       "name": "stripe-mock",
       "description": "Local Stripe API mock for Cashier and webhook testing",
-      "image": "docker.io/stripemock/stripe-mock:latest"
+      "image": "docker.io/stripemock/stripe-mock:latest",
+      "category": "testing",
+      "icon": "card"
     },
     {
       "name": "typesense",
       "description": "Typesense search engine",
       "family": "typesense",
-      "image": "docker.io/typesense/typesense:30.2"
+      "image": "docker.io/typesense/typesense:30.2",
+      "category": "search",
+      "icon": "search"
     },
     {
       "name": "typesense-dashboard",
@@ -211,13 +273,20 @@
       "depends_on": [
         "typesense"
       ],
-      "image": "docker.io/bfritscher/typesense-dashboard:latest"
+      "image": "docker.io/bfritscher/typesense-dashboard:latest",
+      "category": "admin",
+      "icon": "search",
+      "admin_for": [
+        "typesense"
+      ]
     },
     {
       "name": "valkey",
       "description": "Valkey in-memory store (Redis-compatible)",
       "family": "valkey",
-      "image": "docker.io/valkey/valkey:9-alpine"
+      "image": "docker.io/valkey/valkey:9-alpine",
+      "category": "cache",
+      "icon": "bolt"
     }
   ]
 }

@@ -52,3 +52,5 @@ client_shims:
     binary: [mariadb, mysql]
   - name: mysqldump
     binary: [mariadb-dump, mysqldump]
+category: databases
+icon: database
