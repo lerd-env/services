@@ -93,6 +93,15 @@
       "image": "docker.io/opensearchproject/opensearch:2.19.5"
     },
     {
+      "name": "opensearch-dashboards",
+      "description": "OpenSearch Dashboards web UI for the lerd OpenSearch service",
+      "dashboard": "http://localhost:8086",
+      "depends_on": [
+        "opensearch"
+      ],
+      "image": "docker.io/opensearchproject/opensearch-dashboards:2.19.5"
+    },
+    {
       "name": "pgadmin",
       "description": "pgAdmin web UI for the lerd Postgres service",
       "dashboard": "http://localhost:8081",
