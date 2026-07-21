@@ -36,3 +36,9 @@ site_init:
   exec: psql -U postgres -d {{site}} -c "CREATE EXTENSION IF NOT EXISTS timescaledb CASCADE"
 category: databases
 icon: elephant
+introspect:
+  list_databases: >
+    psql -U postgres -tAc
+    "SELECT datname || chr(9) || GREATEST(pg_database_size(datname)
+    - (SELECT pg_database_size('template1')), 0) FROM pg_database
+    WHERE datistemplate = false AND datname <> 'postgres' ORDER BY datname"

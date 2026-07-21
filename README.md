@@ -132,6 +132,12 @@ files:                     # config-file mounts (static content, or a generator)
   - target: /etc/my-service/config
     content: |
       key = value
+introspect:                # database engines only: power the web UI Databases tab
+  list_databases: >        # print one "name<TAB>size_bytes" row per user database
+    psql -U postgres -tAc
+    "SELECT datname || chr(9) || GREATEST(pg_database_size(datname)
+    - (SELECT pg_database_size('template1')), 0) FROM pg_database
+    WHERE datistemplate = false AND datname <> 'postgres' ORDER BY datname"
 ```
 
 See the [service presets documentation](https://lerd.sh/usage/service-presets) for the full schema reference and every available field.

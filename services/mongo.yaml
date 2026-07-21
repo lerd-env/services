@@ -23,3 +23,7 @@ site_init:
   exec: mongosh --quiet -u root -p lerd --authenticationDatabase admin --eval "try { db.getSiblingDB('{{site}}').createCollection('_lerd_init') } catch (e) {}"
 category: databases
 icon: leaf
+introspect:
+  list_databases: >
+    mongosh --quiet -u root -p lerd --authenticationDatabase admin --eval
+    'db.adminCommand({listDatabases:1}).databases.forEach(function(d){ if(["admin","local","config"].indexOf(d.name)<0) print(d.name+"\t"+d.sizeOnDisk) })'
