@@ -138,6 +138,10 @@ introspect:                # database engines only: power the web UI Databases t
     "SELECT datname || chr(9) || GREATEST(pg_database_size(datname)
     - (SELECT pg_database_size('template1')), 0) FROM pg_database
     WHERE datistemplate = false AND datname <> 'postgres' ORDER BY datname"
+extensions:                # postgres engines only: what the image can create
+  - name: vector           # created wherever Lerd creates a database
+    always: true
+    types: [vector]        # a dump naming one of these brings the extension with it
 ```
 
 See the [service presets documentation](https://lerd.sh/usage/service-presets) for the full schema reference and every available field.
