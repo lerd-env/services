@@ -79,7 +79,8 @@
       ],
       "default_version": "11.8",
       "category": "databases",
-      "icon": "database"
+      "icon": "database",
+      "env_role": "mysql"
     },
     {
       "name": "memcached",
@@ -286,7 +287,8 @@
       "family": "valkey",
       "image": "docker.io/valkey/valkey:9-alpine",
       "category": "cache",
-      "icon": "bolt"
+      "icon": "bolt",
+      "env_role": "redis"
     }
   ]
 }
