@@ -55,6 +55,8 @@ client_shims:
     binary: [mariadb-dump, mysqldump]
 category: databases
 icon: database
+# list_databases is kept alongside entities so lerd versions from before the
+# entities schema still list the databases.
 introspect:
   list_databases: >
     $(command -v mariadb || command -v mysql) -uroot -sN -e
@@ -63,3 +65,40 @@ introspect:
     LEFT JOIN information_schema.TABLES t ON t.TABLE_SCHEMA = s.SCHEMA_NAME
     WHERE s.SCHEMA_NAME NOT IN ('information_schema', 'performance_schema', 'mysql', 'sys')
     GROUP BY s.SCHEMA_NAME ORDER BY s.SCHEMA_NAME"
+  entities:
+    - kind: databases
+      format: sql
+      list: >
+        $(command -v mariadb || command -v mysql) -uroot -sN -e
+        "SELECT s.SCHEMA_NAME, COALESCE(SUM(t.DATA_LENGTH + t.INDEX_LENGTH), 0)
+        FROM information_schema.SCHEMATA s
+        LEFT JOIN information_schema.TABLES t ON t.TABLE_SCHEMA = s.SCHEMA_NAME
+        WHERE s.SCHEMA_NAME NOT IN ('information_schema', 'performance_schema', 'mysql', 'sys')
+        GROUP BY s.SCHEMA_NAME ORDER BY s.SCHEMA_NAME"
+      columns:
+        - key: size
+          label: Size
+          format: bytes
+      actions:
+        create: >
+          $(command -v mariadb || command -v mysql) -uroot -e
+          'CREATE DATABASE IF NOT EXISTS `{{name}}`;'
+        drop:
+          exec: >
+            $(command -v mariadb || command -v mysql) -uroot -e
+            'DROP DATABASE IF EXISTS `{{name}}`;'
+          destructive: true
+        export:
+          exec: >
+            $(command -v mariadb-dump || command -v mysqldump) -uroot
+            --single-transaction --quick --no-tablespaces --routines --triggers --events
+            {{name}}
+          filename: "{{name}}.sql"
+        import: >
+          $(command -v mariadb || command -v mysql) --max-allowed-packet=1G -uroot {{name}}
+        export_all: >
+          $(command -v mariadb-dump || command -v mysqldump) -uroot
+          --single-transaction --quick --no-tablespaces --routines --triggers --events
+          --add-drop-database --all-databases
+        import_all: >
+          $(command -v mariadb || command -v mysql) --max-allowed-packet=1G -uroot
