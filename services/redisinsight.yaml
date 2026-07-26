@@ -1,14 +1,16 @@
 name: redisinsight
 image: docker.io/redis/redisinsight:latest
-description: RedisInsight web UI for the lerd Redis service
+description: RedisInsight web UI for every installed lerd Redis and Valkey service
 ports:
   - "8085:5540"
 environment:
   RI_APP_PORT: "5540"
-  # Pre-populate the lerd Redis connection so the UI opens already wired up.
-  RI_REDIS_HOST: lerd-redis
-  RI_REDIS_PORT: "6379"
-  RI_REDIS_ALIAS: lerd-redis
+# One numbered RI_REDIS_* connection set per running redis/valkey member, so
+# the UI opens already wired to every installed engine, not just lerd-redis.
+dynamic_env:
+  RI_REDIS_HOST: expand_family:redis,valkey={host}
+  RI_REDIS_PORT: expand_family:redis,valkey=6379
+  RI_REDIS_ALIAS: expand_family:redis,valkey={name}
 depends_on:
   - redis
 dashboard: http://localhost:8085
