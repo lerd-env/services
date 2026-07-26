@@ -224,7 +224,7 @@
     },
     {
       "name": "redisinsight",
-      "description": "RedisInsight web UI for the lerd Redis service",
+      "description": "RedisInsight web UI for every installed lerd Redis and Valkey service",
       "dashboard": "http://localhost:8085",
       "depends_on": [
         "redis"
