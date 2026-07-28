@@ -8,6 +8,15 @@
       "icon": "queue"
     },
     {
+      "name": "clickhouse",
+      "description": "ClickHouse column-oriented analytics database",
+      "family": "clickhouse",
+      "dashboard": "http://localhost:8123/play?user=lerd&password=lerd",
+      "image": "docker.io/library/clickhouse:26.3",
+      "category": "databases",
+      "icon": "database"
+    },
+    {
       "name": "elasticsearch",
       "description": "Elasticsearch single-node search and analytics engine",
       "image": "docker.elastic.co/elasticsearch/elasticsearch:8.13.4",

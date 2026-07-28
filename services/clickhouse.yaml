@@ -1,0 +1,111 @@
+name: clickhouse
+image: docker.io/library/clickhouse:26.3
+description: ClickHouse column-oriented analytics database
+family: clickhouse
+# The native protocol sits on 9010 because the default stack already publishes
+# 9000 for rustfs, and the generic port guard only shifts a service's primary.
+ports:
+  - "8123:8123"
+  - "9010:9000"
+environment:
+  CLICKHOUSE_USER: lerd
+  CLICKHOUSE_PASSWORD: lerd
+  CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: "1"
+  # Rootless podman maps container root to the host user, so the bind-mounted
+  # data dir is only writable when the server keeps that uid.
+  CLICKHOUSE_RUN_AS_ROOT: "1"
+data_dir: /var/lib/clickhouse
+connection_url: http://lerd:lerd@127.0.0.1:8123
+env_vars:
+  - CLICKHOUSE_HOST=lerd-clickhouse
+  - CLICKHOUSE_PORT=8123
+  - CLICKHOUSE_USERNAME=lerd
+  - CLICKHOUSE_PASSWORD=lerd
+  - CLICKHOUSE_DATABASE={{site}}
+# ClickHouse serves its own SQL console on the HTTP port, and the play page
+# reads the credentials off the query string, so it opens already connected.
+dashboard: http://localhost:8123/play?user=lerd&password=lerd
+env_detect:
+  key: CLICKHOUSE_HOST
+  composer: smi2/phpclickhouse
+site_init:
+  exec: clickhouse-client -q 'CREATE DATABASE IF NOT EXISTS "{{site}}"'
+client_shims:
+  - clickhouse-client
+category: databases
+icon: database
+files:
+  - target: /etc/clickhouse-server/config.d/lerd.xml
+    content: |
+      <clickhouse>
+          <listen_host>0.0.0.0</listen_host>
+          <logger>
+              <level>warning</level>
+          </logger>
+          <!-- A dev box has no use for the full telemetry tables, and they grow
+               unbounded; query_log stays with a short TTL. -->
+          <metric_log remove="1"/>
+          <asynchronous_metric_log remove="1"/>
+          <trace_log remove="1"/>
+          <query_thread_log remove="1"/>
+          <query_log>
+              <ttl>event_date + INTERVAL 3 DAY DELETE</ttl>
+          </query_log>
+          <max_server_memory_usage_to_ram_ratio>0.4</max_server_memory_usage_to_ram_ratio>
+          <mark_cache_size>268435456</mark_cache_size>
+          <storage_configuration>
+              <disks>
+                  <backups>
+                      <type>local</type>
+                      <path>/var/lib/clickhouse/backups/</path>
+                  </backups>
+              </disks>
+          </storage_configuration>
+          <backups>
+              <allowed_disk>backups</allowed_disk>
+              <allowed_path>/var/lib/clickhouse/backups/</allowed_path>
+          </backups>
+      </clickhouse>
+  - target: /etc/clickhouse-client/config.xml
+    content: |
+      <clickhouse>
+          <user>lerd</user>
+          <password>lerd</password>
+      </clickhouse>
+introspect:
+  # list_databases is kept alongside entities so lerd versions from before the
+  # entities schema still list the databases.
+  list_databases: >
+    clickhouse-client -q "SELECT d.name, ifNull(s.bytes, 0) FROM system.databases AS d
+    LEFT JOIN (SELECT database, sum(bytes_on_disk) AS bytes FROM system.parts
+    WHERE active GROUP BY database) AS s ON s.database = d.name
+    WHERE d.name NOT IN ('system', 'INFORMATION_SCHEMA', 'information_schema')
+    ORDER BY d.name"
+  entities:
+    - kind: databases
+      list: >
+        clickhouse-client -q "SELECT d.name, ifNull(s.bytes, 0) FROM system.databases AS d
+        LEFT JOIN (SELECT database, sum(bytes_on_disk) AS bytes FROM system.parts
+        WHERE active GROUP BY database) AS s ON s.database = d.name
+        WHERE d.name NOT IN ('system', 'INFORMATION_SCHEMA', 'information_schema')
+        ORDER BY d.name"
+      columns:
+        - key: size
+          label: Size
+          format: bytes
+      actions:
+        create: clickhouse-client -q 'CREATE DATABASE IF NOT EXISTS "{{name}}"'
+        drop:
+          exec: clickhouse-client -q 'DROP DATABASE IF EXISTS "{{name}}"'
+          destructive: true
+        export:
+          exec: >
+            clickhouse-client -q "BACKUP DATABASE \"{{name}}\" TO Disk('backups', '{{name}}.zip')" >/dev/null
+            && cat /var/lib/clickhouse/backups/{{name}}.zip
+            && rm -f /var/lib/clickhouse/backups/{{name}}.zip
+          filename: "{{name}}.zip"
+        import: >
+          cat > /var/lib/clickhouse/backups/{{name}}.zip
+          && clickhouse-client -q "DROP DATABASE IF EXISTS \"{{name}}\"" >/dev/null
+          && clickhouse-client -q "RESTORE DATABASE \"{{name}}\" FROM Disk('backups', '{{name}}.zip')" >/dev/null
+          && rm -f /var/lib/clickhouse/backups/{{name}}.zip
