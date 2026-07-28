@@ -32,6 +32,7 @@ All of it is data. None of it ships in the binary.
 
 | Service | What it is |
 |---------|------------|
+| `clickhouse` | ClickHouse column-oriented analytics database, with its own SQL console |
 | `mariadb` | MariaDB, the MySQL-compatible server (multi-version) |
 | `mongo` | MongoDB document database |
 | `postgres-pgvector` | PostgreSQL + pgvector for vector search (multi-version) |
