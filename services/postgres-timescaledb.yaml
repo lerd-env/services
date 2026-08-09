@@ -1,6 +1,9 @@
 name: postgres-timescaledb
 description: PostgreSQL with TimescaleDB (time-series extension)
 family: postgres
+# The image stops with SIGINT (fast shutdown), which still checkpoints before
+# it exits. A killed checkpoint costs a recovery pass on the next start.
+stop_timeout: 60
 default_version: "17"
 versions:
   - tag: "17"

@@ -1,6 +1,9 @@
 name: typesense
 description: Typesense search engine
 family: typesense
+# Writes its on-disk state before exiting; killed first, it rebuilds from the
+# write-ahead log on the next start.
+stop_timeout: 30
 image: docker.io/typesense/typesense:30.2
 # typesense-server refuses to boot without --api-key and --data-dir, and the
 # image entrypoint takes them as flags rather than env vars.
