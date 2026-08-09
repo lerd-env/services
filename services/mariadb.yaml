@@ -4,6 +4,9 @@ family: mariadb
 env_role: mysql
 default_version: "11.8"
 init: true
+# InnoDB flushes the buffer pool on a clean shutdown; killed part-way through,
+# the next start recovers from the redo log instead.
+stop_timeout: 60
 versions:
   - tag: "12"
     label: "12 (latest)"

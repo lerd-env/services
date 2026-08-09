@@ -2,6 +2,9 @@ name: mongo
 image: docker.io/library/mongo:7
 description: MongoDB document database
 family: mongo
+# mongod flushes its journal and closes storage cleanly on SIGTERM; killed
+# first, the next start replays the journal instead.
+stop_timeout: 60
 ports:
   - "27017:27017"
 environment:

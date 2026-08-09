@@ -2,6 +2,9 @@ name: clickhouse
 image: docker.io/library/clickhouse:26.3
 description: ClickHouse column-oriented analytics database
 family: clickhouse
+# MergeTree flushes in-memory parts on shutdown; killed part-way through, the
+# next start replays the write-ahead log instead.
+stop_timeout: 60
 # The native protocol sits on 9010 because the default stack already publishes
 # 9000 for rustfs, and the generic port guard only shifts a service's primary.
 ports:
