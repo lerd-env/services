@@ -30,3 +30,4 @@ env_detect:
 connection_url: http://127.0.0.1:9200
 category: search
 icon: search
+color: "#005571"

@@ -14,14 +14,16 @@
       "dashboard": "http://localhost:8123/play?user=lerd&password=lerd",
       "image": "docker.io/library/clickhouse:26.3",
       "category": "databases",
-      "icon": "database"
+      "icon": "database",
+      "color": "#ffcc01"
     },
     {
       "name": "elasticsearch",
       "description": "Elasticsearch single-node search and analytics engine",
       "image": "docker.elastic.co/elasticsearch/elasticsearch:8.13.4",
       "category": "search",
-      "icon": "search"
+      "icon": "search",
+      "color": "#005571"
     },
     {
       "name": "elasticvue",
@@ -41,8 +43,8 @@
       "name": "gotenberg",
       "description": "Gotenberg API for PDF generation and document conversion",
       "image": "docker.io/gotenberg/gotenberg:8",
-      "category": "mail",
-      "icon": "mail"
+      "category": "other",
+      "icon": "document"
     },
     {
       "name": "mariadb",
@@ -89,6 +91,7 @@
       "default_version": "11.8",
       "category": "databases",
       "icon": "database",
+      "color": "#003545",
       "env_role": "mysql"
     },
     {
@@ -103,7 +106,8 @@
       "description": "MongoDB document database",
       "image": "docker.io/library/mongo:7",
       "category": "databases",
-      "icon": "leaf"
+      "icon": "leaf",
+      "color": "#47a248"
     },
     {
       "name": "mongo-express",
@@ -124,7 +128,8 @@
       "description": "OpenSearch single-node search and analytics engine",
       "image": "docker.io/opensearchproject/opensearch:2.19.5",
       "category": "search",
-      "icon": "search"
+      "icon": "search",
+      "color": "#005eb8"
     },
     {
       "name": "opensearch-dashboards",
@@ -166,6 +171,7 @@
       "image": "docker.io/library/phpmyadmin:latest",
       "category": "admin",
       "icon": "database",
+      "color": "#6c78af",
       "admin_for": [
         "mysql",
         "mariadb"
@@ -198,7 +204,8 @@
       ],
       "default_version": "18",
       "category": "databases",
-      "icon": "elephant"
+      "icon": "elephant",
+      "color": "#4169e1"
     },
     {
       "name": "postgres-timescaledb",
@@ -221,7 +228,8 @@
       ],
       "default_version": "17",
       "category": "databases",
-      "icon": "elephant"
+      "icon": "elephant",
+      "color": "#4169e1"
     },
     {
       "name": "rabbitmq",
@@ -229,7 +237,8 @@
       "dashboard": "http://localhost:15672",
       "image": "docker.io/library/rabbitmq:3-management-alpine",
       "category": "messaging",
-      "icon": "queue"
+      "icon": "queue",
+      "color": "#ff6600"
     },
     {
       "name": "redisinsight",
@@ -252,7 +261,8 @@
       "dashboard": "http://localhost:7900/?autoconnect=1&resize=scale",
       "image": "docker.io/selenium/standalone-chromium:latest",
       "category": "testing",
-      "icon": "browserPlay"
+      "icon": "browserPlay",
+      "color": "#43b02a"
     },
     {
       "name": "soketi",
@@ -266,7 +276,8 @@
       "description": "Local Stripe API mock for Cashier and webhook testing",
       "image": "docker.io/stripemock/stripe-mock:latest",
       "category": "testing",
-      "icon": "card"
+      "icon": "card",
+      "color": "#635bff"
     },
     {
       "name": "typesense",
@@ -297,6 +308,7 @@
       "image": "docker.io/valkey/valkey:9-alpine",
       "category": "cache",
       "icon": "bolt",
+      "color": "#123678",
       "env_role": "redis"
     }
   ]

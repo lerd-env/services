@@ -27,3 +27,4 @@ files:
       management.path_prefix = /_svc/rabbitmq
 category: messaging
 icon: queue
+color: "#ff6600"

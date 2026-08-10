@@ -41,6 +41,7 @@ client_shims:
   - pg_restore
 category: databases
 icon: elephant
+color: "#4169e1"
 # list_databases is kept alongside entities so lerd versions from before the
 # entities schema still list the databases.
 introspect:
