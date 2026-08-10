@@ -37,6 +37,7 @@ client_shims:
   - clickhouse-client
 category: databases
 icon: database
+color: "#ffcc01"
 files:
   - target: /etc/clickhouse-server/config.d/lerd.xml
     content: |

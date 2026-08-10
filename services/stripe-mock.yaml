@@ -10,3 +10,4 @@ env_detect:
   key: STRIPE_KEY
 category: testing
 icon: card
+color: "#635bff"

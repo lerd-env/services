@@ -15,3 +15,4 @@ env_detect:
 dashboard: http://localhost:7900/?autoconnect=1&resize=scale
 category: testing
 icon: browserPlay
+color: "#43b02a"

@@ -58,6 +58,7 @@ client_shims:
     binary: [mariadb-dump, mysqldump]
 category: databases
 icon: database
+color: "#003545"
 # list_databases is kept alongside entities so lerd versions from before the
 # entities schema still list the databases.
 introspect:
