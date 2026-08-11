@@ -31,6 +31,14 @@ files:
       X_FRAME_OPTIONS = ''
       ENHANCED_COOKIE_PROTECTION = False
       WTF_CSRF_CHECK_DEFAULT = False
+
+      # A lerd that does not know dashboard_proxy still frames this from its own
+      # origin, where the Flask session and CSRF cookies need SameSite=None to
+      # be sent at all. That needs Secure=True, which browsers accept over HTTP
+      # on localhost. Inert once the dashboard is served same-origin, so it stays
+      # until no supported lerd frames this cross-origin.
+      SESSION_COOKIE_SAMESITE = 'None'
+      SESSION_COOKIE_SECURE = True
 category: admin
 icon: elephant
 admin_for:

@@ -13,10 +13,11 @@ depends_on:
   - mysql
 dashboard: http://localhost:8080
 # The session cookie is dropped when the dashboard is framed from another
-# origin, so lerd-ui serves it same-origin under /_svc/phpmyadmin/ instead. The
-# alias below carries that mount path, so any binary that proxies this reaches
-# it and dashboard_external is safe here.
-dashboard_external: true
+# origin, so lerd-ui serves it same-origin under /_svc/phpmyadmin/ instead. Not
+# dashboard_external: the alias below only reaches the container on a restart
+# that regenerates its unit, which an older lerd does not do in the pass that
+# flips it to the proxy, so it would serve a 404 in between.
+dashboard_proxy: true
 files:
   - target: /etc/apache2/conf-enabled/lerd-path-prefix.conf
     content: |
@@ -24,6 +25,15 @@ files:
   - target: /etc/phpmyadmin/config.user.inc.php
     content: |
       <?php
+      // A lerd that does not know dashboard_proxy still frames this from its own
+      // origin, where SameSite=Strict drops the session cookie on every POST.
+      // SameSite=None needs Secure, which phpmyadmin only sets when isHttps()
+      // is true, hence the forced env var; browsers accept Secure on localhost.
+      // Inert once the dashboard is served same-origin, so it stays until no
+      // supported lerd frames this cross-origin.
+      $cfg['CookieSameSite'] = 'None';
+      $_SERVER['HTTPS'] = 'on';
+
       // The official phpmyadmin image only handles PMA_USER/PMA_PASSWORD for
       // single-host setups; in multi-host (PMA_HOSTS) it writes host/verbose
       // per server but leaves user/password blank, forcing a login screen.
