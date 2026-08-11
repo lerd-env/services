@@ -12,20 +12,16 @@ dynamic_env:
 depends_on:
   - mysql
 dashboard: http://localhost:8080
+# The session cookie is dropped when the dashboard is framed from another
+# origin, so lerd-ui serves it same-origin under /_svc/phpmyadmin/ instead.
+dashboard_external: true
 files:
+  - target: /etc/apache2/conf-enabled/lerd-path-prefix.conf
+    content: |
+      Alias /_svc/phpmyadmin /var/www/html
   - target: /etc/phpmyadmin/config.user.inc.php
     content: |
       <?php
-      // Allow phpmyadmin's session cookie to be sent when it's embedded in
-      // an iframe served from a different origin (the lerd-ui dashboard).
-      // The default SameSite=Strict drops the cookie on form POSTs, which
-      // breaks the server-switch dropdown via CSRF token mismatch.
-      // SameSite=None requires Secure=1, which phpmyadmin only sets when
-      // isHttps() is true, so we force the HTTPS env var — browsers treat
-      // localhost as secure so Secure cookies are accepted over HTTP.
-      $cfg['CookieSameSite'] = 'None';
-      $_SERVER['HTTPS'] = 'on';
-
       // The official phpmyadmin image only handles PMA_USER/PMA_PASSWORD for
       // single-host setups; in multi-host (PMA_HOSTS) it writes host/verbose
       // per server but leaves user/password blank, forcing a login screen.
