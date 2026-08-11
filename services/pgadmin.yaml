@@ -15,8 +15,10 @@ depends_on:
   - postgres
 dashboard: http://localhost:8081
 # The Flask session cookie is dropped when the dashboard is framed from another
-# origin, so lerd-ui serves it same-origin under /_svc/pgadmin/ instead.
-dashboard_external: true
+# origin, so lerd-ui serves it same-origin under /_svc/pgadmin/ instead. Not
+# dashboard_external: pgadmin learns that path from a header lerd sends, so a
+# binary that predates it would proxy to a mount pgadmin does not answer on.
+dashboard_proxy: true
 files:
   - target: /pgadmin4/servers.json
     generator: pgadmin_servers

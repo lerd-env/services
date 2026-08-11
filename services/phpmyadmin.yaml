@@ -13,7 +13,9 @@ depends_on:
   - mysql
 dashboard: http://localhost:8080
 # The session cookie is dropped when the dashboard is framed from another
-# origin, so lerd-ui serves it same-origin under /_svc/phpmyadmin/ instead.
+# origin, so lerd-ui serves it same-origin under /_svc/phpmyadmin/ instead. The
+# alias below carries that mount path, so any binary that proxies this reaches
+# it and dashboard_external is safe here.
 dashboard_external: true
 files:
   - target: /etc/apache2/conf-enabled/lerd-path-prefix.conf
