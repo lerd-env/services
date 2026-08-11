@@ -72,7 +72,14 @@ introspect:
           filename: "{{name}}.sql"
         import: psql -U postgres -d {{name}}
         export_all: pg_dumpall -U postgres --clean --if-exists
-        import_all: psql -U postgres -d postgres
+        import_all:
+          exec: psql -U postgres -d postgres
+          # A pg_dumpall replay drops and recreates the role it is connected
+          # as, which a live cluster cannot be without. Both lines are the dump
+          # talking to itself, so a restore that produced only these worked.
+          expected_errors:
+            - "current user cannot be dropped"
+            - 'role "postgres" already exists'
 extensions:
   - name: vector
     always: true

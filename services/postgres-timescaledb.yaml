@@ -70,7 +70,15 @@ introspect:
           filename: "{{name}}.sql"
         import: psql -U postgres -d {{name}}
         export_all: pg_dumpall -U postgres --clean --if-exists
-        import_all: psql -U postgres -d postgres
+        import_all:
+          exec: psql -U postgres -d postgres
+          # A pg_dumpall replay drops and recreates the role it is connected
+          # as, and here the extension's own objects depend on it, so the drop
+          # fails that way instead. Both lines are the dump talking to itself,
+          # so a restore that produced only these worked.
+          expected_errors:
+            - 'role "postgres" already exists'
+            - 'role "postgres" cannot be dropped because some objects depend on it'
 extensions:
   - name: timescaledb
     always: true
