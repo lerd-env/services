@@ -10,6 +10,11 @@ environment:
 depends_on:
   - mongo
 dashboard: http://localhost:8082
+# The express-session cookie is dropped when the dashboard is framed from
+# another origin, so lerd-ui serves it same-origin under /_svc/mongo-express/.
+# Not dashboard_external: the base URL that moves its router there comes from
+# lerd, so a binary that predates it would proxy to a path it does not serve.
+dashboard_proxy: true
 category: admin
 icon: leaf
 admin_for:

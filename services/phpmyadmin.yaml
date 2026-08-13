@@ -12,17 +12,25 @@ dynamic_env:
 depends_on:
   - mysql
 dashboard: http://localhost:8080
+# The session cookie is dropped when the dashboard is framed from another
+# origin, so lerd-ui serves it same-origin under /_svc/phpmyadmin/ instead. Not
+# dashboard_external: the alias below only reaches the container on a restart
+# that regenerates its unit, which an older lerd does not do in the pass that
+# flips it to the proxy, so it would serve a 404 in between.
+dashboard_proxy: true
 files:
+  - target: /etc/apache2/conf-enabled/lerd-path-prefix.conf
+    content: |
+      Alias /_svc/phpmyadmin /var/www/html
   - target: /etc/phpmyadmin/config.user.inc.php
     content: |
       <?php
-      // Allow phpmyadmin's session cookie to be sent when it's embedded in
-      // an iframe served from a different origin (the lerd-ui dashboard).
-      // The default SameSite=Strict drops the cookie on form POSTs, which
-      // breaks the server-switch dropdown via CSRF token mismatch.
-      // SameSite=None requires Secure=1, which phpmyadmin only sets when
-      // isHttps() is true, so we force the HTTPS env var — browsers treat
-      // localhost as secure so Secure cookies are accepted over HTTP.
+      // A lerd that does not know dashboard_proxy still frames this from its own
+      // origin, where SameSite=Strict drops the session cookie on every POST.
+      // SameSite=None needs Secure, which phpmyadmin only sets when isHttps()
+      // is true, hence the forced env var; browsers accept Secure on localhost.
+      // Inert once the dashboard is served same-origin, so it stays until no
+      // supported lerd frames this cross-origin.
       $cfg['CookieSameSite'] = 'None';
       $_SERVER['HTTPS'] = 'on';
 

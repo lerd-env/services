@@ -14,6 +14,11 @@ dynamic_env:
 depends_on:
   - postgres
 dashboard: http://localhost:8081
+# The Flask session cookie is dropped when the dashboard is framed from another
+# origin, so lerd-ui serves it same-origin under /_svc/pgadmin/ instead. Not
+# dashboard_external: pgadmin learns that path from a header lerd sends, so a
+# binary that predates it would proxy to a mount pgadmin does not answer on.
+dashboard_proxy: true
 files:
   - target: /pgadmin4/servers.json
     generator: pgadmin_servers
@@ -27,9 +32,11 @@ files:
       ENHANCED_COOKIE_PROTECTION = False
       WTF_CSRF_CHECK_DEFAULT = False
 
-      # Allow pgadmin's Flask session + CSRF cookies to flow inside a cross-origin
-      # iframe (the lerd-ui dashboard). SameSite=None requires Secure=True, which
-      # browsers accept over HTTP on localhost.
+      # A lerd that does not know dashboard_proxy still frames this from its own
+      # origin, where the Flask session and CSRF cookies need SameSite=None to
+      # be sent at all. That needs Secure=True, which browsers accept over HTTP
+      # on localhost. Inert once the dashboard is served same-origin, so it stays
+      # until no supported lerd frames this cross-origin.
       SESSION_COOKIE_SAMESITE = 'None'
       SESSION_COOKIE_SECURE = True
 category: admin
