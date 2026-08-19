@@ -47,6 +47,28 @@
       "icon": "document"
     },
     {
+      "name": "kafka",
+      "description": "Apache Kafka event streaming broker",
+      "image": "docker.io/apache/kafka:4.3.1",
+      "category": "messaging",
+      "icon": "queue",
+      "color": "#231f20"
+    },
+    {
+      "name": "kafka-ui",
+      "description": "Kafbat UI web console for the lerd Kafka service",
+      "dashboard": "http://localhost:8087",
+      "depends_on": [
+        "kafka"
+      ],
+      "image": "ghcr.io/kafbat/kafka-ui:v1.5.0",
+      "category": "admin",
+      "icon": "queue",
+      "admin_for": [
+        "kafka"
+      ]
+    },
+    {
       "name": "mariadb",
       "description": "MariaDB (MySQL-compatible) versions",
       "family": "mariadb",
