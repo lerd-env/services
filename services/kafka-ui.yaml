@@ -1,0 +1,21 @@
+name: kafka-ui
+image: ghcr.io/kafbat/kafka-ui:v1.5.0
+description: Kafbat UI web console for the lerd Kafka service
+ports:
+  - "8087:8080"
+environment:
+  KAFKA_CLUSTERS_0_NAME: lerd
+  KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: lerd-kafka:9092
+  # Spring serves the whole app under this prefix, which is where lerd-ui mounts
+  # the proxy. Without it the framed page asks for its assets at / and 404s.
+  SERVER_SERVLET_CONTEXT_PATH: /_svc/kafka-ui
+depends_on:
+  - kafka
+dashboard: http://localhost:8087
+# It answers with X-Frame-Options: DENY, so it only embeds through lerd's
+# same-origin proxy, which strips the framing headers.
+dashboard_proxy: true
+category: admin
+icon: queue
+admin_for:
+  - kafka
