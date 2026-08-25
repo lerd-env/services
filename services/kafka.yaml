@@ -19,6 +19,10 @@ environment:
   # stays empty and every topic is lost when the container is recreated.
   KAFKA_LOG_DIRS: "/var/lib/kafka/data"
 data_dir: /var/lib/kafka/data
+# Map host user 1:1 to container UID 1000 and chown the data dir to it so the
+# broker's log dirs are writable in rootless podman, same as the opensearch preset.
+userns: keep-id:uid=1000,gid=0
+chown_data: true
 env_vars:
   - KAFKA_BROKERS=lerd-kafka:9092
   - KAFKA_HOST=lerd-kafka
