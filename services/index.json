@@ -12,6 +12,8 @@
         "mysql",
         "mariadb",
         "postgres",
+        "postgres-pgvector",
+        "postgres-timescaledb",
         "clickhouse"
       ],
       "admin_rank": 10

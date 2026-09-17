@@ -169,10 +169,15 @@ dashboard_external: true
 category: admin
 icon: database
 color: "#34567c"
+# admin_for matches the preset a service was installed from, not its family, so
+# the Postgres variants have to be named even though discover_family already
+# finds them by family and puts them in the server list.
 admin_for:
   - mysql
   - mariadb
   - postgres
+  - postgres-pgvector
+  - postgres-timescaledb
   - clickhouse
 # Preferred over the single-engine tools when more than one is installed, and
 # suggested ahead of them. It covers every engine lerd runs from one container,
