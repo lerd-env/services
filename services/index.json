@@ -7,7 +7,7 @@
       "depends_on": [
         "mysql"
       ],
-      "image": "docker.io/library/adminer:5",
+      "image": "docker.io/library/adminer:6",
       "category": "admin",
       "icon": "database",
       "color": "#34567c",
