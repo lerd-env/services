@@ -49,6 +49,7 @@ All of it is data. None of it ships in the binary.
 | `elasticvue` | Elasticsearch |
 | `typesense-dashboard` | Typesense |
 | `opensearch-dashboards` | OpenSearch |
+| `adminer` | every installed MySQL / MariaDB / PostgreSQL / ClickHouse service |
 
 **Search & analytics**
 
