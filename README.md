@@ -67,6 +67,7 @@ All of it is data. None of it ships in the binary.
 | `rabbitmq` | RabbitMQ broker with management UI |
 | `soketi` | Pusher-compatible WebSocket server |
 | `beanstalkd` | Beanstalkd work queue |
+| `mercure` | Mercure hub for server-sent events, the Symfony realtime transport |
 
 **Testing & tooling**
 
