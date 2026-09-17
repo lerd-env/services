@@ -1,6 +1,8 @@
 name: solr
 image: docker.io/library/solr:9
-update_strategy: minor
+# The tag is a major line that upstream keeps moving, like gotenberg:8, so the
+# strategy follows the tag rather than hunting for a higher version number.
+update_strategy: rolling
 description: "Apache Solr search platform, used by Drupal and TYPO3"
 family: solr
 ports:
