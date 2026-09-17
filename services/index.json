@@ -1,6 +1,25 @@
 {
   "services": [
     {
+      "name": "adminer",
+      "description": "Adminer web UI for every database lerd runs",
+      "dashboard": "http://localhost:8081",
+      "depends_on": [
+        "mysql"
+      ],
+      "image": "docker.io/library/adminer:5",
+      "category": "admin",
+      "icon": "database",
+      "color": "#34567c",
+      "admin_for": [
+        "mysql",
+        "mariadb",
+        "postgres",
+        "clickhouse"
+      ],
+      "admin_rank": 10
+    },
+    {
       "name": "beanstalkd",
       "description": "Beanstalkd work queue",
       "image": "docker.io/schickling/beanstalkd:latest",
