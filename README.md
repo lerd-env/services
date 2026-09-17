@@ -75,6 +75,7 @@ All of it is data. None of it ships in the binary.
 | `selenium` | Headless Chromium with a noVNC viewer for browser tests |
 | `stripe-mock` | Stripe API mock server |
 | `gotenberg` | Gotenberg API for PDF and document conversion |
+| `spamassassin` | SpamAssassin scoring backend for the Mailpit catcher |
 
 Don't see what you need? [Add it](#contributing) — that's what this repo is for.
 
