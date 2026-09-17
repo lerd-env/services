@@ -10,8 +10,6 @@ dynamic_env:
   ADMINER_MYSQL_HOSTS: discover_family:mysql,mariadb
   ADMINER_PGSQL_HOSTS: discover_family:postgres
   ADMINER_CLICKHOUSE_HOSTS: discover_family:clickhouse
-depends_on:
-  - mysql
 # Adminer's own index.php only prefills the server field, which leaves a login
 # form in front of databases lerd already holds the credentials for. This one
 # seeds a session per running server, resolves a database named without a server
