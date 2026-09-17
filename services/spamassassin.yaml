@@ -3,11 +3,9 @@ image: docker.io/axllent/spamassassin:3
 update_strategy: rolling
 description: "SpamAssassin scoring backend for the Mailpit catcher"
 family: spamassassin
-# spamd speaks its own protocol on 783 and nothing on the host talks to it
-# directly; mailpit reaches it over the lerd network. Published anyway so
-# `lerd service list` reports a reachable port like every other service.
-ports:
-  - "10783:783"
+# No published port. spamd speaks its own protocol and the only thing that talks
+# to it is mailpit, over the lerd network by container name, so publishing one
+# would take a host port that nothing ever connects to.
 category: mail
 icon: mail
 color: "#cc0000"
