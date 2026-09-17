@@ -82,6 +82,22 @@ files:
       		return null;
       	}
 
+      	// The dashboard proxy forwards its own /_svc/<name>/ prefix, and Adminer's own
+      	// assets are query strings rather than paths, so they survive it. A design
+      	// stylesheet is the exception: Adminer links it as a plain file name, which
+      	// arrives here under the prefix, misses on disk and falls through to this
+      	// script. Serve it rather than treat it as a page to redirect.
+      	$asset = basename(parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?: '');
+      	if (preg_match('~^[\\w.-]+\\.(css|js|png|gif|ico|svg|woff2?)$~', $asset) && is_file(__DIR__ . '/' . $asset)) {
+      		$types = array('css' => 'text/css', 'js' => 'application/javascript', 'png' => 'image/png',
+      			'gif' => 'image/gif', 'ico' => 'image/x-icon', 'svg' => 'image/svg+xml',
+      			'woff' => 'font/woff', 'woff2' => 'font/woff2');
+      		$ext = strtolower(pathinfo($asset, PATHINFO_EXTENSION));
+      		header('Content-Type: ' . ($types[$ext] ?? 'application/octet-stream'));
+      		readfile(__DIR__ . '/' . $asset);
+      		exit;
+      	}
+
       	$servers = lerd_servers();
       	// Seeded and closed before adminer.php is included, with the cache limiter
       	// off, so its own session_start sends no headers after ours have gone out.
@@ -107,7 +123,9 @@ files:
       	foreach ($servers as $host => $s) {
       		if (isset($_GET[lerd_query_key($s)])) { $named = true; break; }
       	}
-      	if (!$named) {
+      	// An asset request carries file=; it needs no server and redirecting it only
+      	// costs a round trip before Adminer serves the same bytes.
+      	if (!$named && !isset($_GET['file'])) {
       		$pick = null;
       		// lerd_server is how the dashboard says which engine it opened this for,
       		// without having to know the driver or the credentials that go with it.
@@ -161,6 +179,64 @@ files:
       	ob_start('lerd_switcher');
       	require './adminer.php';
       }
+  - target: /var/www/html/adminer.css
+    content: |
+      /* Adminer design lerd */
+      /* Adminer themes itself through four variables, so matching the dashboard is a
+         matter of setting them rather than restyling the page. Only the accent comes
+         from lerd's palette, which the overlay copies into this document, so picking
+         another palette repaints the embedded tool too. The surfaces are lerd's own
+         light neutrals, which are plain greys and not palette driven. */
+      html {
+      	--bg: #f9fafb;
+      	--fg: #1f2937;
+      	--dim: #f3f4f6;
+      	--lit: #e5e7eb;
+      }
+      a, a:visited { color: var(--lerd-accent, #ff2d20); }
+  - target: /var/www/html/adminer-dark.css
+    content: |
+      /* Adminer design lerd */
+      /* Adminer themes itself through four variables, and its own dark sheet then
+         repaints about thirty rules in blues that ignore them. The variables carry the
+         surfaces, and the rules below take those blues back onto lerd's own greys, so
+         the embedded tool sits on the same palette as the panel around it. bg, card
+         and border come from the palette the overlay copies in, so changing palette in
+         lerd repaints this too. */
+      html {
+      	--bg: var(--lerd-bg, #0d0d0d);
+      	--fg: #e5e5e5;
+      	--dim: var(--lerd-card, #161616);
+      	--lit: var(--lerd-border, #262626);
+      	--accent: var(--lerd-accent, #ff2d20);
+      }
+
+      a, a:visited, button.link, #schema div.table a, .js .checkable .checked a { color: var(--accent); }
+      a:link:hover, a:visited:hover, button.link:hover { color: var(--lerd-accent-hover, #e02419); }
+
+      h1 { border-color: var(--lit); color: var(--fg); }
+      h2 { border-color: var(--lit); color: var(--fg); background: var(--dim); }
+      #h1, .version, #version, .plugins .update { color: var(--fg); }
+
+      table, td, th, .column, fieldset, #menu, #menu p, #logins, #tables,
+      #schema .table, #help { border-color: var(--lit); }
+      th, code { background: var(--dim); }
+      thead td, thead th, thead th a, :target { color: var(--fg); }
+      tbody tr:hover td, tbody tr:hover th,
+      #edit-fields tbody tr:hover td, #edit-fields tbody tr:hover th { background: var(--lit); }
+      .odds tbody tr:nth-child(2n) { background: var(--dim); }
+      .js .checkable .checked td, .js .checkable .checked th { background: var(--lit); color: var(--fg); }
+      .js .checkable .checked:hover td, .js .checkable .checked:hover th { background: var(--lit); }
+      #menu .active { color: var(--accent); }
+      .icon { background-color: var(--dim); }
+      .icon:hover { background-color: var(--accent); }
+
+      /* The syntax highlighter has its own set, keyed to the same surfaces. */
+      .jush { --bg-color: var(--dim); --border-color: var(--lit); }
+# The dashboard's own palette, as an Adminer design. Adminer pairs adminer.css
+# with adminer-dark.css behind the prefers-color-scheme queries, and the overlay
+# drives which one applies and copies lerd's custom properties in, so the
+# embedded tool follows both the theme and the palette picked in lerd.
 dashboard: http://localhost:8081
 # Adminer answers X-Frame-Options: deny, so it is served through the same-origin
 # proxy, which drops that header. Its own links are query strings rather than
