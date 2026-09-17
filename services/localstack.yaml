@@ -1,6 +1,10 @@
 name: localstack
-image: docker.io/localstack/localstack:3
-update_strategy: minor
+image: docker.io/localstack/localstack:4.14
+# Pinned to the 4.x line on purpose. The tags past it are a licensed build that
+# quits on start without an auth token, so "latest" is not a free LocalStack any
+# more and a rolling strategy would walk a working install into one that refuses
+# to boot.
+update_strategy: patch
 description: "LocalStack, the AWS APIs (SQS, SES, DynamoDB, Secrets Manager) run locally"
 ports:
   - "4566:4566"

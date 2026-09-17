@@ -71,7 +71,7 @@
     {
       "name": "localstack",
       "description": "LocalStack, the AWS APIs (SQS, SES, DynamoDB, Secrets Manager) run locally",
-      "image": "docker.io/localstack/localstack:3",
+      "image": "docker.io/localstack/localstack:4.14",
       "category": "testing",
       "icon": "cube",
       "color": "#4b4ed2"
