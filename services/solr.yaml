@@ -1,0 +1,37 @@
+name: solr
+image: docker.io/library/solr:9
+update_strategy: minor
+description: "Apache Solr search platform, used by Drupal and TYPO3"
+family: solr
+ports:
+  - "8983:8983"
+data_dir: /var/solr
+environment:
+  # analysis-extras carries the ICU field types. Drupal's Search API Solr config
+  # set declares solr.ICUCollationField, so without this module a core built
+  # from it refuses to load and the integration stops before it starts.
+  SOLR_MODULES: analysis-extras
+chown_data: true
+dashboard: http://localhost:8983/solr/
+# Solr serves its UI only under /solr and has no setting for a mount path, so the
+# proxy strips its own prefix rather than forwarding it, which also drops the
+# frame-ancestors none it answers with. Its assets are all path-relative, which
+# is what makes that work.
+dashboard_proxy_strip: true
+# A core per site, named after it, the way each site gets its own database and
+# its own bucket. A single shared core would put every site's documents in one
+# index, so one site's search would answer with another's content and clearing
+# one would empty them all.
+site_init:
+  exec: solr create -c {{site}} 2>/dev/null || true
+env_vars:
+  - SOLR_HOST=lerd-solr
+  - SOLR_PORT=8983
+  - SOLR_CORE={{site}}
+# The solr CLI, for indexing and core management from the host. bin/post is
+# deliberately not shimmed: 9.10 deprecates it in favour of "solr post".
+client_shims:
+  - solr
+category: search
+icon: search
+color: "#d9411e"
