@@ -69,6 +69,14 @@
       ]
     },
     {
+      "name": "localstack",
+      "description": "LocalStack, the AWS APIs (SQS, SES, DynamoDB, Secrets Manager) run locally",
+      "image": "docker.io/localstack/localstack:3",
+      "category": "testing",
+      "icon": "cube",
+      "color": "#4b4ed2"
+    },
+    {
       "name": "mariadb",
       "description": "MariaDB (MySQL-compatible) versions",
       "family": "mariadb",
