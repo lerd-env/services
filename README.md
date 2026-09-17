@@ -57,6 +57,7 @@ All of it is data. None of it ships in the binary.
 | `elasticsearch` | Elasticsearch single-node engine |
 | `opensearch` | OpenSearch single-node engine |
 | `typesense` | Typesense typo-tolerant search |
+| `solr` | Apache Solr, the search backend Drupal and TYPO3 expect |
 
 **Cache, queues & messaging**
 
