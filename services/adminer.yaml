@@ -98,6 +98,11 @@ files:
       	session_write_close();
       	ob_end_clean();
 
+      	// Which server this request is for. A request that already names one is left
+      	// alone; anything else is answered with a redirect to the canonical URL rather
+      	// than by rewriting the request in place, because the versions disagree about
+      	// whether they build their own links from $_GET or from the raw query string,
+      	// and a rewrite that one of them ignores turns into a redirect loop.
       	$named = false;
       	foreach ($servers as $host => $s) {
       		if (isset($_GET[lerd_query_key($s)])) { $named = true; break; }
@@ -113,9 +118,17 @@ files:
       		}
       		if ($pick === null) { $pick = key($servers); }
       		$s = $servers[$pick];
-      		$_GET[lerd_query_key($s)] = $pick;
-      		$_GET['username'] = $s['username'];
-      		unset($_GET['lerd_server']);
+      		$q = $_GET;
+      		unset($q['lerd_server']);
+      		$q[lerd_query_key($s)] = $pick;
+      		$q['username'] = $s['username'];
+      		// A Postgres database is only half an address; without a schema the hub
+      		// of the URL is incomplete and 6 bounces it back rather than opening it.
+      		if ($s['driver'] === 'pgsql' && !empty($q['db']) && !isset($q['ns'])) {
+      			$q['ns'] = 'public';
+      		}
+      		header('Location: ?' . http_build_query($q), true, 302);
+      		exit;
       	}
 
       	// Adminer 5 registers a plugin hook only for methods that exist on its core
