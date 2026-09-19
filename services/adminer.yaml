@@ -9,7 +9,6 @@ dynamic_env:
   # authenticate all of them rather than the one the preset happens to name.
   ADMINER_MYSQL_HOSTS: discover_family:mysql,mariadb
   ADMINER_PGSQL_HOSTS: discover_family:postgres
-  ADMINER_CLICKHOUSE_HOSTS: discover_family:clickhouse
 # Adminer's own index.php only prefills the server field, which leaves a login
 # form in front of databases lerd already holds the credentials for. This one
 # seeds a session per running server, resolves a database named without a server
@@ -38,7 +37,6 @@ files:
       		$families = array(
       			'ADMINER_MYSQL_HOSTS'      => array('server',     'root',     'lerd'),
       			'ADMINER_PGSQL_HOSTS'      => array('pgsql',      'postgres', 'lerd'),
-      			'ADMINER_CLICKHOUSE_HOSTS' => array('clickhouse', 'lerd',     'lerd'),
       		);
       		$out = array();
       		foreach ($families as $env => $spec) {
@@ -254,7 +252,6 @@ admin_for:
   - postgres
   - postgres-pgvector
   - postgres-timescaledb
-  - clickhouse
 # Preferred over the single-engine tools when more than one is installed, and
 # suggested ahead of them. It covers every engine lerd runs from one container,
 # and lerd's own Databases tab already does the dump and restore that pgAdmin
