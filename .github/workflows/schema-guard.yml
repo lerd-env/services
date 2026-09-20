@@ -17,6 +17,9 @@ jobs:
           python-version: "3.12"
       - run: pip install pyyaml
 
+      - name: Check the renderer
+        run: python3 .github/scripts/test_render_schema.py
+
       - name: Render every schema
         run: python3 .github/scripts/render_schema.py
 
