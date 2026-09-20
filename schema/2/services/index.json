@@ -328,6 +328,16 @@
       "icon": "broadcast"
     },
     {
+      "name": "solr",
+      "description": "Apache Solr search platform, used by Drupal and TYPO3",
+      "family": "solr",
+      "dashboard": "http://localhost:8983/solr/",
+      "image": "docker.io/library/solr:9",
+      "category": "search",
+      "icon": "search",
+      "color": "#d9411e"
+    },
+    {
       "name": "stripe-mock",
       "description": "Local Stripe API mock for Cashier and webhook testing",
       "image": "docker.io/stripemock/stripe-mock:latest",
