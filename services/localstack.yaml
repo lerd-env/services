@@ -1,19 +1,44 @@
 name: localstack
 image: docker.io/localstack/localstack:4.14
+# Pinned to the 4.x line on purpose. The tags past it are a licensed build that
+# quits on start without an auth token, so "latest" is not a free LocalStack any
+# more and a rolling strategy would walk a working install into one that refuses
+# to boot.
 update_strategy: patch
-description: LocalStack, the AWS APIs (SQS, SES, DynamoDB, Secrets Manager) run locally
+description: "LocalStack, the AWS APIs (SQS, SES, DynamoDB, Secrets Manager) run locally"
 ports:
-- 4566:4566
+  - "4566:4566"
 environment:
-  DEBUG: '0'
+  # SERVICES is deliberately unset. It is a hard switch, not a hint: naming a
+  # subset leaves every other service answering "not enabled", so an app that
+  # reaches for ses or dynamodb fails on a service LocalStack could have run.
+  # Unset means all of them, started lazily on first call.
+  DEBUG: "0"
 data_dir: /var/lib/localstack
+# No dashboard: the only web surface is a JSON health endpoint.
+# The credentials match RustFS's deliberately. LocalStack accepts any key pair,
+# so declaring the same values means a site running both services gets one
+# consistent set rather than whichever preset was applied last. The S3-specific
+# keys (AWS_ENDPOINT, AWS_URL, AWS_BUCKET) stay RustFS's alone.
 env_vars:
-- AWS_ACCESS_KEY_ID=lerd
-- AWS_SECRET_ACCESS_KEY=lerdpassword
-- AWS_DEFAULT_REGION=us-east-1
-- SQS_PREFIX=http://lerd-localstack:4566/000000000000
-- SQS_QUEUE=default
-- AWS_ENDPOINT_URL=http://lerd-localstack:4566
+  - AWS_ACCESS_KEY_ID=lerd
+  - AWS_SECRET_ACCESS_KEY=lerdpassword
+  - AWS_DEFAULT_REGION=us-east-1
+  - SQS_PREFIX=http://lerd-localstack:4566/000000000000
+  - SQS_QUEUE=default
+  # Read by the AWS SDK itself, which is what makes this work with no app
+  # config: Laravel's queue config has no endpoint key, so without it the sqs
+  # driver builds a queue URL from the prefix and still posts it to the real
+  # sqs.us-east-1.amazonaws.com. One generic variable covers every service
+  # rather than a line per API. It does not take S3 away from RustFS: the
+  # filesystem config passes its endpoint explicitly, and an explicit endpoint
+  # beats the environment.
+  - AWS_ENDPOINT_URL=http://lerd-localstack:4566
+# No client_shims for awslocal. A shim runs its tool in a throwaway container
+# on the lerd network, and awslocal defaults to localhost:4566, which in that
+# container is nothing. It has no host argument to redirect it either, so it
+# would need the endpoint in the environment, which shims cannot carry yet.
+# Use "podman exec lerd-localstack awslocal ..." meanwhile.
 category: testing
 icon: cube
-color: '#4b4ed2'
+color: "#4b4ed2"
