@@ -116,7 +116,7 @@ def index_for(docs):
     return {"services": entries}
 
 
-def write_tree(out_dir, docs, assets, only=None):
+def write_tree(out_dir, docs, assets, only=None, verbatim=None):
     """Write a published tree.
 
     A schema above the oldest is sparse: it carries only the definitions whose
@@ -132,6 +132,12 @@ def write_tree(out_dir, docs, assets, only=None):
     for name, doc in sorted(docs.items()):
         if only is not None and name not in only:
             continue
+        # Rendering down that changed nothing keeps the authored file byte for
+        # byte, comments included. Rewriting it would churn every install's copy
+        # of a definition that did not change.
+        if verbatim and name in verbatim:
+            shutil.copy2(verbatim[name], out_dir / f"{name}.yaml")
+            continue
         with open(out_dir / f"{name}.yaml", "w", encoding="utf-8") as handle:
             yaml.safe_dump(doc, handle, sort_keys=False, default_flow_style=False, allow_unicode=True)
     for asset in assets:
@@ -145,7 +151,8 @@ def main():
     specs = schemas()
     newest = max(v for v, _ in specs) if specs else 1
     src = SOURCES / "services"
-    sources = {p.stem: load_yaml(p) for p in sorted(src.glob("*.yaml")) if p.name != "index.json"}
+    source_paths = {p.stem: p for p in sorted(src.glob("*.yaml")) if p.name != "index.json"}
+    sources = {n: load_yaml(p) for n, p in source_paths.items()}
     assets = sorted(src.glob("*.svg"))
 
     targets = {1: ROOT / "services"}
@@ -159,8 +166,10 @@ def main():
     for version, out_dir in sorted(targets.items()):
         rendered = {n: render_to(d, version, specs) for n, d in sources.items()}
         if version == oldest:
-            write_tree(out_dir, rendered, assets)
-            print(f"schema {version}: {len(rendered)} definition(s) -> {out_dir.relative_to(ROOT)}")
+            unchanged = {n: source_paths[n] for n, doc in rendered.items() if doc == sources[n]}
+            write_tree(out_dir, rendered, assets, verbatim=unchanged)
+            print(f"schema {version}: {len(rendered)} definition(s), "
+                  f"{len(rendered) - len(unchanged)} rendered -> {out_dir.relative_to(ROOT)}")
             continue
         differs = {n for n, doc in rendered.items() if doc != base_render[n]}
         write_tree(out_dir, rendered, [], only=differs)

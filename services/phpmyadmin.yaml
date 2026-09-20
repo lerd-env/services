@@ -2,7 +2,7 @@ name: phpmyadmin
 image: docker.io/library/phpmyadmin:latest
 description: phpMyAdmin web UI for every installed lerd MySQL service
 ports:
-- 8080:80
+  - "8080:80"
 environment:
   UPLOAD_LIMIT: 256M
 dynamic_env:
@@ -10,41 +10,58 @@ dynamic_env:
   PMA_USERS: repeat_family:mysql,mariadb=root
   PMA_PASSWORDS: repeat_family:mysql,mariadb=lerd
 depends_on:
-- mysql
+  - mysql
 dashboard: http://localhost:8080
+# The session cookie is dropped when the dashboard is framed from another
+# origin, so lerd-ui serves it same-origin under /_svc/phpmyadmin/ instead. Not
+# dashboard_external: the alias below only reaches the container on a restart
+# that regenerates its unit, which an older lerd does not do in the pass that
+# flips it to the proxy, so it would serve a 404 in between.
 dashboard_proxy: true
 files:
-- target: /etc/apache2/conf-enabled/lerd-path-prefix.conf
-  content: 'Alias /_svc/phpmyadmin /var/www/html
+  - target: /etc/apache2/conf-enabled/lerd-path-prefix.conf
+    content: |
+      Alias /_svc/phpmyadmin /var/www/html
+  - target: /etc/phpmyadmin/config.user.inc.php
+    content: |
+      <?php
+      // A lerd that does not know dashboard_proxy still frames this from its own
+      // origin, where SameSite=Strict drops the session cookie on every POST.
+      // SameSite=None needs Secure, which phpmyadmin only sets when isHttps()
+      // is true, hence the forced env var; browsers accept Secure on localhost.
+      // Served under the proxy mount the page is first-party and needs none of
+      // it, and that same isHttps() names the cookie __Secure-..._https and
+      // marks it secure, which a browser refuses over plain http. So the two
+      // apply to the requests that still arrive cross-origin, and stay until no
+      // supported lerd frames this that way.
+      if (strncmp($_SERVER['REQUEST_URI'] ?? '', '/_svc/phpmyadmin', 16) !== 0) {
+          $cfg['CookieSameSite'] = 'None';
+          $_SERVER['HTTPS'] = 'on';
+      }
 
-    '
-- target: /etc/phpmyadmin/config.user.inc.php
-  content: "<?php\n// A lerd that does not know dashboard_proxy still frames this\
-    \ from its own\n// origin, where SameSite=Strict drops the session cookie on every\
-    \ POST.\n// SameSite=None needs Secure, which phpmyadmin only sets when isHttps()\n\
-    // is true, hence the forced env var; browsers accept Secure on localhost.\n//\
-    \ Served under the proxy mount the page is first-party and needs none of\n// it,\
-    \ and that same isHttps() names the cookie __Secure-..._https and\n// marks it\
-    \ secure, which a browser refuses over plain http. So the two\n// apply to the\
-    \ requests that still arrive cross-origin, and stay until no\n// supported lerd\
-    \ frames this that way.\nif (strncmp($_SERVER['REQUEST_URI'] ?? '', '/_svc/phpmyadmin',\
-    \ 16) !== 0) {\n    $cfg['CookieSameSite'] = 'None';\n    $_SERVER['HTTPS'] =\
-    \ 'on';\n}\n\n// The official phpmyadmin image only handles PMA_USER/PMA_PASSWORD\
-    \ for\n// single-host setups; in multi-host (PMA_HOSTS) it writes host/verbose\n\
-    // per server but leaves user/password blank, forcing a login screen.\n// Rebuild\
-    \ $cfg['Servers'] from our own parallel env arrays so every\n// discovered mysql/mariadb\
-    \ service auto-logs in with config auth.\n$hosts = array_values(array_filter(array_map('trim',\
-    \ explode(',', (string) getenv('PMA_HOSTS')))));\n$users = array_map('trim', explode(',',\
-    \ (string) getenv('PMA_USERS')));\n$passwords = array_map('trim', explode(',',\
-    \ (string) getenv('PMA_PASSWORDS')));\nforeach ($hosts as $i => $host) {\n   \
-    \ $idx = $i + 1;\n    $cfg['Servers'][$idx] = [\n        'host'      => $host,\n\
-    \        'verbose'   => $host,\n        'auth_type' => 'config',\n        'user'\
-    \      => $users[$i] ?? 'root',\n        'password'  => $passwords[$i] ?? 'lerd',\n\
-    \        'AllowNoPassword' => false,\n    ];\n}\n$cfg['AllowThirdPartyFraming']\
-    \ = true;\n"
+      // The official phpmyadmin image only handles PMA_USER/PMA_PASSWORD for
+      // single-host setups; in multi-host (PMA_HOSTS) it writes host/verbose
+      // per server but leaves user/password blank, forcing a login screen.
+      // Rebuild $cfg['Servers'] from our own parallel env arrays so every
+      // discovered mysql/mariadb service auto-logs in with config auth.
+      $hosts = array_values(array_filter(array_map('trim', explode(',', (string) getenv('PMA_HOSTS')))));
+      $users = array_map('trim', explode(',', (string) getenv('PMA_USERS')));
+      $passwords = array_map('trim', explode(',', (string) getenv('PMA_PASSWORDS')));
+      foreach ($hosts as $i => $host) {
+          $idx = $i + 1;
+          $cfg['Servers'][$idx] = [
+              'host'      => $host,
+              'verbose'   => $host,
+              'auth_type' => 'config',
+              'user'      => $users[$i] ?? 'root',
+              'password'  => $passwords[$i] ?? 'lerd',
+              'AllowNoPassword' => false,
+          ];
+      }
+      $cfg['AllowThirdPartyFraming'] = true;
 category: admin
 icon: database
-color: '#6c78af'
+color: "#6c78af"
 admin_for:
-- mysql
-- mariadb
+  - mysql
+  - mariadb
