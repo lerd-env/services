@@ -14,7 +14,8 @@
         "postgres",
         "postgres-pgvector",
         "postgres-timescaledb"
-      ]
+      ],
+      "admin_rank": 10
     },
     {
       "name": "beanstalkd",
@@ -316,15 +317,6 @@
       "image": "quay.io/soketi/soketi:1.6-16-alpine",
       "category": "messaging",
       "icon": "broadcast"
-    },
-    {
-      "name": "spamassassin",
-      "description": "SpamAssassin scoring backend for the Mailpit catcher",
-      "family": "spamassassin",
-      "image": "docker.io/axllent/spamassassin:3",
-      "category": "mail",
-      "icon": "mail",
-      "color": "#cc0000"
     },
     {
       "name": "stripe-mock",

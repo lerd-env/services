@@ -144,3 +144,4 @@ admin_for:
 - postgres
 - postgres-pgvector
 - postgres-timescaledb
+admin_rank: 10

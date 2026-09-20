@@ -11,6 +11,8 @@ depends_on:
 - kafka
 dashboard: http://localhost:8087
 dashboard_proxy: true
+dashboard_follows_color_scheme: true
+dashboard_scheme_key: mode
 category: admin
 icon: queue
 admin_for:

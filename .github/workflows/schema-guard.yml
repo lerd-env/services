@@ -3,22 +3,40 @@ name: Schema guard
 on:
   pull_request:
 
-# A store definition reaches every install within a day, whatever version of
-# lerd it runs, so a pull request may only grow the schema. This refuses a key
-# that disappeared or changed type, and reports a value no published definition
-# has used before.
+# A definition is authored in the highest schema tree it needs and rendered down
+# into every tree below. Two things have to hold on every pull request: the lower
+# trees are what the authored ones render to, and the lowest stays readable by
+# the binaries that fetch it.
 jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pyyaml
+
+      - name: Render every schema
+        run: python3 .github/scripts/render_schema.py
+
+      - name: The published trees must match the sources
+        run: |
+          if ! git diff --quiet; then
+            echo "The rendered trees are stale. Run .github/scripts/render_schema.py and commit the result."
+            git diff --stat
+            exit 1
+          fi
+
   schema-guard:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-
       - run: pip install pyyaml
 
       - name: Extract the published tree
