@@ -116,11 +116,22 @@ def index_for(docs):
     return {"services": entries}
 
 
-def write_tree(out_dir, docs, assets):
+def write_tree(out_dir, docs, assets, only=None):
+    """Write a published tree.
+
+    A schema above the oldest is sparse: it carries only the definitions whose
+    render differs from the tree below it, plus its own complete index. The
+    client tries each base in order and a 404 falls straight through, so a
+    definition that renders the same in both is served once from the legacy
+    tree rather than stored twice. Assets are schema independent and live only
+    in the legacy tree for the same reason.
+    """
     if out_dir.exists():
         shutil.rmtree(out_dir)
     out_dir.mkdir(parents=True)
     for name, doc in sorted(docs.items()):
+        if only is not None and name not in only:
+            continue
         with open(out_dir / f"{name}.yaml", "w", encoding="utf-8") as handle:
             yaml.safe_dump(doc, handle, sort_keys=False, default_flow_style=False, allow_unicode=True)
     for asset in assets:
@@ -142,10 +153,18 @@ def main():
         if version > 1:
             targets[version] = ROOT / "schema" / str(version) / "services"
 
+    oldest = min(targets)
+    base_render = {n: render_to(d, oldest, specs) for n, d in sources.items()}
+
     for version, out_dir in sorted(targets.items()):
         rendered = {n: render_to(d, version, specs) for n, d in sources.items()}
-        write_tree(out_dir, rendered, assets)
-        print(f"schema {version}: {len(rendered)} definition(s) -> {out_dir.relative_to(ROOT)}")
+        if version == oldest:
+            write_tree(out_dir, rendered, assets)
+            print(f"schema {version}: {len(rendered)} definition(s) -> {out_dir.relative_to(ROOT)}")
+            continue
+        differs = {n for n, doc in rendered.items() if doc != base_render[n]}
+        write_tree(out_dir, rendered, [], only=differs)
+        print(f"schema {version}: {len(differs)} of {len(rendered)} differ -> {out_dir.relative_to(ROOT)}")
     print(f"authored schema is {newest}")
     return 0
 
