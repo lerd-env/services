@@ -49,6 +49,7 @@ All of it is data. None of it ships in the binary.
 | `elasticvue` | Elasticsearch |
 | `typesense-dashboard` | Typesense |
 | `opensearch-dashboards` | OpenSearch |
+| `adminer` | every installed MySQL / MariaDB / PostgreSQL / ClickHouse service |
 
 **Search & analytics**
 
@@ -75,6 +76,7 @@ All of it is data. None of it ships in the binary.
 | `selenium` | Headless Chromium with a noVNC viewer for browser tests |
 | `stripe-mock` | Stripe API mock server |
 | `gotenberg` | Gotenberg API for PDF and document conversion |
+| `localstack` | LocalStack, the AWS APIs run locally (SQS, SES, DynamoDB, Secrets Manager) |
 | `spamassassin` | SpamAssassin scoring backend for the Mailpit catcher |
 
 Don't see what you need? [Add it](#contributing) — that's what this repo is for.
