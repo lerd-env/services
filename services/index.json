@@ -1,6 +1,24 @@
 {
   "services": [
     {
+      "name": "adminer",
+      "description": "Adminer web UI for every database lerd runs",
+      "dashboard": "http://localhost:8081",
+      "image": "docker.io/library/adminer:6",
+      "category": "admin",
+      "icon": "database",
+      "color": "#34567c",
+      "admin_for": [
+        "mysql",
+        "mariadb",
+        "postgres",
+        "postgres-pgvector",
+        "postgres-timescaledb",
+        "clickhouse"
+      ],
+      "admin_rank": 10
+    },
+    {
       "name": "beanstalkd",
       "description": "Beanstalkd work queue",
       "image": "docker.io/schickling/beanstalkd:latest",
@@ -67,6 +85,14 @@
       "admin_for": [
         "kafka"
       ]
+    },
+    {
+      "name": "localstack",
+      "description": "LocalStack, the AWS APIs (SQS, SES, DynamoDB, Secrets Manager) run locally",
+      "image": "docker.io/localstack/localstack:4.14",
+      "category": "testing",
+      "icon": "cube",
+      "color": "#4b4ed2"
     },
     {
       "name": "mariadb",
