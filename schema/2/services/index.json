@@ -319,15 +319,6 @@
       "icon": "broadcast"
     },
     {
-      "name": "spamassassin",
-      "description": "SpamAssassin scoring backend for the Mailpit catcher",
-      "family": "spamassassin",
-      "image": "docker.io/axllent/spamassassin:3",
-      "category": "mail",
-      "icon": "mail",
-      "color": "#cc0000"
-    },
-    {
       "name": "stripe-mock",
       "description": "Local Stripe API mock for Cashier and webhook testing",
       "image": "docker.io/stripemock/stripe-mock:latest",
@@ -366,6 +357,15 @@
       "icon": "bolt",
       "color": "#123678",
       "env_role": "redis"
+    },
+    {
+      "name": "spamassassin",
+      "description": "SpamAssassin scoring backend for the Mailpit catcher",
+      "family": "spamassassin",
+      "image": "docker.io/axllent/spamassassin:3",
+      "category": "mail",
+      "icon": "mail",
+      "color": "#cc0000"
     }
   ]
 }
