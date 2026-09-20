@@ -1,6 +1,0 @@
-<svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
-<rect x="151" y="0" width="105" height="105" rx="10"/>
-<path d="M97 31h30a8 8 0 0 1 8 8v74h82a8 8 0 0 1 8 8v30a8 8 0 0 1-8 8H97a8 8 0 0 1-8-8V39a8 8 0 0 1 8-8z"/>
-<path d="M77 39v73H0z"/>
-<path d="M216 182h-73v73z"/>
-</svg>
