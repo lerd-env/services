@@ -175,8 +175,20 @@ def main():
     # A definition is authored in the highest schema tree it needs, and every
     # tree below renders down from it. One that needs nothing newer is authored
     # in services/ and published as it stands.
-    top = SCHEMA_DIR / str(newest) / "services"
-    sources = {p.stem: load_yaml(p) for p in sorted(top.glob("*.yaml"))} if top.exists() else {}
+    #
+    # Every schema tree is searched, not just the newest: a definition authored
+    # at schema 2 stays there when schema 3 arrives, and looking only at the top
+    # would leave it in neither set and drop it from the published trees.
+    sources, authored_at = {}, {}
+    for version in sorted({v for v, _ in specs}, reverse=True):
+        tree = SCHEMA_DIR / str(version) / "services"
+        if not tree.exists():
+            continue
+        for path in sorted(tree.glob("*.yaml")):
+            if path.stem in sources:
+                continue
+            sources[path.stem] = load_yaml(path)
+            authored_at[path.stem] = version
     plain = {p.stem: load_yaml(p) for p in sorted(LEGACY.glob("*.yaml")) if p.stem not in sources}
 
     inert, withheld = [], []
@@ -207,8 +219,8 @@ def main():
             if not visible_at(name, version):
                 (out_dir / f"{name}.yaml").unlink(missing_ok=True)
                 continue
-            # The newest tree is authored, not rendered: leave its bytes alone.
-            if version < newest:
+            # The tree a definition is authored in keeps its bytes.
+            if version < authored_at.get(name, newest):
                 high = render_to(doc, version, specs)
                 if high != render_to(doc, oldest, specs):
                     dump(high, out_dir / f"{name}.yaml")
