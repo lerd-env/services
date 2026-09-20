@@ -13,10 +13,8 @@
         "mariadb",
         "postgres",
         "postgres-pgvector",
-        "postgres-timescaledb",
-        "clickhouse"
-      ],
-      "admin_rank": 10
+        "postgres-timescaledb"
+      ]
     },
     {
       "name": "beanstalkd",
@@ -47,13 +45,13 @@
       "name": "elasticvue",
       "description": "Elasticvue web UI for the lerd Elasticsearch service",
       "dashboard": "http://localhost:8083",
-      "depends_on": [
-        "elasticsearch"
-      ],
       "image": "docker.io/cars10/elasticvue:latest",
       "category": "admin",
       "icon": "search",
       "admin_for": [
+        "elasticsearch"
+      ],
+      "depends_on": [
         "elasticsearch"
       ]
     },
@@ -76,13 +74,13 @@
       "name": "kafka-ui",
       "description": "Kafbat UI web console for the lerd Kafka service",
       "dashboard": "http://localhost:8087",
-      "depends_on": [
-        "kafka"
-      ],
       "image": "ghcr.io/kafbat/kafka-ui:v1.5.0",
       "category": "admin",
       "icon": "queue",
       "admin_for": [
+        "kafka"
+      ],
+      "depends_on": [
         "kafka"
       ]
     },
@@ -98,6 +96,9 @@
       "name": "mariadb",
       "description": "MariaDB (MySQL-compatible) versions",
       "family": "mariadb",
+      "category": "databases",
+      "icon": "database",
+      "color": "#003545",
       "versions": [
         {
           "tag": "12",
@@ -137,9 +138,6 @@
         }
       ],
       "default_version": "11.8",
-      "category": "databases",
-      "icon": "database",
-      "color": "#003545",
       "env_role": "mysql"
     },
     {
@@ -152,6 +150,7 @@
     {
       "name": "mongo",
       "description": "MongoDB document database",
+      "family": "mongo",
       "image": "docker.io/library/mongo:7",
       "category": "databases",
       "icon": "leaf",
@@ -161,13 +160,13 @@
       "name": "mongo-express",
       "description": "Mongo Express web UI for the lerd MongoDB service",
       "dashboard": "http://localhost:8082",
-      "depends_on": [
-        "mongo"
-      ],
       "image": "docker.io/library/mongo-express:latest",
       "category": "admin",
       "icon": "leaf",
       "admin_for": [
+        "mongo"
+      ],
+      "depends_on": [
         "mongo"
       ]
     },
@@ -183,13 +182,13 @@
       "name": "opensearch-dashboards",
       "description": "OpenSearch Dashboards web UI for the lerd OpenSearch service",
       "dashboard": "http://localhost:8086",
-      "depends_on": [
-        "opensearch"
-      ],
       "image": "docker.io/opensearchproject/opensearch-dashboards:2.19.5",
       "category": "admin",
       "icon": "search",
       "admin_for": [
+        "opensearch"
+      ],
+      "depends_on": [
         "opensearch"
       ]
     },
@@ -197,9 +196,6 @@
       "name": "pgadmin",
       "description": "pgAdmin web UI for the lerd Postgres service",
       "dashboard": "http://localhost:8081",
-      "depends_on": [
-        "postgres"
-      ],
       "image": "docker.io/dpage/pgadmin4:latest",
       "category": "admin",
       "icon": "elephant",
@@ -207,15 +203,15 @@
         "postgres",
         "postgres-pgvector",
         "postgres-timescaledb"
+      ],
+      "depends_on": [
+        "postgres"
       ]
     },
     {
       "name": "phpmyadmin",
       "description": "phpMyAdmin web UI for every installed lerd MySQL service",
       "dashboard": "http://localhost:8080",
-      "depends_on": [
-        "mysql"
-      ],
       "image": "docker.io/library/phpmyadmin:latest",
       "category": "admin",
       "icon": "database",
@@ -223,19 +219,25 @@
       "admin_for": [
         "mysql",
         "mariadb"
+      ],
+      "depends_on": [
+        "mysql"
       ]
     },
     {
       "name": "postgres-pgvector",
       "description": "PostgreSQL with pgvector (vector embeddings, no PostGIS)",
       "family": "postgres",
+      "category": "databases",
+      "icon": "elephant",
+      "color": "#4169e1",
       "versions": [
         {
           "tag": "18",
           "label": "18 (default)",
           "image": "docker.io/pgvector/pgvector:pg18",
-          "host_port": 5432,
-          "canonical": true
+          "canonical": true,
+          "host_port": 5432
         },
         {
           "tag": "17",
@@ -250,22 +252,22 @@
           "host_port": 5432
         }
       ],
-      "default_version": "18",
-      "category": "databases",
-      "icon": "elephant",
-      "color": "#4169e1"
+      "default_version": "18"
     },
     {
       "name": "postgres-timescaledb",
       "description": "PostgreSQL with TimescaleDB (time-series extension)",
       "family": "postgres",
+      "category": "databases",
+      "icon": "elephant",
+      "color": "#4169e1",
       "versions": [
         {
           "tag": "17",
           "label": "17 (default)",
           "image": "docker.io/timescale/timescaledb:latest-pg17",
-          "host_port": 5432,
-          "canonical": true
+          "canonical": true,
+          "host_port": 5432
         },
         {
           "tag": "16",
@@ -274,10 +276,7 @@
           "host_port": 5432
         }
       ],
-      "default_version": "17",
-      "category": "databases",
-      "icon": "elephant",
-      "color": "#4169e1"
+      "default_version": "17"
     },
     {
       "name": "rabbitmq",
@@ -292,15 +291,15 @@
       "name": "redisinsight",
       "description": "RedisInsight web UI for every installed lerd Redis and Valkey service",
       "dashboard": "http://localhost:8085",
-      "depends_on": [
-        "redis"
-      ],
       "image": "docker.io/redis/redisinsight:latest",
       "category": "admin",
       "icon": "database",
       "admin_for": [
         "redis",
         "valkey"
+      ],
+      "depends_on": [
+        "redis"
       ]
     },
     {
@@ -339,13 +338,13 @@
       "name": "typesense-dashboard",
       "description": "Typesense Dashboard web UI for the lerd Typesense service",
       "dashboard": "http://localhost:8084",
-      "depends_on": [
-        "typesense"
-      ],
       "image": "docker.io/bfritscher/typesense-dashboard:latest",
       "category": "admin",
       "icon": "search",
       "admin_for": [
+        "typesense"
+      ],
+      "depends_on": [
         "typesense"
       ]
     },

@@ -75,6 +75,26 @@ def profile(root, pattern):
     return out
 
 
+def schema_dropped_paths(root):
+    """Paths a schema delta renders away, which are removals by design.
+
+    The published legacy tree is the oldest schema, so every key a later schema
+    added is absent from it on purpose. Without this the guard would read each
+    of those as a key that disappeared.
+    """
+    dropped = set()
+    for path in sorted(pathlib.Path(root, "schema").glob("*.yaml")):
+        try:
+            with open(path, "r", encoding="utf-8") as handle:
+                spec = yaml.safe_load(handle) or {}
+        except (OSError, yaml.YAMLError):
+            continue
+        for change in spec.get("changes", []):
+            if change.get("downgrade") == "drop" and "path" in change:
+                dropped.add(change["path"])
+    return dropped
+
+
 def closed_sets(profiles):
     """Union every file's observed values per path, keeping the small ones."""
     merged = {}
@@ -96,6 +116,7 @@ def main():
     published = profile(published_dir, pattern)
     candidate = profile(candidate_dir, pattern)
     enums = closed_sets(published)
+    by_design = schema_dropped_paths(candidate_dir)
 
     failures, warnings = [], []
 
@@ -110,6 +131,8 @@ def main():
 
         for path, kinds in sorted(old_types.items()):
             if path not in new_types:
+                if path.split("[]")[0] in by_design:
+                    continue
                 failures.append(f"{rel}: key `{path}` was removed, an older lerd still reads it")
                 continue
             if kinds != new_types[path] and not kinds & new_types[path]:
