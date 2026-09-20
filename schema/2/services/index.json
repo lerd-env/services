@@ -149,6 +149,15 @@
       "icon": "bolt"
     },
     {
+      "name": "mercure",
+      "description": "Mercure hub for server-sent events, the Symfony realtime transport",
+      "dashboard": "http://localhost:3001/.well-known/mercure/ui/",
+      "image": "docker.io/dunglas/mercure:v0.24.2",
+      "category": "messaging",
+      "icon": "broadcast",
+      "color": "#2ab3d7"
+    },
+    {
       "name": "mongo",
       "description": "MongoDB document database",
       "family": "mongo",
