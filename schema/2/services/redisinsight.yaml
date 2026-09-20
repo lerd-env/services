@@ -16,6 +16,8 @@ depends_on:
 - redis
 dashboard: http://localhost:8085
 dashboard_external: true
+dashboard_follows_color_scheme: true
+dashboard_scheme_key: '{{mount}}_theme'
 category: admin
 icon: database
 admin_for:

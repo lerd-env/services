@@ -15,6 +15,7 @@ depends_on:
 - postgres
 dashboard: http://localhost:8081
 dashboard_proxy: true
+dashboard_follows_color_scheme: true
 files:
 - target: /pgadmin4/servers.json
   generator: pgadmin_servers
