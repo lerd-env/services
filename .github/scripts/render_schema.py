@@ -7,12 +7,13 @@ That is the oldest schema still supported, and it is where a definition lives by
 default: services/<name>.yaml is authored, published as it stands, and copied
 nowhere.
 
-A definition only needs a source when its two schemas disagree, which happens
-when a key a newer lerd reads would be wrong to publish to an older one. Then it
-is authored once in the newest schema under sources/, and this renders it into
-each published tree: services/ gets the downgrade, schema/N/ gets the original.
-A schema tree is sparse, carrying only those definitions plus its own index,
-since the client tries its bases in order and a 404 falls straight through.
+A definition is authored in the highest schema tree it needs, and every tree
+below renders down from it. One needing nothing newer is authored in services/
+and published as it stands; one carrying a key that would be wrong to publish to
+an older binary is authored in schema/N/services/ instead, and services/ gets the
+downgrade rendered from it. A schema tree is sparse, holding only the definitions
+authored there plus its own index, since the client tries its bases in order and
+a 404 falls straight through to the tree below.
 
 Usage: render_schema.py
 """
@@ -24,7 +25,6 @@ import sys
 import yaml
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-SOURCES = ROOT / "sources" / "services"
 LEGACY = ROOT / "services"
 SCHEMA_DIR = ROOT / "schema"
 
@@ -153,7 +153,11 @@ def main():
     oldest = 1
     newest = max(v for v, _ in specs)
 
-    sources = {p.stem: load_yaml(p) for p in sorted(SOURCES.glob("*.yaml"))} if SOURCES.exists() else {}
+    # A definition is authored in the highest schema tree it needs, and every
+    # tree below renders down from it. One that needs nothing newer is authored
+    # in services/ and published as it stands.
+    top = SCHEMA_DIR / str(newest) / "services"
+    sources = {p.stem: load_yaml(p) for p in sorted(top.glob("*.yaml"))} if top.exists() else {}
     plain = {p.stem: load_yaml(p) for p in sorted(LEGACY.glob("*.yaml")) if p.stem not in sources}
 
     inert = []
@@ -173,13 +177,15 @@ def main():
             continue
         out_dir = SCHEMA_DIR / str(version) / "services"
         out_dir.mkdir(parents=True, exist_ok=True)
-        for stale in out_dir.glob("*.yaml"):
-            stale.unlink()
         carried = 0
         for name, doc in sorted(sources.items()):
-            high = render_to(doc, version, specs)
-            if high != render_to(doc, oldest, specs):
-                dump(high, out_dir / f"{name}.yaml")
+            # The newest tree is authored, not rendered: leave its bytes alone.
+            if version < newest:
+                high = render_to(doc, version, specs)
+                if high != render_to(doc, oldest, specs):
+                    dump(high, out_dir / f"{name}.yaml")
+                    carried += 1
+            else:
                 carried += 1
         write_index(out_dir / "index.json", LEGACY / "index.json",
                     list(plain.values()) + [render_to(d, version, specs) for d in sources.values()],

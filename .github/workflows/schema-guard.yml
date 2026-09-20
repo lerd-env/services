@@ -3,10 +3,10 @@ name: Schema guard
 on:
   pull_request:
 
-# Definitions are authored under sources/ in the newest schema and published as
-# one rendered tree per schema. Two things have to hold on every pull request:
-# the published trees are what the sources render to, and the oldest of them
-# stays readable by the binaries that fetch it.
+# A definition is authored in the highest schema tree it needs and rendered down
+# into every tree below. Two things have to hold on every pull request: the lower
+# trees are what the authored ones render to, and the lowest stays readable by
+# the binaries that fetch it.
 jobs:
   render:
     runs-on: ubuntu-latest
@@ -23,7 +23,7 @@ jobs:
       - name: The published trees must match the sources
         run: |
           if ! git diff --quiet; then
-            echo "The published trees are stale. Run .github/scripts/render_schema.py and commit the result."
+            echo "The rendered trees are stale. Run .github/scripts/render_schema.py and commit the result."
             git diff --stat
             exit 1
           fi

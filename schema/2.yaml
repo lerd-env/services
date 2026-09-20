@@ -1,10 +1,10 @@
 # Schema 2, as understood by lerd 1.36.0 and later.
 #
 # A schema states only what changed since the one before it, and how to render a
-# document back down to that one. Definitions are authored in the newest schema
-# under sources/, and CI publishes a rendered tree per schema: the legacy
-# unprefixed path is schema 1, which is what every binary up to 1.35.0 computes
-# for itself and cannot be taught otherwise.
+# document back down to that one. A definition is authored in the highest schema
+# tree it needs and rendered down into every tree below, the lowest being the
+# unprefixed path: that is what every binary up to 1.35.0 computes for itself and
+# cannot be taught otherwise.
 schema: 2
 since_lerd: "1.36.0"
 
