@@ -16,6 +16,28 @@ import tempfile
 SCRIPT = pathlib.Path(__file__).resolve()
 
 
+def build_multi(root, schemas, legacy=None, trees=None):
+    """A store with several schema trees. `schemas` maps version to its yaml."""
+    (root / ".github" / "scripts").mkdir(parents=True)
+    shutil.copy2(SCRIPT.parent / "render_schema.py", root / ".github" / "scripts" / "render_schema.py")
+    (root / "schema").mkdir()
+    for version, body in schemas.items():
+        (root / "schema" / f"{version}.yaml").write_text(body)
+    (root / "services").mkdir()
+    for name, body in (legacy or {}).items():
+        (root / "services" / f"{name}.yaml").write_text(body)
+    for version, files in (trees or {}).items():
+        tree = root / "schema" / str(version) / "services"
+        tree.mkdir(parents=True)
+        for name, body in files.items():
+            (tree / f"{name}.yaml").write_text(body)
+    out = subprocess.run([sys.executable, str(root / ".github" / "scripts" / "render_schema.py")],
+                         capture_output=True, text=True)
+    if out.returncode != 0:
+        raise SystemExit(f"render failed:\n{out.stdout}\n{out.stderr}")
+    return out.stdout
+
+
 def build(root, schema_yaml, legacy=None, top=None):
     (root / ".github" / "scripts").mkdir(parents=True)
     shutil.copy2(SCRIPT.parent / "render_schema.py", root / ".github" / "scripts" / "render_schema.py")
@@ -89,6 +111,29 @@ def case_guarded_drop_reads_the_source():
         low = (root / "services" / "thing.yaml").read_text()
         assert "dashboard" not in low, \
             "a guarded drop must fire even when an earlier rule removed the key it reads"
+
+
+def case_a_definition_authored_below_the_top_survives():
+    """A definition authored at schema 2 is still found once schema 3 exists."""
+    with tempfile.TemporaryDirectory() as tmp:
+        root = pathlib.Path(tmp)
+        build_multi(root,
+                    {2: "schema: 2\nsince_lerd: \"1.36.0\"\nintroduces:\n  - gated\nchanges: []\n",
+                     3: "schema: 3\nsince_lerd: \"1.40.0\"\nintroduces: []\nchanges:\n"
+                        "  - path: newkey\n    downgrade: drop\n"},
+                    trees={2: {"gated": "name: gated\nimage: g\ndescription: d\ncategory: c\nicon: i\n"},
+                           3: {"fresh": "name: fresh\nimage: f\ndescription: d\ncategory: c\nicon: i\nnewkey: 1\n"}})
+
+        assert (root / "schema" / "2" / "services" / "gated.yaml").exists(), \
+            "a definition authored below the top tree must not be dropped"
+        assert not (root / "services" / "gated.yaml").exists(), \
+            "an introduced definition stays withheld from the tree below it"
+        assert "gated" in names_in(root / "schema" / "2" / "services" / "index.json"), \
+            "it stays listed in the schema that introduced it"
+        assert "gated" in names_in(root / "schema" / "3" / "services" / "index.json"), \
+            "a later schema still lists a definition introduced earlier"
+        assert "gated" not in names_in(root / "services" / "index.json"), \
+            "and the oldest tree still does not"
 
 
 def main():
