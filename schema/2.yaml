@@ -8,6 +8,13 @@
 schema: 2
 since_lerd: "1.36.0"
 
+# Definitions this schema introduces. One listed here is published to this tree
+# and no lower one, so a binary reading an older schema neither lists it nor can
+# fetch it. For a service that would offer that binary nothing at all, because
+# whatever drives it shipped later, that is kinder than publishing a preset which
+# installs and then sits there doing nothing.
+introduces: []
+
 changes:
   # Keys schema 1 has no field for. An old binary ignores them, so dropping is
   # about publishing a tree that means what it says rather than about safety.
