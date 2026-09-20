@@ -69,6 +69,7 @@ All of it is data. None of it ships in the binary.
 | `rabbitmq` | RabbitMQ broker with management UI |
 | `soketi` | Pusher-compatible WebSocket server |
 | `beanstalkd` | Beanstalkd work queue |
+| `mercure` | Mercure hub for server-sent events, the Symfony realtime transport |
 
 **Testing & tooling**
 
@@ -78,6 +79,7 @@ All of it is data. None of it ships in the binary.
 | `stripe-mock` | Stripe API mock server |
 | `gotenberg` | Gotenberg API for PDF and document conversion |
 | `localstack` | LocalStack, the AWS APIs run locally (SQS, SES, DynamoDB, Secrets Manager) |
+| `spamassassin` | SpamAssassin scoring backend for the Mailpit catcher |
 
 Don't see what you need? [Add it](#contributing) — that's what this repo is for.
 

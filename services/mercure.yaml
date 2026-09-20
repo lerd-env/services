@@ -1,0 +1,24 @@
+name: mercure
+image: docker.io/dunglas/mercure:v0.24.2
+update_strategy: minor
+description: Mercure hub for server-sent events, the Symfony realtime transport
+ports:
+- 3001:80
+environment:
+  SERVER_NAME: :80
+  MERCURE_PUBLISHER_JWT_KEY: '!ChangeThisMercureHubJWTSecretKey!'
+  MERCURE_SUBSCRIBER_JWT_KEY: '!ChangeThisMercureHubJWTSecretKey!'
+files:
+- target: /etc/caddy/Caddyfile
+  content: "{\n\t{$GLOBAL_OPTIONS}\n}\n\n{$CADDY_EXTRA_CONFIG}\n\n{$SERVER_NAME:localhost}\
+    \ {\n\tencode zstd gzip\n\n\tmercure {\n\t\tpublisher_jwt {env.MERCURE_PUBLISHER_JWT_KEY}\n\
+    \t\tsubscriber_jwt {env.MERCURE_SUBSCRIBER_JWT_KEY}\n\t\tanonymous\n\t\tcors_origins\
+    \ *\n\t\tdemo\n\t}\n\n\trespond /healthz 200\n\trespond \"Mercure hub, run by\
+    \ lerd\" 200\n}\n"
+env_vars:
+- MERCURE_URL=http://lerd-mercure/.well-known/mercure
+- MERCURE_PUBLIC_URL=http://localhost:3001/.well-known/mercure
+- MERCURE_JWT_SECRET=!ChangeThisMercureHubJWTSecretKey!
+category: messaging
+icon: broadcast
+color: '#2ab3d7'

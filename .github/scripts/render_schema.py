@@ -15,6 +15,12 @@ downgrade rendered from it. A schema tree is sparse, holding only the definition
 authored there plus its own index, since the client tries its bases in order and
 a 404 falls straight through to the tree below.
 
+A schema may also introduce a definition outright, listing it under `introduces`.
+That definition is not rendered into any tree below and does not appear in their
+indexes, so a binary reading an older schema neither lists it nor can fetch it.
+This is the version gate: a service that offers an older lerd nothing at all,
+because what drives it shipped in a later release, is simply not published to it.
+
 Usage: render_schema.py
 """
 
@@ -119,7 +125,7 @@ def index_for(docs):
     return {"services": entries}
 
 
-def write_index(path, published, docs, owned):
+def write_index(path, published, docs, owned, drop=None):
     """Rewrite only the entries this render owns.
 
     The published index is hand-maintained and does not always match what a
@@ -130,13 +136,16 @@ def write_index(path, published, docs, owned):
     """
     entries = index_for(docs)["services"]
     fresh = {e["name"]: e for e in entries if e.get("name") in owned}
+    drop = drop or set()
     out, seen = [], set()
     if published.exists():
         with open(published, "r", encoding="utf-8") as handle:
             for entry in json.load(handle).get("services", []):
                 name = entry.get("name")
-                out.append(fresh.get(name, entry))
                 seen.add(name)
+                if name in drop:
+                    continue
+                out.append(fresh.get(name, entry))
     for entry in entries:
         if entry.get("name") not in seen:
             out.append(entry)
@@ -153,6 +162,16 @@ def main():
     oldest = 1
     newest = max(v for v, _ in specs)
 
+    # name -> the schema that introduced it. A tree below that schema neither
+    # carries the definition nor lists it.
+    introduced_at = {}
+    for version, spec in specs:
+        for name in spec.get("introduces", []) or []:
+            introduced_at[name] = version
+
+    def visible_at(name, version):
+        return introduced_at.get(name, oldest) <= version
+
     # A definition is authored in the highest schema tree it needs, and every
     # tree below renders down from it. One that needs nothing newer is authored
     # in services/ and published as it stands.
@@ -160,17 +179,23 @@ def main():
     sources = {p.stem: load_yaml(p) for p in sorted(top.glob("*.yaml"))} if top.exists() else {}
     plain = {p.stem: load_yaml(p) for p in sorted(LEGACY.glob("*.yaml")) if p.stem not in sources}
 
-    inert = []
+    inert, withheld = [], []
     for name, doc in sorted(sources.items()):
+        if not visible_at(name, oldest):
+            withheld.append(name)
+            (LEGACY / f"{name}.yaml").unlink(missing_ok=True)
+            continue
         low = render_to(doc, oldest, specs)
         dump(low, LEGACY / f"{name}.yaml")
         if low == doc:
             inert.append(name)
 
     write_index(LEGACY / "index.json", LEGACY / "index.json",
-                list(plain.values()) + [render_to(d, oldest, specs) for d in sources.values()],
-                set(sources))
-    print(f"schema {oldest}: {len(plain)} authored in place, {len(sources)} rendered -> services")
+                list(plain.values())
+                + [render_to(d, oldest, specs) for n, d in sources.items() if visible_at(n, oldest)],
+                set(sources), drop={n for n in sources if not visible_at(n, oldest)})
+    print(f"schema {oldest}: {len(plain)} authored in place, "
+          f"{len(sources) - len(withheld)} rendered -> services")
 
     for version, _ in sorted(specs):
         if version <= oldest:
@@ -179,6 +204,9 @@ def main():
         out_dir.mkdir(parents=True, exist_ok=True)
         carried = 0
         for name, doc in sorted(sources.items()):
+            if not visible_at(name, version):
+                (out_dir / f"{name}.yaml").unlink(missing_ok=True)
+                continue
             # The newest tree is authored, not rendered: leave its bytes alone.
             if version < newest:
                 high = render_to(doc, version, specs)
@@ -188,10 +216,13 @@ def main():
             else:
                 carried += 1
         write_index(out_dir / "index.json", LEGACY / "index.json",
-                    list(plain.values()) + [render_to(d, version, specs) for d in sources.values()],
-                    set(sources))
+                    list(plain.values())
+                    + [render_to(d, version, specs) for n, d in sources.items() if visible_at(n, version)],
+                    set(sources), drop={n for n in sources if not visible_at(n, version)})
         print(f"schema {version}: {carried} definition(s) -> {out_dir.relative_to(ROOT)}")
 
+    if withheld:
+        print(f"withheld from older schemas: {', '.join(sorted(withheld))}")
     if inert:
         print(f"note: {', '.join(inert)} render the same in every schema and need no source")
     print(f"authored schema is {newest}")
