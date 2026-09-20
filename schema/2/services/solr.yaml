@@ -9,6 +9,8 @@ data_dir: /var/solr
 environment:
   SOLR_MODULES: analysis-extras
 chown_data: true
+dashboard: http://localhost:8983/solr/
+dashboard_proxy_strip: true
 site_init:
   exec: solr create -c {{site}} 2>/dev/null || true
 env_vars:

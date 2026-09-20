@@ -320,7 +320,7 @@
     },
     {
       "name": "solr",
-      "description": "Apache Solr search platform, the backend Drupal and TYPO3 expect",
+      "description": "Apache Solr search platform, used by Drupal and TYPO3",
       "family": "solr",
       "image": "docker.io/library/solr:9",
       "category": "search",
