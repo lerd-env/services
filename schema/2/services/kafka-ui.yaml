@@ -1,0 +1,19 @@
+name: kafka-ui
+image: ghcr.io/kafbat/kafka-ui:v1.5.0
+description: Kafbat UI web console for the lerd Kafka service
+ports:
+- 8087:8080
+environment:
+  KAFKA_CLUSTERS_0_NAME: lerd
+  KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: lerd-kafka:9092
+  SERVER_SERVLET_CONTEXT_PATH: /_svc/kafka-ui
+depends_on:
+- kafka
+dashboard: http://localhost:8087
+dashboard_proxy: true
+dashboard_follows_color_scheme: true
+dashboard_scheme_key: mode
+category: admin
+icon: queue
+admin_for:
+- kafka

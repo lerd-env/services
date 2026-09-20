@@ -1,0 +1,25 @@
+name: redisinsight
+image: docker.io/redis/redisinsight:latest
+description: RedisInsight web UI for every installed lerd Redis and Valkey service
+ports:
+- 8085:5540
+environment:
+  RI_APP_PORT: '5540'
+  RI_REDIS_HOST: lerd-redis
+  RI_REDIS_PORT: '6379'
+  RI_REDIS_ALIAS: lerd-redis
+expand_env:
+  RI_REDIS_HOST: redis,valkey={host}
+  RI_REDIS_PORT: redis,valkey=6379
+  RI_REDIS_ALIAS: redis,valkey={name}
+depends_on:
+- redis
+dashboard: http://localhost:8085
+dashboard_external: true
+dashboard_follows_color_scheme: true
+dashboard_scheme_key: '{{mount}}_theme'
+category: admin
+icon: database
+admin_for:
+- redis
+- valkey
