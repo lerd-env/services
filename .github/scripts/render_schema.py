@@ -1,32 +1,33 @@
 #!/usr/bin/env python3
-"""Render the authored definitions into one published tree per schema.
+"""Render the definitions that differ between schemas into their published trees.
 
-Definitions are authored under sources/ in the newest schema. Every binary in
-the field computes its own store URL and cannot be taught a new one, so the
-legacy unprefixed path has to carry the oldest schema still supported, and each
-later schema gets a prefixed tree that only a binary knowing about it asks for.
+Every binary in the field computes its own store URL and cannot be taught a new
+one, so the unprefixed path has to keep carrying what those binaries expect.
+That is the oldest schema still supported, and it is where a definition lives by
+default: services/<name>.yaml is authored, published as it stands, and copied
+nowhere.
 
-A schema file states the delta from the one before it and how to render back
-down: `drop` removes a key, `join` collapses a list into a delimited string,
-`rename` moves one. A change may carry `when: <path>`, applying only to a
-document where that path is truthy, which is how a key valid in both schemas can
-still be wrong to publish to the older one.
+A definition only needs a source when its two schemas disagree, which happens
+when a key a newer lerd reads would be wrong to publish to an older one. Then it
+is authored once in the newest schema under sources/, and this renders it into
+each published tree: services/ gets the downgrade, schema/N/ gets the original.
+A schema tree is sparse, carrying only those definitions plus its own index,
+since the client tries its bases in order and a 404 falls straight through.
 
-Usage: render_schema.py [--check]
+Usage: render_schema.py
 """
 
 import copy
 import json
 import pathlib
-import shutil
 import sys
 import yaml
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-SOURCES = ROOT / "sources"
+SOURCES = ROOT / "sources" / "services"
+LEGACY = ROOT / "services"
 SCHEMA_DIR = ROOT / "schema"
 
-# Fields an index entry carries, in the order the published index uses them.
 INDEX_FIELDS = ["name", "description", "family", "dashboard", "image", "category",
                 "icon", "color", "admin_for", "admin_rank", "depends_on",
                 "versions", "default_version", "env_role"]
@@ -38,7 +39,6 @@ def load_yaml(path):
 
 
 def schemas():
-    """Every schema file, oldest first. Schema 1 is implicit and has no file."""
     out = []
     for path in sorted(SCHEMA_DIR.glob("*.yaml"), key=lambda p: int(p.stem)):
         spec = load_yaml(path)
@@ -47,7 +47,6 @@ def schemas():
 
 
 def resolve(doc, path):
-    """Read a dotted path out of a document, or None."""
     node = doc
     for part in path.split("."):
         if not isinstance(node, dict) or part not in node:
@@ -68,7 +67,7 @@ def drop(doc, path):
 
 
 def apply_change(doc, change, guard):
-    """Render one change backwards, from the newer schema to the older one.
+    """Render one change backwards, newer schema to older.
 
     A `when` guard reads the document as it entered this schema's step, not the
     half-rendered one: a rule commonly depends on a key an earlier rule in the
@@ -97,7 +96,6 @@ def apply_change(doc, change, guard):
 
 
 def render_to(doc, target, specs):
-    """Render a newest-schema document down to the target schema."""
     out = copy.deepcopy(doc)
     for version, spec in sorted(specs, reverse=True):
         if version <= target:
@@ -108,72 +106,88 @@ def render_to(doc, target, specs):
     return out
 
 
+def dump(doc, path):
+    with open(path, "w", encoding="utf-8") as handle:
+        yaml.safe_dump(doc, handle, sort_keys=False, default_flow_style=False, allow_unicode=True)
+
+
 def index_for(docs):
     entries = []
     for doc in sorted(docs, key=lambda d: d.get("name", "")):
-        entry = {f: doc[f] for f in INDEX_FIELDS if f in doc and doc[f] not in (None, "", [], {})}
-        entries.append(entry)
+        entries.append({f: doc[f] for f in INDEX_FIELDS
+                        if f in doc and doc[f] not in (None, "", [], {})})
     return {"services": entries}
 
 
-def write_tree(out_dir, docs, assets, only=None, verbatim=None):
-    """Write a published tree.
+def write_index(path, published, docs, owned):
+    """Rewrite only the entries this render owns.
 
-    A schema above the oldest is sparse: it carries only the definitions whose
-    render differs from the tree below it, plus its own complete index. The
-    client tries each base in order and a 404 falls straight through, so a
-    definition that renders the same in both is served once from the legacy
-    tree rather than stored twice. Assets are schema independent and live only
-    in the legacy tree for the same reason.
+    The published index is hand-maintained and does not always match what a
+    projection of the YAML would produce. Regenerating it wholesale would push
+    those differences to every install as a change nobody asked for, so entries
+    for definitions this render does not touch are carried through exactly as
+    they stand.
     """
-    if out_dir.exists():
-        shutil.rmtree(out_dir)
-    out_dir.mkdir(parents=True)
-    for name, doc in sorted(docs.items()):
-        if only is not None and name not in only:
-            continue
-        # Rendering down that changed nothing keeps the authored file byte for
-        # byte, comments included. Rewriting it would churn every install's copy
-        # of a definition that did not change.
-        if verbatim and name in verbatim:
-            shutil.copy2(verbatim[name], out_dir / f"{name}.yaml")
-            continue
-        with open(out_dir / f"{name}.yaml", "w", encoding="utf-8") as handle:
-            yaml.safe_dump(doc, handle, sort_keys=False, default_flow_style=False, allow_unicode=True)
-    for asset in assets:
-        shutil.copy2(asset, out_dir / asset.name)
-    with open(out_dir / "index.json", "w", encoding="utf-8") as handle:
-        json.dump(index_for(list(docs.values())), handle, indent=2)
+    entries = index_for(docs)["services"]
+    fresh = {e["name"]: e for e in entries if e.get("name") in owned}
+    out, seen = [], set()
+    if published.exists():
+        with open(published, "r", encoding="utf-8") as handle:
+            for entry in json.load(handle).get("services", []):
+                name = entry.get("name")
+                out.append(fresh.get(name, entry))
+                seen.add(name)
+    for entry in entries:
+        if entry.get("name") not in seen:
+            out.append(entry)
+    with open(path, "w", encoding="utf-8") as handle:
+        json.dump({"services": out}, handle, indent=2)
         handle.write("\n")
 
 
 def main():
     specs = schemas()
-    newest = max(v for v, _ in specs) if specs else 1
-    src = SOURCES / "services"
-    source_paths = {p.stem: p for p in sorted(src.glob("*.yaml")) if p.name != "index.json"}
-    sources = {n: load_yaml(p) for n, p in source_paths.items()}
-    assets = sorted(src.glob("*.svg"))
+    if not specs:
+        print("no schema deltas; nothing to render")
+        return 0
+    oldest = 1
+    newest = max(v for v, _ in specs)
 
-    targets = {1: ROOT / "services"}
-    for version, _ in specs:
-        if version > 1:
-            targets[version] = ROOT / "schema" / str(version) / "services"
+    sources = {p.stem: load_yaml(p) for p in sorted(SOURCES.glob("*.yaml"))} if SOURCES.exists() else {}
+    plain = {p.stem: load_yaml(p) for p in sorted(LEGACY.glob("*.yaml")) if p.stem not in sources}
 
-    oldest = min(targets)
-    base_render = {n: render_to(d, oldest, specs) for n, d in sources.items()}
+    inert = []
+    for name, doc in sorted(sources.items()):
+        low = render_to(doc, oldest, specs)
+        dump(low, LEGACY / f"{name}.yaml")
+        if low == doc:
+            inert.append(name)
 
-    for version, out_dir in sorted(targets.items()):
-        rendered = {n: render_to(d, version, specs) for n, d in sources.items()}
-        if version == oldest:
-            unchanged = {n: source_paths[n] for n, doc in rendered.items() if doc == sources[n]}
-            write_tree(out_dir, rendered, assets, verbatim=unchanged)
-            print(f"schema {version}: {len(rendered)} definition(s), "
-                  f"{len(rendered) - len(unchanged)} rendered -> {out_dir.relative_to(ROOT)}")
+    write_index(LEGACY / "index.json", LEGACY / "index.json",
+                list(plain.values()) + [render_to(d, oldest, specs) for d in sources.values()],
+                set(sources))
+    print(f"schema {oldest}: {len(plain)} authored in place, {len(sources)} rendered -> services")
+
+    for version, _ in sorted(specs):
+        if version <= oldest:
             continue
-        differs = {n for n, doc in rendered.items() if doc != base_render[n]}
-        write_tree(out_dir, rendered, [], only=differs)
-        print(f"schema {version}: {len(differs)} of {len(rendered)} differ -> {out_dir.relative_to(ROOT)}")
+        out_dir = SCHEMA_DIR / str(version) / "services"
+        out_dir.mkdir(parents=True, exist_ok=True)
+        for stale in out_dir.glob("*.yaml"):
+            stale.unlink()
+        carried = 0
+        for name, doc in sorted(sources.items()):
+            high = render_to(doc, version, specs)
+            if high != render_to(doc, oldest, specs):
+                dump(high, out_dir / f"{name}.yaml")
+                carried += 1
+        write_index(out_dir / "index.json", LEGACY / "index.json",
+                    list(plain.values()) + [render_to(d, version, specs) for d in sources.values()],
+                    set(sources))
+        print(f"schema {version}: {carried} definition(s) -> {out_dir.relative_to(ROOT)}")
+
+    if inert:
+        print(f"note: {', '.join(inert)} render the same in every schema and need no source")
     print(f"authored schema is {newest}")
     return 0
 
