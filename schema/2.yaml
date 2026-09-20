@@ -13,7 +13,8 @@ since_lerd: "1.36.0"
 # fetch it. For a service that would offer that binary nothing at all, because
 # whatever drives it shipped later, that is kinder than publishing a preset which
 # installs and then sits there doing nothing.
-introduces: []
+introduces:
+  - spamassassin
 
 changes:
   # Keys schema 1 has no field for. An old binary ignores them, so dropping is

@@ -357,6 +357,15 @@
       "icon": "bolt",
       "color": "#123678",
       "env_role": "redis"
+    },
+    {
+      "name": "spamassassin",
+      "description": "SpamAssassin scoring backend for the Mailpit catcher",
+      "family": "spamassassin",
+      "image": "docker.io/axllent/spamassassin:3",
+      "category": "mail",
+      "icon": "mail",
+      "color": "#cc0000"
     }
   ]
 }

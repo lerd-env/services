@@ -1,0 +1,11 @@
+name: spamassassin
+image: docker.io/axllent/spamassassin:3
+update_strategy: rolling
+description: "SpamAssassin scoring backend for the Mailpit catcher"
+family: spamassassin
+# No published port. spamd speaks its own protocol and the only thing that talks
+# to it is mailpit, over the lerd network by container name, so publishing one
+# would take a host port that nothing ever connects to.
+category: mail
+icon: mail
+color: "#cc0000"
