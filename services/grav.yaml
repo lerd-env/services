@@ -1,0 +1,32 @@
+# Bundled (private-store) Grav preset for the Harvester/Blogger runtime.
+# Mirrors the reviewed repository descriptor docker/grav/lerd-service.yaml
+# from miguelenes/blogger plus dashboard discovery metadata. The image is a
+# local build (docker.io/library/blogger-grav:2.0.24-php8.5-secretless-r3,
+# built with `podman build --format docker -f docker/grav/Dockerfile`) and is
+# intentionally NOT published to a public registry; this preset only resolves
+# on machines that build it and point LERD_SERVICES_BASE_URL here.
+name: grav
+image: docker.io/library/blogger-grav:2.0.24-php8.5-secretless-r3
+description: Harvester Grav runtime built from the reviewed project Dockerfile
+dashboard: http://localhost:8082
+ports:
+  - 8082:80
+environment:
+  GRAV_ENVIRONMENT: blogger
+  GRAV_SITE_KEYS_FILE: /var/www/html/user/env/.blogger-runtime/site-keys
+  GRAV_INTEGRATION_USERNAME_FILE: /var/www/html/user/env/.blogger-runtime/username
+  GRAV_INTEGRATION_PASSWORD_FILE: /var/www/html/user/env/.blogger-runtime/password
+  GRAV_INTEGRATION_API_KEY_FILE: /var/www/html/user/env/.blogger-runtime/api-key
+  GRAV_REDIS_SERVER: lerd-redis
+  GRAV_REDIS_PORT: "6379"
+  GRAV_REDIS_DATABASE: "2"
+  GRAV_SCHEDULER_ENABLED: "true"
+  GRAV_DEBUGGER_ENABLED: "false"
+  GRAV_ERRORS_DISPLAY: "0"
+  GRAV_ERRORS_LOG: "1"
+data_dir: /var/www/html/user/env
+depends_on:
+  - redis
+category: other
+icon: document
+color: '#2b2b2b'

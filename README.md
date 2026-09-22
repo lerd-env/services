@@ -71,6 +71,12 @@ All of it is data. None of it ships in the binary.
 | `beanstalkd` | Beanstalkd work queue |
 | `mercure` | Mercure hub for server-sent events, the Symfony realtime transport |
 
+**Content management**
+
+| Service | What it is |
+|---------|------------|
+| `grav` | Harvester Grav CMS runtime, built from the reviewed project Dockerfile (requires the local `blogger-grav` image) |
+
 **Testing & tooling**
 
 | Service | What it is |
