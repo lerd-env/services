@@ -1,6 +1,22 @@
 {
   "services": [
     {
+      "name": "adminer",
+      "description": "Adminer web UI for every database lerd runs",
+      "dashboard": "http://localhost:8081",
+      "image": "docker.io/library/adminer:6",
+      "category": "admin",
+      "icon": "database",
+      "color": "#34567c",
+      "admin_for": [
+        "mysql",
+        "mariadb",
+        "postgres",
+        "postgres-pgvector",
+        "postgres-timescaledb"
+      ]
+    },
+    {
       "name": "beanstalkd",
       "description": "Beanstalkd work queue",
       "image": "docker.io/schickling/beanstalkd:latest",
@@ -40,6 +56,14 @@
       ]
     },
     {
+      "name": "github-actions-runner",
+      "description": "Persistent self-hosted GitHub Actions runner for Lerd projects",
+      "image": "ghcr.io/miguelenes/lerd-actions-runner:0.1.1@sha256:300a90b16f8fd4df85493fda0d7b87f0f9da85835641a168ddc6f316e9fd7ff8",
+      "category": "testing",
+      "icon": "bolt",
+      "color": "#6e40c9"
+    },
+    {
       "name": "gotenberg",
       "description": "Gotenberg API for PDF generation and document conversion",
       "image": "docker.io/gotenberg/gotenberg:8",
@@ -47,12 +71,16 @@
       "icon": "document"
     },
     {
-      "name": "github-actions-runner",
-      "description": "Persistent self-hosted GitHub Actions runner for Lerd projects",
-      "image": "ghcr.io/miguelenes/lerd-actions-runner:0.1.1@sha256:300a90b16f8fd4df85493fda0d7b87f0f9da85835641a168ddc6f316e9fd7ff8",
-      "category": "testing",
-      "icon": "bolt",
-      "color": "#6e40c9"
+      "name": "grav",
+      "description": "Harvester Grav runtime built from the reviewed project Dockerfile",
+      "image": "docker.io/library/blogger-grav:2.0.24-php8.5-secretless-r3",
+      "dashboard": "http://localhost:8082",
+      "depends_on": [
+        "redis"
+      ],
+      "category": "other",
+      "icon": "document",
+      "color": "#2b2b2b"
     },
     {
       "name": "kafka",
@@ -66,15 +94,23 @@
       "name": "kafka-ui",
       "description": "Kafbat UI web console for the lerd Kafka service",
       "dashboard": "http://localhost:8087",
-      "depends_on": [
-        "kafka"
-      ],
       "image": "ghcr.io/kafbat/kafka-ui:v1.5.0",
       "category": "admin",
       "icon": "queue",
       "admin_for": [
         "kafka"
+      ],
+      "depends_on": [
+        "kafka"
       ]
+    },
+    {
+      "name": "localstack",
+      "description": "LocalStack, the AWS APIs (SQS, SES, DynamoDB, Secrets Manager) run locally",
+      "image": "docker.io/localstack/localstack:4.14",
+      "category": "testing",
+      "icon": "cube",
+      "color": "#4b4ed2"
     },
     {
       "name": "mariadb",
@@ -130,6 +166,14 @@
       "image": "docker.io/library/memcached:1.6-alpine",
       "category": "cache",
       "icon": "bolt"
+    },
+    {
+      "name": "mercure",
+      "description": "Mercure hub for server-sent events, the Symfony realtime transport",
+      "image": "docker.io/dunglas/mercure:v0.24.2",
+      "category": "messaging",
+      "icon": "broadcast",
+      "color": "#2ab3d7"
     },
     {
       "name": "mongo",
@@ -188,9 +232,6 @@
       "name": "pgadmin",
       "description": "pgAdmin web UI for the lerd Postgres service",
       "dashboard": "http://localhost:8081",
-      "depends_on": [
-        "postgres"
-      ],
       "image": "docker.io/dpage/pgadmin4:latest",
       "category": "admin",
       "icon": "elephant",
@@ -198,6 +239,9 @@
         "postgres",
         "postgres-pgvector",
         "postgres-timescaledb"
+      ],
+      "depends_on": [
+        "postgres"
       ]
     },
     {
@@ -224,7 +268,7 @@
         {
           "tag": "18",
           "label": "18 (default)",
-          "image": "docker.io/pgvector/pgvector:pg18-trixie",
+          "image": "docker.io/pgvector/pgvector:pg18",
           "host_port": 5432,
           "canonical": true
         },
@@ -283,15 +327,15 @@
       "name": "redisinsight",
       "description": "RedisInsight web UI for every installed lerd Redis and Valkey service",
       "dashboard": "http://localhost:8085",
-      "depends_on": [
-        "redis"
-      ],
       "image": "docker.io/redis/redisinsight:latest",
       "category": "admin",
       "icon": "database",
       "admin_for": [
         "redis",
         "valkey"
+      ],
+      "depends_on": [
+        "redis"
       ]
     },
     {
@@ -309,6 +353,15 @@
       "image": "quay.io/soketi/soketi:1.6-16-alpine",
       "category": "messaging",
       "icon": "broadcast"
+    },
+    {
+      "name": "solr",
+      "description": "Apache Solr search platform, used by Drupal and TYPO3",
+      "family": "solr",
+      "image": "docker.io/library/solr:9",
+      "category": "search",
+      "icon": "search",
+      "color": "#d9411e"
     },
     {
       "name": "stripe-mock",

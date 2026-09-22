@@ -74,6 +74,12 @@ All of it is data. None of it ships in the binary.
 |---------|------------|
 | `ollama` | Ollama local LLM server with automatic model bootstrap |
 
+**Content management**
+
+| Service | What it is |
+|---------|------------|
+| `grav` | Harvester Grav CMS runtime, built from the reviewed project Dockerfile (requires the local `blogger-grav` image) |
+
 **Testing & tooling**
 
 | Service | What it is |
