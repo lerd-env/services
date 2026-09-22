@@ -24,6 +24,68 @@ environment:
   GRAV_DEBUGGER_ENABLED: "false"
   GRAV_ERRORS_DISPLAY: "0"
   GRAV_ERRORS_LOG: "1"
+  # Grav config carried by docker/grav/grav.env under Compose. Cache points at
+  # the lerd Redis service (not Compose's `valkey`); the debugger/error display
+  # hardening above intentionally replaces grav.env's dev values.
+  GRAV_CONFIG: "true"
+  GRAV_CONFIG__site__default_lang: en
+  GRAV_CONFIG__site__taxonomies__0: category
+  GRAV_CONFIG__site__taxonomies__1: tag
+  GRAV_CONFIG__site__taxonomies__2: performer
+  GRAV_CONFIG__system__timezone: UTC
+  GRAV_CONFIG__system__reverse_proxy_setup: "1"
+  GRAV_CONFIG__system__http_x_forwarded__protocol: "1"
+  GRAV_CONFIG__system__http_x_forwarded__host: "1"
+  GRAV_CONFIG__system__http_x_forwarded__port: "1"
+  GRAV_CONFIG__system__http_x_forwarded__ip: "1"
+  GRAV_CONFIG__system__cache__enabled: "1"
+  GRAV_CONFIG__system__cache__driver: redis
+  GRAV_CONFIG__system__cache__cli_compatibility: "1"
+  GRAV_CONFIG__system__cache__check__method: file
+  GRAV_CONFIG__system__cache__redis__server: lerd-redis
+  GRAV_CONFIG__system__cache__redis__port: "6379"
+  GRAV_CONFIG__system__cache__redis__database: "2"
+  GRAV_CONFIG__system__twig__cache: "1"
+  GRAV_CONFIG__system__twig__auto_reload: "1"
+  GRAV_CONFIG__plugins__api__enabled: "1"
+  GRAV_CONFIG__plugins__api__route: /api
+  GRAV_CONFIG__plugins__api__version_prefix: v1
+  GRAV_CONFIG__plugins__api__auth__api_keys_enabled: "1"
+  GRAV_CONFIG__plugins__api__auth__jwt_enabled: "1"
+  GRAV_CONFIG__plugins__api__auth__session_enabled: "0"
+  GRAV_CONFIG__plugins__api__auth__jwt_algorithm: HS256
+  GRAV_CONFIG__plugins__api__auth__jwt_expiry: "3600"
+  GRAV_CONFIG__plugins__api__auth__jwt_refresh_expiry: "604800"
+  GRAV_CONFIG__plugins__api__cors__enabled: "0"
+  GRAV_CONFIG__plugins__api__rate_limit__enabled: "0"
+  GRAV_CONFIG__plugins__login__enabled: "1"
+  GRAV_CONFIG__plugins__login__max_login_count: "0"
+  GRAV_CONFIG__plugins__login__max_pw_resets_count: "0"
+  GRAV_CONFIG__plugins__login__max_token_attempts_count: "0"
+  GRAV_CONFIG__plugins__login__user_registration__enabled: "0"
+  GRAV_CONFIG__plugins__sitemap__enabled: "1"
+  GRAV_CONFIG__plugins__simplesearch__enabled: "1"
+  GRAV_CONFIG__plugins__simplesearch__route: /search
+  GRAV_CONFIG__plugins__langswitcher__enabled: "1"
+  GRAV_CONFIG__plugins__comments__enabled: "1"
+  GRAV_CONFIG__plugins__featherlight__enabled: "1"
+  GRAV_CONFIG__plugins__featherlight__active: "1"
+  GRAV_CONFIG__plugins__taxonomylist__enabled: "1"
+  GRAV_CONFIG__plugins__pagination__enabled: "1"
+  GRAV_CONFIG__plugins__readingtime__enabled: "1"
+  GRAV_CONFIG__plugins__relatedpages__enabled: "1"
+  GRAV_CONFIG__plugins__feed__enabled: "1"
+  GRAV_CONFIG__plugins__breadcrumbs__enabled: "1"
+  # POSIX env names cannot contain hyphens; alias the hyphenated plugin scopes.
+  GRAV_CONFIG_ALIAS__MARKDOWN_NOTICES: plugins.markdown-notices
+  GRAV_CONFIG__MARKDOWN_NOTICES__enabled: "1"
+  GRAV_CONFIG_ALIAS__ADVANCED_PAGECACHE: plugins.advanced-pagecache
+  GRAV_CONFIG__ADVANCED_PAGECACHE__enabled: "1"
+  GRAV_CONFIG_ALIAS__STAR_RATINGS: plugins.star-ratings
+  GRAV_CONFIG__STAR_RATINGS__enabled: "1"
+  GRAV_CONFIG_ALIAS__FLEXOBJECTS: plugins.flex-objects
+  GRAV_CONFIG__FLEXOBJECTS__enabled: "1"
+  GRAV_CONFIG__FLEXOBJECTS__directories__0: blueprints://flex-objects/authors.yaml
 data_dir: /var/www/html/user/env
 depends_on:
   - redis
