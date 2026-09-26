@@ -12,22 +12,26 @@
 </p>
 
 <p align="center">
-  <img src=".github/logos/adminer.svg" width="44" height="44" alt="adminer" title="adminer">
-  <img src=".github/logos/clickhouse.svg" width="44" height="44" alt="clickhouse" title="clickhouse">
-  <img src=".github/logos/elasticsearch.svg" width="44" height="44" alt="elasticsearch" title="elasticsearch">
-  <img src=".github/logos/kafka.svg" width="44" height="44" alt="kafka" title="kafka">
-  <img src=".github/logos/localstack.svg" width="44" height="44" alt="localstack" title="localstack">
-  <img src=".github/logos/mariadb.svg" width="44" height="44" alt="mariadb" title="mariadb">
-  <img src=".github/logos/mercure.svg" width="44" height="44" alt="mercure" title="mercure">
-  <img src=".github/logos/mongo.svg" width="44" height="44" alt="mongo" title="mongo">
-  <img src=".github/logos/opensearch.svg" width="44" height="44" alt="opensearch" title="opensearch">
-  <img src=".github/logos/phpmyadmin.svg" width="44" height="44" alt="phpmyadmin" title="phpmyadmin">
-  <img src=".github/logos/postgres-pgvector.svg" width="44" height="44" alt="PostgreSQL" title="postgres-pgvector, postgres-timescaledb">
-  <img src=".github/logos/rabbitmq.svg" width="44" height="44" alt="rabbitmq" title="rabbitmq">
-  <img src=".github/logos/selenium.svg" width="44" height="44" alt="selenium" title="selenium">
-  <img src=".github/logos/solr.svg" width="44" height="44" alt="solr" title="solr">
-  <img src=".github/logos/stripe-mock.svg" width="44" height="44" alt="stripe-mock" title="stripe-mock">
-  <img src=".github/logos/valkey.svg" width="44" height="44" alt="valkey" title="valkey">
+  <img src=".github/logos/adminer.svg" width="38" height="38" alt="adminer" title="adminer">
+  <img src=".github/logos/clickhouse.svg" width="38" height="38" alt="clickhouse" title="clickhouse">
+  <img src=".github/logos/elasticsearch.svg" width="38" height="38" alt="elasticsearch" title="elasticsearch">
+  <img src=".github/logos/kafka.svg" width="38" height="38" alt="kafka" title="kafka">
+  <img src=".github/logos/localstack.svg" width="38" height="38" alt="localstack" title="localstack">
+  <img src=".github/logos/mailpit.svg" width="38" height="38" alt="mailpit" title="mailpit">
+  <img src=".github/logos/mariadb.svg" width="38" height="38" alt="mariadb" title="mariadb">
+  <img src=".github/logos/meilisearch.svg" width="38" height="38" alt="meilisearch" title="meilisearch">
+  <img src=".github/logos/mercure.svg" width="38" height="38" alt="mercure" title="mercure">
+  <img src=".github/logos/mongo.svg" width="38" height="38" alt="mongo" title="mongo">
+  <img src=".github/logos/mysql.svg" width="38" height="38" alt="mysql" title="mysql">
+  <img src=".github/logos/opensearch.svg" width="38" height="38" alt="opensearch" title="opensearch">
+  <img src=".github/logos/phpmyadmin.svg" width="38" height="38" alt="phpmyadmin" title="phpmyadmin">
+  <img src=".github/logos/postgres.svg" width="38" height="38" alt="postgres" title="postgres, postgres-pgvector, postgres-timescaledb">
+  <img src=".github/logos/rabbitmq.svg" width="38" height="38" alt="rabbitmq" title="rabbitmq">
+  <img src=".github/logos/redis.svg" width="38" height="38" alt="redis" title="redis">
+  <img src=".github/logos/selenium.svg" width="38" height="38" alt="selenium" title="selenium">
+  <img src=".github/logos/solr.svg" width="38" height="38" alt="solr" title="solr">
+  <img src=".github/logos/stripe-mock.svg" width="38" height="38" alt="stripe-mock" title="stripe-mock">
+  <img src=".github/logos/valkey.svg" width="38" height="38" alt="valkey" title="valkey">
 </p>
 
 Run `lerd service search`, pick something, `lerd service preset <name>` — and Lerd pulls the matching preset from this store, then knows exactly how to run it: which image and ports, how to wire your project's `.env`, which admin dashboard to embed, what it depends on, and which config files to mount for auto-login. Everything is a single YAML file. Add a service here and every Lerd install can use it within 24 hours, with no new Lerd release and no Go code.
@@ -57,6 +61,8 @@ All of it is data. None of it ships in the binary.
 | <img src=".github/logos/clickhouse.svg" width="28" height="28" alt=""> | `clickhouse` | ClickHouse column-oriented analytics database, with its own SQL console |
 | <img src=".github/logos/mariadb.svg" width="28" height="28" alt=""> | `mariadb` | MariaDB, the MySQL-compatible server (multi-version) |
 | <img src=".github/logos/mongo.svg" width="28" height="28" alt=""> | `mongo` | MongoDB document database |
+| <img src=".github/logos/mysql.svg" width="28" height="28" alt=""> | `mysql` | MySQL database server · **built into Lerd** |
+| <img src=".github/logos/postgres.svg" width="28" height="28" alt=""> | `postgres` | PostgreSQL with PostGIS · **built into Lerd** |
 | <img src=".github/logos/postgres-pgvector.svg" width="28" height="28" alt=""> | `postgres-pgvector` | PostgreSQL + pgvector for vector search (multi-version) |
 | <img src=".github/logos/postgres-timescaledb.svg" width="28" height="28" alt=""> | `postgres-timescaledb` | PostgreSQL + TimescaleDB for time-series (multi-version) |
 
@@ -79,6 +85,7 @@ All of it is data. None of it ships in the binary.
 | | Service | What it is |
 |:-:|---|---|
 | <img src=".github/logos/elasticsearch.svg" width="28" height="28" alt=""> | `elasticsearch` | Elasticsearch single-node engine |
+| <img src=".github/logos/meilisearch.svg" width="28" height="28" alt=""> | `meilisearch` | Meilisearch search engine · **built into Lerd** |
 | <img src=".github/logos/opensearch.svg" width="28" height="28" alt=""> | `opensearch` | OpenSearch single-node engine |
 | <img src=".github/logos/solr.svg" width="28" height="28" alt=""> | `solr` | Apache Solr, the search backend Drupal and TYPO3 expect |
 | <img src=".github/logos/typesense.svg" width="28" height="28" alt=""> | `typesense` | Typesense typo-tolerant search |
@@ -92,6 +99,7 @@ All of it is data. None of it ships in the binary.
 | <img src=".github/logos/memcached.svg" width="28" height="28" alt=""> | `memcached` | Memcached in-memory cache |
 | <img src=".github/logos/mercure.svg" width="28" height="28" alt=""> | `mercure` | Mercure hub for server-sent events, the Symfony realtime transport |
 | <img src=".github/logos/rabbitmq.svg" width="28" height="28" alt=""> | `rabbitmq` | RabbitMQ broker with management UI |
+| <img src=".github/logos/redis.svg" width="28" height="28" alt=""> | `redis` | Redis in-memory store · **built into Lerd** |
 | <img src=".github/logos/soketi.svg" width="28" height="28" alt=""> | `soketi` | Pusher-compatible WebSocket server |
 | <img src=".github/logos/valkey.svg" width="28" height="28" alt=""> | `valkey` | Valkey, the Redis-compatible cache (coexists with Redis) |
 
@@ -101,6 +109,8 @@ All of it is data. None of it ships in the binary.
 |:-:|---|---|
 | <img src=".github/logos/gotenberg.svg" width="28" height="28" alt=""> | `gotenberg` | Gotenberg API for PDF and document conversion |
 | <img src=".github/logos/localstack.svg" width="28" height="28" alt=""> | `localstack` | LocalStack, the AWS APIs run locally (SQS, SES, DynamoDB, Secrets Manager) |
+| <img src=".github/logos/mailpit.svg" width="28" height="28" alt=""> | `mailpit` | Mailpit SMTP catcher with a web inbox · **built into Lerd** |
+| <img src=".github/logos/rustfs.svg" width="28" height="28" alt=""> | `rustfs` | RustFS S3-compatible object storage · **built into Lerd** |
 | <img src=".github/logos/selenium.svg" width="28" height="28" alt=""> | `selenium` | Headless Chromium with a noVNC viewer for browser tests |
 | <img src=".github/logos/spamassassin.svg" width="28" height="28" alt=""> | `spamassassin` | SpamAssassin scoring backend for the Mailpit catcher |
 | <img src=".github/logos/stripe-mock.svg" width="28" height="28" alt=""> | `stripe-mock` | Stripe API mock server |
@@ -232,7 +242,7 @@ A family is the other way round. Every member of one is that engine, so they all
 carry its mark and its colour: pgvector and TimescaleDB are Postgres, and both
 draw the Postgres elephant in Postgres blue rather than a mark of their own.
 
-The coloured tiles in this README are not the marks themselves. `.github/scripts/readme_logos.py` paints each mark in its declared colour on a white tile, so GitHub shows it in either theme, and a service without one gets the lerd glyph its `icon` names in its category's tint, from copies kept in `.github/glyphs/`. It writes the result to `.github/logos/`; run it again whenever a service, its mark or its colour changes.
+The coloured tiles in this README are not the marks themselves. `.github/scripts/readme_logos.py` paints each mark in its declared colour on a white tile, so GitHub shows it in either theme, and a service without one gets the lerd glyph its `icon` names in its category's tint, from copies kept in `.github/glyphs/`. The six services built into lerd are listed too, from the marks and colours mirrored in `.github/builtin/`. It writes the result to `.github/logos/`; run it again whenever a service, its mark or its colour changes.
 
 See the [service presets documentation](https://lerd.sh/usage/service-presets) for the full schema reference and every available field.
 
