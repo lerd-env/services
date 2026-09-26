@@ -22,8 +22,7 @@
   <img src=".github/logos/mongo.svg" width="44" height="44" alt="mongo" title="mongo">
   <img src=".github/logos/opensearch.svg" width="44" height="44" alt="opensearch" title="opensearch">
   <img src=".github/logos/phpmyadmin.svg" width="44" height="44" alt="phpmyadmin" title="phpmyadmin">
-  <img src=".github/logos/postgres-pgvector.svg" width="44" height="44" alt="postgres-pgvector" title="postgres-pgvector">
-  <img src=".github/logos/postgres-timescaledb.svg" width="44" height="44" alt="postgres-timescaledb" title="postgres-timescaledb">
+  <img src=".github/logos/postgres-pgvector.svg" width="44" height="44" alt="PostgreSQL" title="postgres-pgvector, postgres-timescaledb">
   <img src=".github/logos/rabbitmq.svg" width="44" height="44" alt="rabbitmq" title="rabbitmq">
   <img src=".github/logos/selenium.svg" width="44" height="44" alt="selenium" title="selenium">
   <img src=".github/logos/solr.svg" width="44" height="44" alt="solr" title="solr">
