@@ -16,6 +16,7 @@ import re
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
+BUILTIN = ROOT / ".github" / "builtin"
 GLYPHS = ROOT / ".github" / "glyphs"
 OUT = ROOT / ".github" / "logos"
 
@@ -47,9 +48,12 @@ def split(svg: str, source: str) -> tuple[str, str]:
 
 def services() -> list[dict]:
     # Newer schemas list presets older binaries cannot read, so the README
-    # takes every index there is and lets a later one win a name.
+    # takes every index there is and lets a later one win a name. The default
+    # stack ships inside lerd rather than here, and .github/builtin mirrors it
+    # so the README can list MySQL and friends beside everything else.
     merged = {}
-    for index in [ROOT / "services" / "index.json", *sorted(ROOT.glob("schema/*/services/index.json"))]:
+    indexes = [BUILTIN / "index.json", ROOT / "services" / "index.json", *sorted(ROOT.glob("schema/*/services/index.json"))]
+    for index in indexes:
         for entry in json.loads(index.read_text())["services"]:
             merged[entry["name"]] = entry
     return list(merged.values())
@@ -58,6 +62,8 @@ def services() -> list[dict]:
 def render(entry: dict) -> str:
     name = entry["name"]
     mark = ROOT / "services" / f"{name}.svg"
+    if not mark.exists():
+        mark = BUILTIN / f"{name}.svg"
     if mark.exists():
         viewbox, body = split(mark.read_text(), mark.name)
         return TILE.format(inset=13, size=38, viewbox=viewbox, attrs=f' fill="{entry["color"]}"', body=body)
