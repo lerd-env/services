@@ -25,6 +25,8 @@ changes:
     downgrade: drop
   - path: dashboard_login
     downgrade: drop
+  - path: dashboard_locale_cookies
+    downgrade: drop
   - path: dashboard_proxy_at_path
     downgrade: drop
   - path: dashboard_proxy_keep_host
