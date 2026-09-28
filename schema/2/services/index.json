@@ -221,9 +221,6 @@
       "name": "phpmyadmin",
       "description": "phpMyAdmin web UI for every installed lerd MySQL service",
       "dashboard": "http://localhost:8080",
-      "depends_on": [
-        "mysql"
-      ],
       "image": "docker.io/library/phpmyadmin:latest",
       "category": "admin",
       "icon": "database",
@@ -231,6 +228,9 @@
       "admin_for": [
         "mysql",
         "mariadb"
+      ],
+      "depends_on": [
+        "mysql"
       ]
     },
     {
