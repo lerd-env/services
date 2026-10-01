@@ -21,6 +21,8 @@ changes:
   # about publishing a tree that means what it says rather than about safety.
   - path: admin_rank
     downgrade: drop
+  - path: suggest_for
+    downgrade: drop
   - path: dashboard_follows_color_scheme
     downgrade: drop
   - path: dashboard_login

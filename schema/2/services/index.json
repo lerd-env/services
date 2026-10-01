@@ -384,7 +384,10 @@
       "image": "docker.io/axllent/spamassassin:3",
       "category": "mail",
       "icon": "mail",
-      "color": "#cc0000"
+      "color": "#cc0000",
+      "suggest_for": [
+        "mailpit"
+      ]
     }
   ]
 }
