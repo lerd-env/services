@@ -9,3 +9,7 @@ family: spamassassin
 category: mail
 icon: mail
 color: "#cc0000"
+# Mailpit is built into lerd, so its page offers this preset rather than the
+# other way round.
+suggest_for:
+  - mailpit

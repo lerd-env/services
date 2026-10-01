@@ -35,7 +35,7 @@ LEGACY = ROOT / "services"
 SCHEMA_DIR = ROOT / "schema"
 
 INDEX_FIELDS = ["name", "description", "family", "dashboard", "image", "category",
-                "icon", "color", "admin_for", "admin_rank", "depends_on",
+                "icon", "color", "admin_for", "admin_rank", "suggest_for", "depends_on",
                 "versions", "default_version", "env_role"]
 
 
