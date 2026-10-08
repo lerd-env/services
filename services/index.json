@@ -373,6 +373,14 @@
       "icon": "bolt",
       "color": "#123678",
       "env_role": "redis"
+    },
+    {
+      "name": "floci",
+      "description": "Floci, the open-source AWS emulator (SQS, SES, DynamoDB, S3) with no auth token",
+      "image": "docker.io/floci/floci:2.2.0",
+      "category": "testing",
+      "icon": "cube",
+      "color": "#6368c2"
     }
   ]
 }
