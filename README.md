@@ -15,6 +15,7 @@
   <img src=".github/logos/adminer.svg" width="38" height="38" alt="adminer" title="adminer">
   <img src=".github/logos/clickhouse.svg" width="38" height="38" alt="clickhouse" title="clickhouse">
   <img src=".github/logos/elasticsearch.svg" width="38" height="38" alt="elasticsearch" title="elasticsearch">
+  <img src=".github/logos/floci.svg" width="38" height="38" alt="floci" title="floci">
   <img src=".github/logos/kafka.svg" width="38" height="38" alt="kafka" title="kafka">
   <img src=".github/logos/localstack.svg" width="38" height="38" alt="localstack" title="localstack">
   <img src=".github/logos/mailpit.svg" width="38" height="38" alt="mailpit" title="mailpit">
@@ -107,6 +108,7 @@ All of it is data. None of it ships in the binary.
 
 | | Service | What it is |
 |:-:|---|---|
+| <img src=".github/logos/floci.svg" width="28" height="28" alt=""> | `floci` | Floci, the open-source AWS emulator, no auth token and coexists with LocalStack |
 | <img src=".github/logos/gotenberg.svg" width="28" height="28" alt=""> | `gotenberg` | Gotenberg API for PDF and document conversion |
 | <img src=".github/logos/localstack.svg" width="28" height="28" alt=""> | `localstack` | LocalStack, the AWS APIs run locally (SQS, SES, DynamoDB, Secrets Manager) |
 | <img src=".github/logos/mailpit.svg" width="28" height="28" alt=""> | `mailpit` | Mailpit SMTP catcher with a web inbox · **built into Lerd** |

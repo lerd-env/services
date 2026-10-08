@@ -1,0 +1,36 @@
+name: floci
+image: docker.io/floci/floci:2.2.0
+update_strategy: minor
+description: "Floci, the open-source AWS emulator (SQS, SES, DynamoDB, S3) with no auth token"
+ports:
+  # Floci listens on 4566 like LocalStack, so the host side moves to 4567 to let
+  # both presets run side by side. Sites reach it on lerd-floci:4566 regardless.
+  - "4567:4566"
+environment:
+  # The default is memory, which loses every queue and table on restart. Hybrid
+  # keeps state in memory and flushes it to the data dir.
+  FLOCI_STORAGE_MODE: hybrid
+  FLOCI_STORAGE_PERSISTENT_PATH: /app/data
+  # Without it Floci hands out localhost:4566 in queue URLs, which from a PHP
+  # container points at itself.
+  FLOCI_HOSTNAME: lerd-floci
+  # Startup sweeps containers a previous run left on the Docker daemon. There is
+  # no daemon here, so the sweep only burns ~15s on retries before giving up.
+  FLOCI_SERVICES_ECS_RECONCILE_CONTAINERS_ON_STARTUP: "false"
+  FLOCI_SERVICES_EC2_RECONCILE_CONTAINERS_ON_STARTUP: "false"
+data_dir: /app/data
+# Lambda, ECS, RDS and the other Docker-backed APIs need the host's Docker socket,
+# which rootless Podman does not offer here. The in-process APIs all work. The
+# startup warning about DNS on port 53 is the same story: that server only feeds
+# those containers, and Floci has no switch to turn it off.
+# The credentials match LocalStack and RustFS, see localstack.yaml for why.
+env_vars:
+  - AWS_ACCESS_KEY_ID=lerd
+  - AWS_SECRET_ACCESS_KEY=lerdpassword
+  - AWS_DEFAULT_REGION=us-east-1
+  - SQS_PREFIX=http://lerd-floci:4566/000000000000
+  - SQS_QUEUE=default
+  - AWS_ENDPOINT_URL=http://lerd-floci:4566
+category: testing
+icon: cube
+color: "#6368c2"
