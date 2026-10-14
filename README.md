@@ -123,11 +123,14 @@ Don't see what you need? [Add it](#contributing) — that's what this repo is fo
 ### GitHub Actions runner
 
 `github-actions-runner` is the runner image base. It deliberately has no ports and
-contains no repository credentials. Use the `lerd-add-actions-runner` skill to
-create a site-named Lerd custom service with that image, register it with a
+contains no repository credentials. Use the
+[`lerd-add-actions-runner` skill](https://github.com/miguelenes/lerd-actions-runner/tree/main/skill)
+to create a site-named Lerd custom service with that image, register it with a
 short-lived token, and add the host worker that supervises its private Docker
-sidecar. The released image is pinned by manifest digest in both service indexes.
-The skill owns the per-project runner URL, labels, and lifecycle.
+sidecar. This workflow currently supports Linux x86_64 hosts with rootless Podman
+and user systemd, and trusted private GitHub repositories only. The released image
+is pinned by manifest digest in both service indexes. The skill owns the per-project
+runner URL, labels, and lifecycle.
 
 ## Usage
 
