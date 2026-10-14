@@ -47,6 +47,14 @@
       "icon": "document"
     },
     {
+      "name": "github-actions-runner",
+      "description": "Persistent self-hosted GitHub Actions runner for Lerd projects",
+      "image": "ghcr.io/miguelenes/lerd-actions-runner:0.1.1@sha256:300a90b16f8fd4df85493fda0d7b87f0f9da85835641a168ddc6f316e9fd7ff8",
+      "category": "testing",
+      "icon": "gear",
+      "color": "#6e40c9"
+    },
+    {
       "name": "kafka",
       "description": "Apache Kafka event streaming broker",
       "image": "docker.io/apache/kafka:4.3.1",
