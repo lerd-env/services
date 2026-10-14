@@ -57,11 +57,31 @@
       ]
     },
     {
+      "name": "github-actions-runner",
+      "description": "Persistent self-hosted GitHub Actions runner for Lerd projects",
+      "image": "ghcr.io/miguelenes/lerd-actions-runner:0.1.1@sha256:300a90b16f8fd4df85493fda0d7b87f0f9da85835641a168ddc6f316e9fd7ff8",
+      "category": "testing",
+      "icon": "bolt",
+      "color": "#6e40c9"
+    },
+    {
       "name": "gotenberg",
       "description": "Gotenberg API for PDF generation and document conversion",
       "image": "docker.io/gotenberg/gotenberg:8",
       "category": "other",
       "icon": "document"
+    },
+    {
+      "name": "grav",
+      "description": "Harvester Grav runtime built from the reviewed project Dockerfile",
+      "image": "docker.io/library/blogger-grav:2.0.24-php8.5-secretless-r3",
+      "dashboard": "http://localhost:8082",
+      "depends_on": [
+        "redis"
+      ],
+      "category": "other",
+      "icon": "document",
+      "color": "#2b2b2b"
     },
     {
       "name": "kafka",
@@ -178,6 +198,15 @@
       "admin_for": [
         "mongo"
       ]
+    },
+    {
+      "name": "ollama",
+      "description": "Ollama local large language model server with automatic model bootstrap",
+      "family": "ollama",
+      "image": "ghcr.io/miguelenes/ollama-with-model-bootstrap@sha256:3d5d17212e9fb2080bed1cf5fe1798b8370903ca08261dfabf87970ccdb41829",
+      "category": "other",
+      "icon": "database",
+      "color": "#ff6b35"
     },
     {
       "name": "opensearch",
