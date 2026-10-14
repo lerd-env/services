@@ -56,6 +56,14 @@
       ]
     },
     {
+      "name": "github-actions-runner",
+      "description": "Persistent self-hosted GitHub Actions runner for Lerd projects",
+      "image": "ghcr.io/miguelenes/lerd-actions-runner:0.1.0@sha256:99a52f5eb80c0de478462881d60f9cece7de69ac8c8be8ebc13f2dba395abe4d",
+      "category": "testing",
+      "icon": "gear",
+      "color": "#6e40c9"
+    },
+    {
       "name": "gotenberg",
       "description": "Gotenberg API for PDF generation and document conversion",
       "image": "docker.io/gotenberg/gotenberg:8",
