@@ -60,7 +60,7 @@
       "description": "Persistent self-hosted GitHub Actions runner for Lerd projects",
       "image": "ghcr.io/miguelenes/lerd-actions-runner:0.1.1@sha256:300a90b16f8fd4df85493fda0d7b87f0f9da85835641a168ddc6f316e9fd7ff8",
       "category": "testing",
-      "icon": "gear",
+      "icon": "bolt",
       "color": "#6e40c9"
     },
     {
