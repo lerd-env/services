@@ -270,7 +270,7 @@
         {
           "tag": "18",
           "label": "18 (default)",
-          "image": "docker.io/pgvector/pgvector:pg18",
+          "image": "docker.io/pgvector/pgvector:pg18-trixie",
           "host_port": 5432,
           "canonical": true
         },
