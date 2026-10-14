@@ -49,6 +49,8 @@ jobs:
           trap 'rm -rf "$runner_data"' EXIT
           set +e
           output="$(docker run --rm \
+            --pull=never \
+            --network=none \
             --mount "type=bind,src=$runner_data,dst=/runner-data" \
             --env RUNNER_URL=https://github.com/lerd-env/services \
             --env RUNNER_NAME=hosted-image-smoke \
