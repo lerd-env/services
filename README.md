@@ -104,6 +104,16 @@ requests, forks, or `pull_request_target` jobs on this persistent runner. The
 released image is pinned by manifest digest in the service index. The skill owns
 the per-project runner URL, labels, and lifecycle.
 
+To check that the published image is available and refuses tokenless startup, dispatch the opt-in hosted smoke workflow after it is present on the target repository:
+
+```bash
+gh-axi workflow run runner-image-smoke.yml --ref main --repo lerd-env/services
+gh-axi run list --workflow "Runner image smoke" --limit 5 --repo lerd-env/services
+gh-axi run view <run-id> --repo lerd-env/services
+```
+
+The workflow runs on a temporary `ubuntu-latest` GitHub-hosted runner. It does not register a runner or prove full runner operation.
+
 ## Usage
 
 You rarely touch the store directly: everything routes through the usual service commands.
