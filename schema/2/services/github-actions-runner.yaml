@@ -1,6 +1,6 @@
 name: github-actions-runner
 description: Persistent self-hosted GitHub Actions runner for Lerd projects
-image: ghcr.io/miguelenes/lerd-actions-runner:0.1.0@sha256:99a52f5eb80c0de478462881d60f9cece7de69ac8c8be8ebc13f2dba395abe4d
+image: ghcr.io/miguelenes/lerd-actions-runner:0.1.1@sha256:300a90b16f8fd4df85493fda0d7b87f0f9da85835641a168ddc6f316e9fd7ff8
 data_dir: /runner-data
 chown_data: true
 userns: keep-id:uid=1001,gid=1001
