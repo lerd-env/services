@@ -1,0 +1,46 @@
+{
+  "services": [
+    {
+      "name": "mysql",
+      "description": "MySQL database",
+      "category": "databases",
+      "icon": "database",
+      "color": "#4479a1"
+    },
+    {
+      "name": "postgres",
+      "description": "PostgreSQL with PostGIS",
+      "category": "databases",
+      "icon": "elephant",
+      "color": "#4169e1"
+    },
+    {
+      "name": "redis",
+      "description": "Redis in-memory store",
+      "category": "cache",
+      "icon": "bolt",
+      "color": "#ff4438"
+    },
+    {
+      "name": "meilisearch",
+      "description": "Meilisearch search engine",
+      "category": "search",
+      "icon": "search",
+      "color": "#ff5caa"
+    },
+    {
+      "name": "rustfs",
+      "description": "RustFS S3-compatible object storage",
+      "category": "storage",
+      "icon": "storage",
+      "color": "#0196d0"
+    },
+    {
+      "name": "mailpit",
+      "description": "Mailpit SMTP catcher",
+      "category": "mail",
+      "icon": "mail",
+      "color": "#00b786"
+    }
+  ]
+}

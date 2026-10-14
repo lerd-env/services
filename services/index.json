@@ -248,9 +248,6 @@
       "name": "phpmyadmin",
       "description": "phpMyAdmin web UI for every installed lerd MySQL service",
       "dashboard": "http://localhost:8080",
-      "depends_on": [
-        "mysql"
-      ],
       "image": "docker.io/library/phpmyadmin:latest",
       "category": "admin",
       "icon": "database",
@@ -258,6 +255,9 @@
       "admin_for": [
         "mysql",
         "mariadb"
+      ],
+      "depends_on": [
+        "mysql"
       ]
     },
     {
@@ -402,6 +402,14 @@
       "icon": "bolt",
       "color": "#123678",
       "env_role": "redis"
+    },
+    {
+      "name": "floci",
+      "description": "Floci, the open-source AWS emulator (SQS, SES, DynamoDB, S3) with no auth token",
+      "image": "docker.io/floci/floci:2.2.0",
+      "category": "testing",
+      "icon": "cube",
+      "color": "#6368c2"
     }
   ]
 }

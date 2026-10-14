@@ -1,0 +1,22 @@
+name: solr
+image: docker.io/library/solr:9
+update_strategy: rolling
+description: Apache Solr search platform, used by Drupal and TYPO3
+family: solr
+ports:
+- 8983:8983
+data_dir: /var/solr
+environment:
+  SOLR_MODULES: analysis-extras
+chown_data: true
+site_init:
+  exec: solr create -c {{site}} 2>/dev/null || true
+env_vars:
+- SOLR_HOST=lerd-solr
+- SOLR_PORT=8983
+- SOLR_CORE={{site}}
+client_shims:
+- solr
+category: search
+icon: search
+color: '#d9411e'
