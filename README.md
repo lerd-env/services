@@ -68,6 +68,12 @@ All of it is data. None of it ships in the binary.
 | `soketi` | Pusher-compatible WebSocket server |
 | `beanstalkd` | Beanstalkd work queue |
 
+**AI & models**
+
+| Service | What it is |
+|---------|------------|
+| `ollama` | Ollama local LLM server with automatic model bootstrap |
+
 **Testing & tooling**
 
 | Service | What it is |

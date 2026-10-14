@@ -146,6 +146,15 @@
       ]
     },
     {
+      "name": "ollama",
+      "description": "Ollama local large language model server with automatic model bootstrap",
+      "family": "ollama",
+      "image": "ghcr.io/miguelenes/ollama-with-model-bootstrap@sha256:3d5d17212e9fb2080bed1cf5fe1798b8370903ca08261dfabf87970ccdb41829",
+      "category": "other",
+      "icon": "database",
+      "color": "#ff6b35"
+    },
+    {
       "name": "opensearch",
       "description": "OpenSearch single-node search and analytics engine",
       "image": "docker.io/opensearchproject/opensearch:2.19.5",
