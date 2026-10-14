@@ -109,7 +109,7 @@ All of it is data. None of it ships in the binary.
 | | Service | What it is |
 |:-:|---|---|
 | <img src=".github/logos/floci.svg" width="28" height="28" alt=""> | `floci` | Floci, the open-source AWS emulator, no auth token and coexists with LocalStack |
-| <img src=".github/logos/github-actions-runner.svg" width="28" height="28" alt=""> | `github-actions-runner` | Persistent self-hosted GitHub Actions runner; use the Lerd skill for per-project configuration and its private Docker worker |
+| <img src=".github/logos/github-actions-runner.svg" width="28" height="28" alt=""> | `github-actions-runner` | Runner image for the shared organization-scoped Lerd Actions service |
 | <img src=".github/logos/gotenberg.svg" width="28" height="28" alt=""> | `gotenberg` | Gotenberg API for PDF and document conversion |
 | <img src=".github/logos/localstack.svg" width="28" height="28" alt=""> | `localstack` | LocalStack, the AWS APIs run locally (SQS, SES, DynamoDB, Secrets Manager) |
 | <img src=".github/logos/mailpit.svg" width="28" height="28" alt=""> | `mailpit` | Mailpit SMTP catcher with a web inbox · **built into Lerd** |
@@ -123,15 +123,15 @@ Don't see what you need? [Add it](#contributing) — that's what this repo is fo
 ### GitHub Actions runner
 
 `github-actions-runner` is the runner image base. It deliberately has no ports and
-contains no repository credentials. Use the
+contains no organization credentials. Use the
 [`lerd-add-actions-runner` skill](https://github.com/miguelenes/lerd-actions-runner/tree/main/skill)
-to create a site-named Lerd custom service with that image, register it with a
-short-lived token, and add the host worker that supervises its private Docker
-sidecar. The current workflow supports Linux x64, rootless Podman, and systemd user
-services for trusted private GitHub repositories. Do not run untrusted pull requests,
-forks, or `pull_request_target` jobs on this persistent runner. The released image
-is pinned by manifest digest in both service indexes. The skill owns the per-project
-runner URL, labels, and lifecycle.
+to install one short-named `gh-runner` Lerd service per host, register it at
+organization scope, and add only selected trusted private repositories to its
+restricted runner group. The current workflow supports Linux x64, rootless Podman,
+and systemd user services. Do not run untrusted pull requests, forks, or
+`pull_request_target` jobs on this persistent runner. The released image is pinned
+by manifest digest in both service indexes. Existing workflows opt in by targeting
+the organization label.
 
 ## Usage
 
