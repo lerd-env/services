@@ -35,7 +35,7 @@ All of it is data. None of it ships in the binary.
 | `clickhouse` | ClickHouse column-oriented analytics database, with its own SQL console |
 | `mariadb` | MariaDB, the MySQL-compatible server (multi-version) |
 | `mongo` | MongoDB document database |
-| `postgres-pgvector` | PostgreSQL + pgvector for vector search (multi-version) |
+| `postgres-pgvector` | PostgreSQL + pgvector for vector search (16, 17, 18 Trixie) |
 | `postgres-timescaledb` | PostgreSQL + TimescaleDB for time-series (multi-version) |
 
 **Admin dashboards** — open inside the Lerd UI, auto-logged-in
@@ -81,18 +81,22 @@ All of it is data. None of it ships in the binary.
 | `selenium` | Headless Chromium with a noVNC viewer for browser tests |
 | `stripe-mock` | Stripe API mock server |
 | `gotenberg` | Gotenberg API for PDF and document conversion |
-| `github-actions-runner` | Persistent self-hosted GitHub Actions runner; use the Lerd skill for per-project configuration and its private Docker worker |
+| `github-actions-runner` | Persistent self-hosted GitHub Actions runner; use the linked Lerd skill for per-project configuration and its private Docker worker |
 
 Don't see what you need? [Add it](#contributing) — that's what this repo is for.
 
 ### GitHub Actions runner
 
 `github-actions-runner` is the runner image base. It deliberately has no ports and
-contains no repository credentials. Use the `lerd-add-actions-runner` skill to
-create a site-named Lerd custom service with that image, register it with a
+contains no repository credentials. Use the
+[`lerd-add-actions-runner` skill](https://github.com/miguelenes/lerd-actions-runner/tree/main/skill)
+to create a site-named Lerd custom service with that image, register it with a
 short-lived token, and add the host worker that supervises its private Docker
-sidecar. The released image is pinned by manifest digest in the service index.
-The skill owns the per-project runner URL, labels, and lifecycle.
+sidecar. This workflow supports Linux x64, rootless Podman, and systemd user
+services for trusted private GitHub repositories. Do not run untrusted pull
+requests, forks, or `pull_request_target` jobs on this persistent runner. The
+released image is pinned by manifest digest in the service index. The skill owns
+the per-project runner URL, labels, and lifecycle.
 
 ## Usage
 

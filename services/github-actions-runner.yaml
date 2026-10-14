@@ -7,5 +7,5 @@ userns: keep-id:uid=1001,gid=1001
 environment:
   RUNNER_LABELS: lerd
 category: testing
-icon: gear
+icon: bolt
 color: '#6e40c9'
