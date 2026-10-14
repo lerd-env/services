@@ -86,8 +86,18 @@ All of it is data. None of it ships in the binary.
 | `gotenberg` | Gotenberg API for PDF and document conversion |
 | `localstack` | LocalStack, the AWS APIs run locally (SQS, SES, DynamoDB, Secrets Manager) |
 | `spamassassin` | SpamAssassin scoring backend for the Mailpit catcher |
+| `github-actions-runner` | Persistent self-hosted GitHub Actions runner; the Lerd skill supplies per-project configuration and its private Docker worker |
 
 Don't see what you need? [Add it](#contributing) — that's what this repo is for.
+
+### GitHub Actions runner
+
+`github-actions-runner` is the runner image base. It deliberately has no ports and
+contains no repository credentials. Use the `lerd-add-actions-runner` skill to
+create a site-named Lerd custom service with that image, register it with a
+short-lived token, and add the host worker that supervises its private Docker
+sidecar. The released image is pinned by manifest digest in both service indexes.
+The skill owns the per-project runner URL, labels, and lifecycle.
 
 ## Usage
 
