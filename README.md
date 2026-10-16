@@ -109,6 +109,7 @@ All of it is data. None of it ships in the binary.
 | | Service | What it is |
 |:-:|---|---|
 | <img src=".github/logos/floci.svg" width="28" height="28" alt=""> | `floci` | Floci, the open-source AWS emulator, no auth token and coexists with LocalStack |
+| <img src=".github/logos/github-actions-runner.svg" width="28" height="28" alt=""> | `github-actions-runner` | Runner image for the shared organization-scoped Lerd Actions service |
 | <img src=".github/logos/gotenberg.svg" width="28" height="28" alt=""> | `gotenberg` | Gotenberg API for PDF and document conversion |
 | <img src=".github/logos/localstack.svg" width="28" height="28" alt=""> | `localstack` | LocalStack, the AWS APIs run locally (SQS, SES, DynamoDB, Secrets Manager) |
 | <img src=".github/logos/mailpit.svg" width="28" height="28" alt=""> | `mailpit` | Mailpit SMTP catcher with a web inbox · **built into Lerd** |
@@ -118,6 +119,20 @@ All of it is data. None of it ships in the binary.
 | <img src=".github/logos/stripe-mock.svg" width="28" height="28" alt=""> | `stripe-mock` | Stripe API mock server |
 
 Don't see what you need? [Add it](#contributing) — that's what this repo is for.
+
+### GitHub Actions runner
+
+`github-actions-runner` is the runner image base. It deliberately has no ports and
+contains no organization credentials. Use the
+[`lerd-add-actions-runner` skill](https://github.com/miguelenes/lerd-actions-runner/tree/main/skill)
+to install one short-named `gh-runner` Lerd service per host, register it at
+organization scope, and add only selected trusted private repositories to its
+restricted runner group. A shared runner handles one job at a time, so concurrent
+jobs wait for it to become free. The current workflow supports Linux x64, rootless Podman,
+and systemd user services. Do not run untrusted pull requests, forks, or
+`pull_request_target` jobs on this persistent runner. The released image is pinned
+by manifest digest in both service indexes. Existing workflows opt in by targeting
+the organization label.
 
 ## Usage
 
