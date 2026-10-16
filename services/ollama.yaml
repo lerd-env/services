@@ -1,0 +1,19 @@
+name: ollama
+description: Ollama local large language model server with automatic model bootstrap
+family: ollama
+image: ghcr.io/miguelenes/ollama-with-model-bootstrap@sha256:3d5d17212e9fb2080bed1cf5fe1798b8370903ca08261dfabf87970ccdb41829
+ports:
+  - "11434:11434"
+environment:
+  OLLAMA_HOST: 0.0.0.0:11434
+  OLLAMA_PULL_MODELS: qwen3-embedding:8b
+data_dir: /root/.ollama
+env_vars:
+  - OLLAMA_URL=http://lerd-ollama:11434
+  - OLLAMA_HOST=lerd-ollama
+  - OLLAMA_PORT=11434
+  - OLLAMA_PULL_MODELS=qwen3-embedding:8b
+connection_url: http://127.0.0.1:11434
+category: other
+icon: database
+color: "#ff6b35"

@@ -64,7 +64,7 @@ All of it is data. None of it ships in the binary.
 | <img src=".github/logos/mongo.svg" width="28" height="28" alt=""> | `mongo` | MongoDB document database |
 | <img src=".github/logos/mysql.svg" width="28" height="28" alt=""> | `mysql` | MySQL database server · **built into Lerd** |
 | <img src=".github/logos/postgres.svg" width="28" height="28" alt=""> | `postgres` | PostgreSQL with PostGIS · **built into Lerd** |
-| <img src=".github/logos/postgres-pgvector.svg" width="28" height="28" alt=""> | `postgres-pgvector` | PostgreSQL + pgvector for vector search (multi-version) |
+| <img src=".github/logos/postgres-pgvector.svg" width="28" height="28" alt=""> | `postgres-pgvector` | PostgreSQL + pgvector for vector search (16, 17, 18 Trixie) |
 | <img src=".github/logos/postgres-timescaledb.svg" width="28" height="28" alt=""> | `postgres-timescaledb` | PostgreSQL + TimescaleDB for time-series (multi-version) |
 
 **Admin dashboards** — open inside the Lerd UI, auto-logged-in
@@ -104,6 +104,18 @@ All of it is data. None of it ships in the binary.
 | <img src=".github/logos/soketi.svg" width="28" height="28" alt=""> | `soketi` | Pusher-compatible WebSocket server |
 | <img src=".github/logos/valkey.svg" width="28" height="28" alt=""> | `valkey` | Valkey, the Redis-compatible cache (coexists with Redis) |
 
+**AI & models**
+
+| Service | What it is |
+|---------|------------|
+| `ollama` | Ollama local LLM server with automatic model bootstrap |
+
+**Content management**
+
+| Service | What it is |
+|---------|------------|
+| `grav` | Harvester Grav CMS runtime, built from the reviewed project Dockerfile (requires the local `blogger-grav` image) |
+
 **Testing & tooling**
 
 | | Service | What it is |
@@ -116,8 +128,32 @@ All of it is data. None of it ships in the binary.
 | <img src=".github/logos/selenium.svg" width="28" height="28" alt=""> | `selenium` | Headless Chromium with a noVNC viewer for browser tests |
 | <img src=".github/logos/spamassassin.svg" width="28" height="28" alt=""> | `spamassassin` | SpamAssassin scoring backend for the Mailpit catcher |
 | <img src=".github/logos/stripe-mock.svg" width="28" height="28" alt=""> | `stripe-mock` | Stripe API mock server |
+| `github-actions-runner` | Persistent self-hosted GitHub Actions runner; use the linked Lerd skill for per-project configuration and its private Docker worker |
 
 Don't see what you need? [Add it](#contributing) — that's what this repo is for.
+
+### GitHub Actions runner
+
+`github-actions-runner` is the runner image base. It deliberately has no ports and
+contains no repository credentials. Use the
+[`lerd-add-actions-runner` skill](https://github.com/miguelenes/lerd-actions-runner/tree/main/skill)
+to create a site-named Lerd custom service with that image, register it with a
+short-lived token, and add the host worker that supervises its private Docker
+sidecar. This workflow supports Linux x64, rootless Podman, and systemd user
+services for trusted private GitHub repositories. Do not run untrusted pull
+requests, forks, or `pull_request_target` jobs on this persistent runner. The
+released image is pinned by manifest digest in the service index. The skill owns
+the per-project runner URL, labels, and lifecycle.
+
+To check that the published image is available and refuses tokenless startup, dispatch the opt-in hosted smoke workflow after it is present on the target repository:
+
+```bash
+gh-axi workflow run runner-image-smoke.yml --ref main --repo lerd-env/services
+gh-axi run list --workflow "Runner image smoke" --limit 5 --repo lerd-env/services
+gh-axi run view <run-id> --repo lerd-env/services
+```
+
+The workflow runs on a temporary `ubuntu-latest` GitHub-hosted runner. It does not register a runner or prove full runner operation.
 
 ## Usage
 
