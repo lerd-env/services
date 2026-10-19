@@ -386,6 +386,16 @@
       "color": "#6368c2"
     },
     {
+      "name": "dragonfly",
+      "description": "Dragonfly in-memory store (Redis-compatible)",
+      "family": "dragonfly",
+      "image": "ghcr.io/dragonflydb/dragonfly:v2.0.2",
+      "category": "cache",
+      "icon": "bolt",
+      "color": "#6d28d9",
+      "env_role": "redis"
+    },
+    {
       "name": "spamassassin",
       "description": "SpamAssassin scoring backend for the Mailpit catcher",
       "family": "spamassassin",

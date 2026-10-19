@@ -96,6 +96,7 @@ All of it is data. None of it ships in the binary.
 | | Service | What it is |
 |:-:|---|---|
 | <img src=".github/logos/beanstalkd.svg" width="28" height="28" alt=""> | `beanstalkd` | Beanstalkd work queue |
+| <img src=".github/logos/dragonfly.svg" width="28" height="28" alt=""> | `dragonfly` | Dragonfly, the Redis-compatible cache (coexists with Redis) |
 | <img src=".github/logos/kafka.svg" width="28" height="28" alt=""> | `kafka` | Apache Kafka event streaming broker |
 | <img src=".github/logos/memcached.svg" width="28" height="28" alt=""> | `memcached` | Memcached in-memory cache |
 | <img src=".github/logos/mercure.svg" width="28" height="28" alt=""> | `mercure` | Mercure hub for server-sent events, the Symfony realtime transport |
