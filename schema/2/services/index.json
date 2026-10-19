@@ -392,7 +392,7 @@
       "image": "ghcr.io/dragonflydb/dragonfly:v2.0.2",
       "category": "cache",
       "icon": "bolt",
-      "color": "#6d28d9",
+      "color": "#5a3ee0",
       "env_role": "redis"
     },
     {

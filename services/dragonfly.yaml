@@ -22,5 +22,5 @@ env_vars:
   - QUEUE_CONNECTION=redis
 connection_url: redis://127.0.0.1:6381
 category: cache
-color: "#6d28d9"
+color: "#5a3ee0"
 icon: bolt
