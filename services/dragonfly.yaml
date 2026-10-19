@@ -3,6 +3,11 @@ description: Dragonfly in-memory store (Redis-compatible)
 family: dragonfly
 env_role: redis
 image: ghcr.io/dragonflydb/dragonfly:v2.0.2
+update_strategy: minor
+# Dragonfly starts one io thread per core and refuses to run unless it has
+# 256MiB for each, so a many-core machine exits at start; two threads and a
+# 1GiB cap are plenty for local work. The entrypoint prepends the binary.
+exec: --proactor_threads=2 --maxmemory=1gb
 # Dragonfly speaks the Redis protocol on 6379 inside the container; it is
 # published on 6381 so it can coexist with the redis and valkey presets.
 ports:
