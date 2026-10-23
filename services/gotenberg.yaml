@@ -1,4 +1,5 @@
 name: gotenberg
+label: "Gotenberg"
 image: docker.io/gotenberg/gotenberg:8
 update_strategy: rolling
 description: "Gotenberg API for PDF generation and document conversion"

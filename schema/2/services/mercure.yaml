@@ -1,4 +1,5 @@
 name: mercure
+label: "Mercure"
 image: docker.io/dunglas/mercure:v0.24.2
 update_strategy: minor
 description: Mercure hub for server-sent events, the Symfony realtime transport

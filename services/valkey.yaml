@@ -1,4 +1,5 @@
 name: valkey
+label: "Valkey"
 description: Valkey in-memory store (Redis-compatible)
 family: valkey
 env_role: redis

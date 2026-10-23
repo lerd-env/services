@@ -1,4 +1,5 @@
 name: umami
+label: "Umami"
 image: ghcr.io/umami-software/umami:3.4
 description: "Umami privacy-focused web analytics, backed by the lerd Postgres service (login: admin / umami)"
 ports:

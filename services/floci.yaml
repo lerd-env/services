@@ -1,4 +1,5 @@
 name: floci
+label: "Floci"
 image: docker.io/floci/floci:2.2.0
 update_strategy: minor
 description: "Floci, the open-source AWS emulator (SQS, SES, DynamoDB, S3) with no auth token"

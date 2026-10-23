@@ -1,4 +1,5 @@
 name: elasticvue
+label: "Elasticvue"
 image: docker.io/cars10/elasticvue:latest
 description: Elasticvue web UI for the lerd Elasticsearch service
 ports:

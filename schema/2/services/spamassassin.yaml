@@ -1,4 +1,5 @@
 name: spamassassin
+label: "SpamAssassin"
 image: docker.io/axllent/spamassassin:3
 update_strategy: rolling
 description: "SpamAssassin scoring backend for the Mailpit catcher"

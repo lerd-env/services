@@ -1,4 +1,5 @@
 name: typesense
+label: "Typesense"
 description: Typesense search engine
 family: typesense
 # Writes its on-disk state before exiting; killed first, it rebuilds from the

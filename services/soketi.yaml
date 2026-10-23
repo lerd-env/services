@@ -1,4 +1,5 @@
 name: soketi
+label: "Soketi"
 description: Soketi realtime WebSocket server (Pusher-compatible)
 image: quay.io/soketi/soketi:1.6-16-alpine
 ports:

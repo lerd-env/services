@@ -1,4 +1,5 @@
 name: elasticsearch
+label: "Elasticsearch"
 image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
 description: Elasticsearch single-node search and analytics engine
 # Flushes the translog and syncs shards on a graceful stop. Cheaper to lose

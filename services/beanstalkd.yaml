@@ -1,4 +1,5 @@
 name: beanstalkd
+label: "Beanstalkd"
 description: Beanstalkd work queue
 # schickling/beanstalkd is the de-facto image and is amd64-only; on arm64
 # (Apple Silicon) it runs under podman's linux/amd64 emulation.

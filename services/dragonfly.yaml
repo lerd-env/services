@@ -1,4 +1,5 @@
 name: dragonfly
+label: "Dragonfly"
 description: Dragonfly in-memory store (Redis-compatible)
 family: dragonfly
 env_role: redis

@@ -2,6 +2,7 @@
   "services": [
     {
       "name": "adminer",
+      "label": "Adminer",
       "description": "Adminer web UI for every database lerd runs",
       "dashboard": "http://localhost:8081",
       "image": "docker.io/library/adminer:6",
@@ -18,6 +19,7 @@
     },
     {
       "name": "beanstalkd",
+      "label": "Beanstalkd",
       "description": "Beanstalkd work queue",
       "image": "docker.io/schickling/beanstalkd:latest",
       "category": "messaging",
@@ -36,6 +38,7 @@
     },
     {
       "name": "elasticsearch",
+      "label": "Elasticsearch",
       "description": "Elasticsearch single-node search and analytics engine",
       "image": "docker.elastic.co/elasticsearch/elasticsearch:8.13.4",
       "category": "search",
@@ -44,6 +47,7 @@
     },
     {
       "name": "elasticvue",
+      "label": "Elasticvue",
       "description": "Elasticvue web UI for the lerd Elasticsearch service",
       "dashboard": "http://localhost:8083",
       "depends_on": [
@@ -58,6 +62,7 @@
     },
     {
       "name": "gotenberg",
+      "label": "Gotenberg",
       "description": "Gotenberg API for PDF generation and document conversion",
       "image": "docker.io/gotenberg/gotenberg:8",
       "category": "other",
@@ -65,6 +70,7 @@
     },
     {
       "name": "kafka",
+      "label": "Kafka",
       "description": "Apache Kafka event streaming broker",
       "image": "docker.io/apache/kafka:4.3.1",
       "category": "messaging",
@@ -146,6 +152,7 @@
     },
     {
       "name": "memcached",
+      "label": "Memcached",
       "description": "Memcached in-memory key/value cache",
       "image": "docker.io/library/memcached:1.6-alpine",
       "category": "cache",
@@ -153,6 +160,7 @@
     },
     {
       "name": "mercure",
+      "label": "Mercure",
       "description": "Mercure hub for server-sent events, the Symfony realtime transport",
       "image": "docker.io/dunglas/mercure:v0.24.2",
       "category": "messaging",
@@ -170,6 +178,7 @@
     },
     {
       "name": "mongo-express",
+      "label": "Mongo Express",
       "description": "Mongo Express web UI for the lerd MongoDB service",
       "dashboard": "http://localhost:8082",
       "depends_on": [
@@ -324,6 +333,7 @@
     },
     {
       "name": "selenium",
+      "label": "Selenium",
       "description": "Selenium + Chromium for browser testing (Laravel Dusk, Symfony Panther, etc.)",
       "dashboard": "http://localhost:7900/?autoconnect=1&resize=scale",
       "image": "docker.io/selenium/standalone-chromium:latest",
@@ -333,6 +343,7 @@
     },
     {
       "name": "soketi",
+      "label": "Soketi",
       "description": "Soketi realtime WebSocket server (Pusher-compatible)",
       "image": "quay.io/soketi/soketi:1.6-16-alpine",
       "category": "messaging",
@@ -340,6 +351,7 @@
     },
     {
       "name": "solr",
+      "label": "Solr",
       "description": "Apache Solr search platform, used by Drupal and TYPO3",
       "family": "solr",
       "image": "docker.io/library/solr:9",
@@ -349,6 +361,7 @@
     },
     {
       "name": "stripe-mock",
+      "label": "Stripe Mock",
       "description": "Local Stripe API mock for Cashier and webhook testing",
       "image": "docker.io/stripemock/stripe-mock:latest",
       "category": "testing",
@@ -357,6 +370,7 @@
     },
     {
       "name": "typesense",
+      "label": "Typesense",
       "description": "Typesense search engine",
       "family": "typesense",
       "image": "docker.io/typesense/typesense:30.2",
@@ -365,6 +379,7 @@
     },
     {
       "name": "typesense-dashboard",
+      "label": "Typesense Dashboard",
       "description": "Typesense Dashboard web UI for the lerd Typesense service",
       "dashboard": "http://localhost:8084",
       "depends_on": [
@@ -379,6 +394,7 @@
     },
     {
       "name": "valkey",
+      "label": "Valkey",
       "description": "Valkey in-memory store (Redis-compatible)",
       "family": "valkey",
       "image": "docker.io/valkey/valkey:9-alpine",
@@ -389,6 +405,7 @@
     },
     {
       "name": "floci",
+      "label": "Floci",
       "description": "Floci, the open-source AWS emulator (SQS, SES, DynamoDB, S3) with no auth token",
       "image": "docker.io/floci/floci:2.2.0",
       "category": "testing",
@@ -397,6 +414,7 @@
     },
     {
       "name": "dragonfly",
+      "label": "Dragonfly",
       "description": "Dragonfly in-memory store (Redis-compatible)",
       "family": "dragonfly",
       "image": "ghcr.io/dragonflydb/dragonfly:v2.0.2",
@@ -407,6 +425,7 @@
     },
     {
       "name": "umami",
+      "label": "Umami",
       "description": "Umami privacy-focused web analytics, backed by the lerd Postgres service (login: admin / umami)",
       "dashboard": "http://localhost:3002",
       "image": "ghcr.io/umami-software/umami:3.4",

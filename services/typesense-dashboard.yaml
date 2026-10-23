@@ -1,4 +1,5 @@
 name: typesense-dashboard
+label: "Typesense Dashboard"
 image: docker.io/bfritscher/typesense-dashboard:latest
 description: Typesense Dashboard web UI for the lerd Typesense service
 ports:

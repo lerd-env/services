@@ -147,10 +147,12 @@ New services and version bumps are welcome — this store is only as good as the
 1. Fork this repo
 2. Add or update `services/<name>.yaml`
 3. Optionally add the service's own mark as `services/<name>.svg` (see below), then run `python3 .github/scripts/readme_logos.py` to draw its tile for this README
-4. Add or update the matching entry in `services/index.json` (name, description, and optionally label, family, dashboard, depends_on)
+4. Add or update the matching entry in `services/index.json` (name, label, description, and optionally family, dashboard, depends_on)
 5. Open a pull request
 
 Keep images pinned to a specific tag or a `track_latest` family; avoid `:latest` for anything that stores data.
+
+`.github/scripts/preset_lint.py` checks every pull request for what makes a preset complete: a `label`, a file named after `name`, a plain hex `color`, no `.test` domain written into `env_vars` or `dashboard` (write the container or localhost URL, which `lerd env` points at the service's domain once it has one), a pinned image on any preset with a `data_dir`, and an `index.json` entry that says what its preset says. Run it before opening one.
 
 ### Preset schema
 
@@ -158,6 +160,7 @@ Definitions live under `services/`: an `index.json` catalogue plus one `<name>.y
 
 ```yaml
 name: my-service
+label: My Service
 image: docker.io/example/my-service:1
 description: What it is
 ports:
@@ -201,16 +204,17 @@ Four fields decide that, and all four live here rather than in lerd, so a new
 service looks right the day it lands:
 
 ```yaml
-label: "MariaDB"       # the name it is shown under; omit it when capitalizing
-                       # the name already spells it right (mongo-express)
+label: "MariaDB"       # the name it is shown under, required on every preset
 category: databases    # discovery section: databases, cache, messaging, search,
                        # mail, admin, storage, testing, other
 icon: database         # one of lerd's built-in glyphs
 color: "#003545"       # the brand colour its mark is tinted with
 ```
 
-Set `label` in the preset and in its `index.json` entry. A lerd that predates the
-key ignores it and keeps naming the service as it always has.
+Set `label` in the preset and in its `index.json` entry; the preset lint refuses
+a preset or an entry without one, so no name is left for lerd to guess from the
+lowercase name. A lerd that predates the key ignores it and keeps naming the
+service as it always has.
 
 `color` must be a plain hex literal, `#003545` or `#abc`. Anything else, a colour
 function or a CSS variable, is dropped and the service falls back to its

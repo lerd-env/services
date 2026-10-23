@@ -1,4 +1,5 @@
 name: selenium
+label: "Selenium"
 image: docker.io/selenium/standalone-chromium:latest
 description: Selenium + Chromium for browser testing (Laravel Dusk, Symfony Panther, etc.)
 ports:

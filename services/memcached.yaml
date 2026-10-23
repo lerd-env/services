@@ -1,4 +1,5 @@
 name: memcached
+label: "Memcached"
 image: docker.io/library/memcached:1.6-alpine
 description: Memcached in-memory key/value cache
 ports:

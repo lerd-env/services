@@ -1,4 +1,5 @@
 name: mongo-express
+label: "Mongo Express"
 image: docker.io/library/mongo-express:latest
 description: Mongo Express web UI for the lerd MongoDB service
 ports:

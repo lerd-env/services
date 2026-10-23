@@ -49,3 +49,20 @@ jobs:
 
       - name: Compare this pull request against it
         run: python3 .github/scripts/schema_guard.py "$RUNNER_TEMP/published" .
+
+  # Separate from the guard, so its failure always means an older lerd breaks;
+  # this one means a definition is missing something lerd shows.
+  preset-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pyyaml
+
+      - name: Check the lint
+        run: python3 .github/scripts/test_preset_lint.py
+
+      - name: Every preset is complete
+        run: python3 .github/scripts/preset_lint.py .

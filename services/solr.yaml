@@ -1,4 +1,5 @@
 name: solr
+label: Solr
 image: docker.io/library/solr:9
 update_strategy: rolling
 description: Apache Solr search platform, used by Drupal and TYPO3

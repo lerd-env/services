@@ -1,4 +1,5 @@
 name: adminer
+label: "Adminer"
 image: docker.io/library/adminer:6
 update_strategy: rolling
 description: Adminer web UI for every database lerd runs
