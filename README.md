@@ -124,7 +124,7 @@ Don't see what you need? [Add it](#contributing) — that's what this repo is fo
 
 `github-actions-runner` is the runner image base. It deliberately has no ports and
 contains no organization credentials. Use the
-[`lerd-add-actions-runner` skill](https://github.com/miguelenes/lerd-actions-runner/tree/main/skill)
+[`lerd-add-actions-runner` skill](https://github.com/illuma-law/lerd-actions-runner/tree/main/skill)
 to install one short-named `gh-runner` Lerd service per host, register it at
 organization scope, and add only selected trusted private repositories to its
 restricted runner group. A shared runner handles one job at a time, so concurrent
