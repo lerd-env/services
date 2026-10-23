@@ -1,0 +1,68 @@
+name: Runner image smoke
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: runner-image-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  image-smoke:
+    name: Pull pinned image and check tokenless startup
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Read and validate preset image reference
+        id: image
+        shell: bash
+        run: |
+          set -euo pipefail
+          image="$(ruby -e 'require "yaml"; puts YAML.safe_load_file(ARGV.fetch(0)).fetch("image")' services/github-actions-runner.yaml)"
+          if [[ ! "$image" =~ @sha256:[0-9a-fA-F]{64}$ ]]; then
+            echo "Runner preset image must be pinned by a SHA-256 digest" >&2
+            exit 1
+          fi
+          printf 'reference=%s\n' "$image" >> "$GITHUB_OUTPUT"
+
+      - name: Pull and inspect pinned image
+        env:
+          IMAGE_REFERENCE: ${{ steps.image.outputs.reference }}
+        run: |
+          set -euo pipefail
+          docker pull "$IMAGE_REFERENCE"
+          docker image inspect "$IMAGE_REFERENCE" >/dev/null
+
+      - name: Confirm registration is refused without a token
+        env:
+          IMAGE_REFERENCE: ${{ steps.image.outputs.reference }}
+        run: |
+          set -euo pipefail
+          runner_data="$(mktemp -d)"
+          chmod 777 "$runner_data"
+          trap 'rm -rf "$runner_data"' EXIT
+          set +e
+          output="$(docker run --rm \
+            --pull=never \
+            --network=none \
+            --mount "type=bind,src=$runner_data,dst=/runner-data" \
+            --env RUNNER_URL=https://github.com/lerd-env/services \
+            --env RUNNER_NAME=hosted-image-smoke \
+            "$IMAGE_REFERENCE" register </dev/null 2>&1)"
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [[ $status -eq 0 ]]; then
+            echo "Runner image accepted startup without a registration token" >&2
+            exit 1
+          fi
+          if [[ "$output" != *"registration token is required on stdin"* ]]; then
+            echo "Runner image failed for a reason other than the expected missing-token guard" >&2
+            exit 1
+          fi

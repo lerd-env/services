@@ -1,0 +1,7 @@
+
+# machine-local agent skill trees (managed by skills-manager-cli / openspec)
+.opencode/skills/
+.codex/skills/
+.claude/skills/
+.cursor/skills/
+.agents/skills/
