@@ -1,6 +1,17 @@
 name: opensearch
 label: "OpenSearch"
-image: docker.io/opensearchproject/opensearch:2.19.5
+family: opensearch
+default_version: "2"
+versions:
+  - tag: "2"
+    label: "2 (default)"
+    image: docker.io/opensearchproject/opensearch:2.19.5
+    canonical: true
+    host_port: 9201
+  - tag: "3"
+    label: "3"
+    image: docker.io/opensearchproject/opensearch:3.9.0
+    host_port: 9201
 description: OpenSearch single-node search and analytics engine
 # Flushes the translog and syncs shards on a graceful stop. Cheaper to lose
 # than a database checkpoint, but it still costs a replay on the next start.
@@ -8,7 +19,7 @@ stop_timeout: 30
 # Container listens on 9200; published on 9201 so it coexists with the
 # elasticsearch preset (also 9200) on the host.
 ports:
-  - "9201:9200"
+  - "{{host_port}}:9200"
 environment:
   discovery.type: single-node
   DISABLE_SECURITY_PLUGIN: "true"
@@ -26,12 +37,12 @@ data_dir: /usr/share/opensearch/data
 userns: keep-id:uid=1000,gid=0
 chown_data: true
 env_vars:
-  - OPENSEARCH_HOST=lerd-opensearch
+  - OPENSEARCH_HOST=lerd-{{name}}
   - OPENSEARCH_PORT=9200
-  - OPENSEARCH_URL=http://lerd-opensearch:9200
+  - OPENSEARCH_URL=http://lerd-{{name}}:9200
 env_detect:
   composer: opensearch-project/opensearch-php
-connection_url: http://127.0.0.1:9201
+connection_url: http://127.0.0.1:{{host_port}}
 category: search
 icon: search
 color: "#005eb8"

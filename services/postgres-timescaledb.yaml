@@ -12,6 +12,10 @@ versions:
     image: docker.io/timescale/timescaledb:latest-pg17
     canonical: true
     host_port: 5432
+  - tag: "18"
+    label: "18"
+    image: docker.io/timescale/timescaledb:latest-pg18
+    host_port: 5432
   - tag: "16"
     label: "16"
     image: docker.io/timescale/timescaledb:latest-pg16

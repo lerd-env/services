@@ -1,6 +1,16 @@
 name: clickhouse
 label: "ClickHouse"
-image: docker.io/library/clickhouse:26.3
+default_version: "26.3"
+versions:
+  - tag: "26.3"
+    label: "26.3 (default)"
+    image: docker.io/library/clickhouse:26.3
+    canonical: true
+    host_port: 8123
+  - tag: "26.10"
+    label: "26.10"
+    image: docker.io/library/clickhouse:26.10
+    host_port: 8123
 description: ClickHouse column-oriented analytics database
 family: clickhouse
 # MergeTree flushes in-memory parts on shutdown; killed part-way through, the
@@ -9,7 +19,7 @@ stop_timeout: 60
 # The native protocol sits on 9010 because the default stack already publishes
 # 9000 for rustfs, and the generic port guard only shifts a service's primary.
 ports:
-  - "8123:8123"
+  - "{{host_port}}:8123"
   - "9010:9000"
 environment:
   CLICKHOUSE_USER: lerd
@@ -19,9 +29,9 @@ environment:
   # data dir is only writable when the server keeps that uid.
   CLICKHOUSE_RUN_AS_ROOT: "1"
 data_dir: /var/lib/clickhouse
-connection_url: http://lerd:lerd@127.0.0.1:8123
+connection_url: http://lerd:lerd@127.0.0.1:{{host_port}}
 env_vars:
-  - CLICKHOUSE_HOST=lerd-clickhouse
+  - CLICKHOUSE_HOST=lerd-{{name}}
   - CLICKHOUSE_PORT=8123
   - CLICKHOUSE_USERNAME=lerd
   - CLICKHOUSE_PASSWORD=lerd

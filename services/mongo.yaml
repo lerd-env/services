@@ -1,20 +1,34 @@
 name: mongo
 label: "MongoDB"
-image: docker.io/library/mongo:7
 description: MongoDB document database
 family: mongo
 # mongod flushes its journal and closes storage cleanly on SIGTERM; killed
 # first, the next start replays the journal instead.
 stop_timeout: 60
+default_version: "7"
+versions:
+  - tag: "7"
+    label: "7 (default)"
+    image: docker.io/library/mongo:7
+    canonical: true
+    host_port: 27017
+  - tag: "9"
+    label: "9"
+    image: docker.io/library/mongo:9
+    host_port: 27017
+  - tag: "8"
+    label: "8"
+    image: docker.io/library/mongo:8
+    host_port: 27017
 ports:
-  - "27017:27017"
+  - "{{host_port}}:27017"
 environment:
   MONGO_INITDB_ROOT_USERNAME: root
   MONGO_INITDB_ROOT_PASSWORD: lerd
 data_dir: /data/db
-connection_url: mongodb://root:lerd@127.0.0.1:27017/?authSource=admin
+connection_url: mongodb://root:lerd@127.0.0.1:{{host_port}}/?authSource=admin
 env_vars:
-  - MONGO_DSN=mongodb://root:lerd@lerd-mongo:27017/{{site}}?authSource=admin
+  - MONGO_DSN=mongodb://root:lerd@lerd-{{name}}:27017/{{site}}?authSource=admin
 client_shims:
   - mongosh
   - mongodump

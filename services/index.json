@@ -29,9 +29,24 @@
       "name": "clickhouse",
       "label": "ClickHouse",
       "description": "ClickHouse column-oriented analytics database",
+      "versions": [
+        {
+          "tag": "26.3",
+          "label": "26.3 (default)",
+          "image": "docker.io/library/clickhouse:26.3",
+          "host_port": 8123,
+          "canonical": true
+        },
+        {
+          "tag": "26.10",
+          "label": "26.10",
+          "image": "docker.io/library/clickhouse:26.10",
+          "host_port": 8123
+        }
+      ],
+      "default_version": "26.3",
       "family": "clickhouse",
       "dashboard": "http://localhost:8123/play?user=lerd&password=lerd",
-      "image": "docker.io/library/clickhouse:26.3",
       "category": "databases",
       "icon": "database",
       "color": "#ffcc01"
@@ -40,7 +55,23 @@
       "name": "elasticsearch",
       "label": "Elasticsearch",
       "description": "Elasticsearch single-node search and analytics engine",
-      "image": "docker.elastic.co/elasticsearch/elasticsearch:8.13.4",
+      "family": "elasticsearch",
+      "versions": [
+        {
+          "tag": "8",
+          "label": "8 (default)",
+          "image": "docker.elastic.co/elasticsearch/elasticsearch:8.13.4",
+          "host_port": 9200,
+          "canonical": true
+        },
+        {
+          "tag": "9",
+          "label": "9",
+          "image": "docker.elastic.co/elasticsearch/elasticsearch:9.5.6",
+          "host_port": 9200
+        }
+      ],
+      "default_version": "8",
       "category": "search",
       "icon": "search",
       "color": "#005571"
@@ -64,7 +95,23 @@
       "name": "gotenberg",
       "label": "Gotenberg",
       "description": "Gotenberg API for PDF generation and document conversion",
-      "image": "docker.io/gotenberg/gotenberg:8",
+      "family": "gotenberg",
+      "versions": [
+        {
+          "tag": "8",
+          "label": "8 (default)",
+          "image": "docker.io/gotenberg/gotenberg:8",
+          "host_port": 3000,
+          "canonical": true
+        },
+        {
+          "tag": "9",
+          "label": "9",
+          "image": "docker.io/gotenberg/gotenberg:9",
+          "host_port": 3000
+        }
+      ],
+      "default_version": "8",
       "category": "other",
       "icon": "document"
     },
@@ -108,8 +155,14 @@
       "family": "mariadb",
       "versions": [
         {
+          "tag": "13",
+          "label": "13 (latest)",
+          "image": "docker.io/library/mariadb:13",
+          "host_port": 3306
+        },
+        {
           "tag": "12",
-          "label": "12 (latest)",
+          "label": "12",
           "image": "docker.io/library/mariadb:12",
           "host_port": 3306
         },
@@ -171,7 +224,29 @@
       "name": "mongo",
       "label": "MongoDB",
       "description": "MongoDB document database",
-      "image": "docker.io/library/mongo:7",
+      "family": "mongo",
+      "versions": [
+        {
+          "tag": "7",
+          "label": "7 (default)",
+          "image": "docker.io/library/mongo:7",
+          "host_port": 27017,
+          "canonical": true
+        },
+        {
+          "tag": "9",
+          "label": "9",
+          "image": "docker.io/library/mongo:9",
+          "host_port": 27017
+        },
+        {
+          "tag": "8",
+          "label": "8",
+          "image": "docker.io/library/mongo:8",
+          "host_port": 27017
+        }
+      ],
+      "default_version": "7",
       "category": "databases",
       "icon": "leaf",
       "color": "#47a248"
@@ -195,7 +270,23 @@
       "name": "opensearch",
       "label": "OpenSearch",
       "description": "OpenSearch single-node search and analytics engine",
-      "image": "docker.io/opensearchproject/opensearch:2.19.5",
+      "family": "opensearch",
+      "versions": [
+        {
+          "tag": "2",
+          "label": "2 (default)",
+          "image": "docker.io/opensearchproject/opensearch:2.19.5",
+          "host_port": 9201,
+          "canonical": true
+        },
+        {
+          "tag": "3",
+          "label": "3",
+          "image": "docker.io/opensearchproject/opensearch:3.9.0",
+          "host_port": 9201
+        }
+      ],
+      "default_version": "2",
       "category": "search",
       "icon": "search",
       "color": "#005eb8"
@@ -294,6 +385,12 @@
           "canonical": true
         },
         {
+          "tag": "18",
+          "label": "18",
+          "image": "docker.io/timescale/timescaledb:latest-pg18",
+          "host_port": 5432
+        },
+        {
           "tag": "16",
           "label": "16",
           "image": "docker.io/timescale/timescaledb:latest-pg16",
@@ -309,8 +406,24 @@
       "name": "rabbitmq",
       "label": "RabbitMQ",
       "description": "RabbitMQ message broker with management UI",
+      "family": "rabbitmq",
+      "versions": [
+        {
+          "tag": "3",
+          "label": "3 (default)",
+          "image": "docker.io/library/rabbitmq:3-management-alpine",
+          "host_port": 5672,
+          "canonical": true
+        },
+        {
+          "tag": "4",
+          "label": "4",
+          "image": "docker.io/library/rabbitmq:4-management-alpine",
+          "host_port": 5672
+        }
+      ],
+      "default_version": "3",
       "dashboard": "http://localhost:15672",
-      "image": "docker.io/library/rabbitmq:3-management-alpine",
       "category": "messaging",
       "icon": "queue",
       "color": "#ff6600"
@@ -354,10 +467,25 @@
       "label": "Solr",
       "description": "Apache Solr search platform, used by Drupal and TYPO3",
       "family": "solr",
-      "image": "docker.io/library/solr:9",
       "category": "search",
       "icon": "search",
-      "color": "#d9411e"
+      "color": "#d9411e",
+      "versions": [
+        {
+          "tag": "9",
+          "label": "9 (default)",
+          "image": "docker.io/library/solr:9",
+          "canonical": true,
+          "host_port": 8983
+        },
+        {
+          "tag": "10",
+          "label": "10",
+          "image": "docker.io/library/solr:10",
+          "host_port": 8983
+        }
+      ],
+      "default_version": "9"
     },
     {
       "name": "stripe-mock",
@@ -416,8 +544,23 @@
       "name": "dragonfly",
       "label": "Dragonfly",
       "description": "Dragonfly in-memory store (Redis-compatible)",
+      "versions": [
+        {
+          "tag": "2.0",
+          "label": "2.0 (default)",
+          "image": "ghcr.io/dragonflydb/dragonfly:v2.0.2",
+          "host_port": 6381,
+          "canonical": true
+        },
+        {
+          "tag": "2.1",
+          "label": "2.1",
+          "image": "ghcr.io/dragonflydb/dragonfly:v2.1.0",
+          "host_port": 6381
+        }
+      ],
+      "default_version": "2.0",
       "family": "dragonfly",
-      "image": "ghcr.io/dragonflydb/dragonfly:v2.0.2",
       "category": "cache",
       "icon": "bolt",
       "color": "#5a3ee0",

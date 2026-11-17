@@ -9,8 +9,12 @@ init: true
 # the next start recovers from the redo log instead.
 stop_timeout: 60
 versions:
+  - tag: "13"
+    label: "13 (latest)"
+    image: docker.io/library/mariadb:13
+    host_port: 3306
   - tag: "12"
-    label: "12 (latest)"
+    label: "12"
     image: docker.io/library/mariadb:12
     host_port: 3306
   - tag: "12.3"
