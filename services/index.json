@@ -177,6 +177,7 @@
       "name": "mongo",
       "label": "MongoDB",
       "description": "MongoDB document database",
+      "family": "mongo",
       "image": "docker.io/library/mongo:7",
       "category": "databases",
       "icon": "leaf",

@@ -1,0 +1,13 @@
+# Schema 3, as understood by lerd 1.40.0 and later.
+#
+# Any preset can carry a version list from this schema on. An older lerd refuses
+# to reinstall a service it installed from a single image once that preset has
+# versions, since the install recorded no version, so every tree below keeps
+# seeing the canonical image alone. A preset older trees already know as a
+# version list stays authored below this one; the schema guard refuses it here.
+schema: 3
+since_lerd: "1.40.0"
+
+changes:
+  - path: versions
+    downgrade: collapse_versions

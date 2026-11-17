@@ -1,0 +1,23 @@
+name: gotenberg
+label: "Gotenberg"
+default_version: "8"
+versions:
+  - tag: "8"
+    label: "8 (default)"
+    image: docker.io/gotenberg/gotenberg:8
+    canonical: true
+    host_port: 3000
+  - tag: "9"
+    label: "9"
+    image: docker.io/gotenberg/gotenberg:9
+    host_port: 3000
+update_strategy: rolling
+description: "Gotenberg API for PDF generation and document conversion"
+ports:
+  - "{{host_port}}:3000"
+env_vars:
+  - GOTENBERG_URL=http://lerd-{{name}}:3000
+env_detect:
+  composer: spatie/laravel-pdf
+category: other
+icon: document

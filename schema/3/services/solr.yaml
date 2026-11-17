@@ -1,0 +1,35 @@
+name: solr
+label: "Solr"
+default_version: "9"
+versions:
+  - tag: "9"
+    label: "9 (default)"
+    image: docker.io/library/solr:9
+    canonical: true
+    host_port: 8983
+  - tag: "10"
+    label: "10"
+    image: docker.io/library/solr:10
+    host_port: 8983
+update_strategy: rolling
+description: Apache Solr search platform, used by Drupal and TYPO3
+family: solr
+ports:
+- "{{host_port}}:8983"
+data_dir: /var/solr
+environment:
+  SOLR_MODULES: analysis-extras
+chown_data: true
+dashboard: http://localhost:{{host_port}}/solr/
+dashboard_proxy_strip: true
+site_init:
+  exec: solr create -c {{site}} 2>/dev/null || true
+env_vars:
+- SOLR_HOST=lerd-{{name}}
+- SOLR_PORT=8983
+- SOLR_CORE={{site}}
+client_shims:
+- solr
+category: search
+icon: search
+color: '#d9411e'

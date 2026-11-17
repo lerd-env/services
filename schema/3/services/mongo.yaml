@@ -1,0 +1,82 @@
+name: mongo
+label: "MongoDB"
+description: MongoDB document database
+family: mongo
+# mongod flushes its journal and closes storage cleanly on SIGTERM; killed
+# first, the next start replays the journal instead.
+stop_timeout: 60
+default_version: "7"
+versions:
+  - tag: "7"
+    label: "7 (default)"
+    image: docker.io/library/mongo:7
+    canonical: true
+    host_port: 27017
+  - tag: "9"
+    label: "9"
+    image: docker.io/library/mongo:9
+    host_port: 27017
+  - tag: "8"
+    label: "8"
+    image: docker.io/library/mongo:8
+    host_port: 27017
+ports:
+  - "{{host_port}}:27017"
+environment:
+  MONGO_INITDB_ROOT_USERNAME: root
+  MONGO_INITDB_ROOT_PASSWORD: lerd
+data_dir: /data/db
+connection_url: mongodb://root:lerd@127.0.0.1:{{host_port}}/?authSource=admin
+env_vars:
+  - MONGO_DSN=mongodb://root:lerd@lerd-{{name}}:27017/{{site}}?authSource=admin
+client_shims:
+  - mongosh
+  - mongodump
+  - mongorestore
+  - mongoexport
+  - mongoimport
+env_detect:
+  key: MONGO_DSN
+  value_prefix: mongodb://
+site_init:
+  exec: mongosh --quiet -u root -p lerd --authenticationDatabase admin --eval "try { db.getSiblingDB('{{site}}').createCollection('_lerd_init') } catch (e) {}"
+category: databases
+icon: leaf
+color: "#47a248"
+# list_databases is kept alongside entities so lerd versions from before the
+# entities schema still list the databases.
+introspect:
+  list_databases: >
+    mongosh --quiet -u root -p lerd --authenticationDatabase admin --eval
+    'db.adminCommand({listDatabases:1}).databases.forEach(function(d){ if(["admin","local","config"].indexOf(d.name)<0) print(d.name+"\t"+d.sizeOnDisk) })'
+  entities:
+    - kind: databases
+      list: >
+        mongosh --quiet -u root -p lerd --authenticationDatabase admin --eval
+        'db.adminCommand({listDatabases:1}).databases.forEach(function(d){ if(["admin","local","config"].indexOf(d.name)<0) print(d.name+"\t"+d.sizeOnDisk) })'
+      columns:
+        - key: size
+          label: Size
+          format: bytes
+      actions:
+        create: >
+          mongosh --quiet -u root -p lerd --authenticationDatabase admin --eval
+          'db.getSiblingDB("{{name}}").createCollection("_lerd_init")'
+        drop:
+          exec: >
+            mongosh --quiet -u root -p lerd --authenticationDatabase admin --eval
+            'db.getSiblingDB("{{name}}").dropDatabase()'
+          destructive: true
+        export:
+          exec: >
+            mongodump --quiet -u root -p lerd --authenticationDatabase admin
+            --db {{name}} --archive
+          filename: "{{name}}.archive"
+        import: >
+          mongorestore --quiet -u root -p lerd --authenticationDatabase admin
+          --nsInclude '{{name}}.*' --drop --archive
+        export_all: >
+          mongodump --quiet -u root -p lerd --authenticationDatabase admin --archive
+        import_all: >
+          mongorestore --quiet -u root -p lerd --authenticationDatabase admin
+          --drop --archive

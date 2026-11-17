@@ -1,0 +1,615 @@
+{
+  "services": [
+    {
+      "name": "adminer",
+      "label": "Adminer",
+      "description": "Adminer web UI for every database lerd runs",
+      "dashboard": "http://localhost:8081",
+      "image": "docker.io/library/adminer:6",
+      "category": "admin",
+      "icon": "database",
+      "color": "#34567c",
+      "admin_for": [
+        "mysql",
+        "mariadb",
+        "postgres",
+        "postgres-pgvector",
+        "postgres-timescaledb"
+      ],
+      "admin_rank": 10
+    },
+    {
+      "name": "beanstalkd",
+      "label": "Beanstalkd",
+      "description": "Beanstalkd work queue",
+      "image": "docker.io/schickling/beanstalkd:latest",
+      "category": "messaging",
+      "icon": "queue"
+    },
+    {
+      "name": "clickhouse",
+      "label": "ClickHouse",
+      "description": "ClickHouse column-oriented analytics database",
+      "family": "clickhouse",
+      "dashboard": "http://localhost:8123/play?user=lerd&password=lerd",
+      "category": "databases",
+      "icon": "database",
+      "color": "#ffcc01",
+      "versions": [
+        {
+          "tag": "26.3",
+          "label": "26.3 (default)",
+          "image": "docker.io/library/clickhouse:26.3",
+          "canonical": true,
+          "host_port": 8123
+        },
+        {
+          "tag": "26.10",
+          "label": "26.10",
+          "image": "docker.io/library/clickhouse:26.10",
+          "host_port": 8123
+        }
+      ],
+      "default_version": "26.3"
+    },
+    {
+      "name": "elasticsearch",
+      "label": "Elasticsearch",
+      "description": "Elasticsearch single-node search and analytics engine",
+      "category": "search",
+      "icon": "search",
+      "color": "#005571",
+      "versions": [
+        {
+          "tag": "8",
+          "label": "8 (default)",
+          "image": "docker.elastic.co/elasticsearch/elasticsearch:8.13.4",
+          "canonical": true,
+          "host_port": 9200
+        },
+        {
+          "tag": "9",
+          "label": "9",
+          "image": "docker.elastic.co/elasticsearch/elasticsearch:9.5.6",
+          "host_port": 9200
+        }
+      ],
+      "default_version": "8"
+    },
+    {
+      "name": "elasticvue",
+      "label": "Elasticvue",
+      "description": "Elasticvue web UI for the lerd Elasticsearch service",
+      "dashboard": "http://localhost:8083",
+      "depends_on": [
+        "elasticsearch"
+      ],
+      "image": "docker.io/cars10/elasticvue:latest",
+      "category": "admin",
+      "icon": "search",
+      "admin_for": [
+        "elasticsearch"
+      ]
+    },
+    {
+      "name": "gotenberg",
+      "label": "Gotenberg",
+      "description": "Gotenberg API for PDF generation and document conversion",
+      "category": "other",
+      "icon": "document",
+      "versions": [
+        {
+          "tag": "8",
+          "label": "8 (default)",
+          "image": "docker.io/gotenberg/gotenberg:8",
+          "canonical": true,
+          "host_port": 3000
+        },
+        {
+          "tag": "9",
+          "label": "9",
+          "image": "docker.io/gotenberg/gotenberg:9",
+          "host_port": 3000
+        }
+      ],
+      "default_version": "8"
+    },
+    {
+      "name": "kafka",
+      "label": "Kafka",
+      "description": "Apache Kafka event streaming broker",
+      "image": "docker.io/apache/kafka:4.3.1",
+      "category": "messaging",
+      "icon": "queue",
+      "color": "#231f20"
+    },
+    {
+      "name": "kafka-ui",
+      "label": "Kafka UI",
+      "description": "Kafbat UI web console for the lerd Kafka service",
+      "dashboard": "http://localhost:8087",
+      "image": "ghcr.io/kafbat/kafka-ui:v1.5.0",
+      "category": "admin",
+      "icon": "queue",
+      "admin_for": [
+        "kafka"
+      ],
+      "depends_on": [
+        "kafka"
+      ]
+    },
+    {
+      "name": "localstack",
+      "label": "LocalStack",
+      "description": "LocalStack, the AWS APIs (SQS, SES, DynamoDB, Secrets Manager) run locally",
+      "image": "docker.io/localstack/localstack:4.14",
+      "category": "testing",
+      "icon": "cube",
+      "color": "#4b4ed2"
+    },
+    {
+      "name": "mariadb",
+      "label": "MariaDB",
+      "description": "MariaDB (MySQL-compatible) versions",
+      "family": "mariadb",
+      "versions": [
+        {
+          "tag": "13",
+          "label": "13 (latest)",
+          "image": "docker.io/library/mariadb:13",
+          "host_port": 3306
+        },
+        {
+          "tag": "12",
+          "label": "12",
+          "image": "docker.io/library/mariadb:12",
+          "host_port": 3306
+        },
+        {
+          "tag": "12.3",
+          "label": "12.3 LTS",
+          "image": "docker.io/library/mariadb:12.3",
+          "host_port": 3306
+        },
+        {
+          "tag": "11.8",
+          "label": "11.8 LTS",
+          "image": "docker.io/library/mariadb:11.8",
+          "host_port": 3306
+        },
+        {
+          "tag": "11.4",
+          "label": "11.4 LTS",
+          "image": "docker.io/library/mariadb:11.4",
+          "host_port": 3306
+        },
+        {
+          "tag": "11",
+          "label": "11 (legacy)",
+          "image": "docker.io/library/mariadb:11",
+          "host_port": 3306
+        },
+        {
+          "tag": "10.11",
+          "label": "10.11 LTS",
+          "image": "docker.io/library/mariadb:10.11",
+          "host_port": 3306
+        }
+      ],
+      "default_version": "11.8",
+      "category": "databases",
+      "icon": "database",
+      "color": "#003545",
+      "env_role": "mysql"
+    },
+    {
+      "name": "memcached",
+      "label": "Memcached",
+      "description": "Memcached in-memory key/value cache",
+      "image": "docker.io/library/memcached:1.6-alpine",
+      "category": "cache",
+      "icon": "bolt"
+    },
+    {
+      "name": "mercure",
+      "label": "Mercure",
+      "description": "Mercure hub for server-sent events, the Symfony realtime transport",
+      "dashboard": "http://localhost:3001/.well-known/mercure/ui/",
+      "image": "docker.io/dunglas/mercure:v0.24.2",
+      "category": "messaging",
+      "icon": "broadcast",
+      "color": "#2ab3d7"
+    },
+    {
+      "name": "mongo",
+      "label": "MongoDB",
+      "description": "MongoDB document database",
+      "family": "mongo",
+      "category": "databases",
+      "icon": "leaf",
+      "color": "#47a248",
+      "versions": [
+        {
+          "tag": "7",
+          "label": "7 (default)",
+          "image": "docker.io/library/mongo:7",
+          "canonical": true,
+          "host_port": 27017
+        },
+        {
+          "tag": "9",
+          "label": "9",
+          "image": "docker.io/library/mongo:9",
+          "host_port": 27017
+        },
+        {
+          "tag": "8",
+          "label": "8",
+          "image": "docker.io/library/mongo:8",
+          "host_port": 27017
+        }
+      ],
+      "default_version": "7"
+    },
+    {
+      "name": "mongo-express",
+      "label": "Mongo Express",
+      "description": "Mongo Express web UI for the lerd MongoDB service",
+      "dashboard": "http://localhost:8082",
+      "depends_on": [
+        "mongo"
+      ],
+      "image": "docker.io/library/mongo-express:latest",
+      "category": "admin",
+      "icon": "leaf",
+      "admin_for": [
+        "mongo"
+      ]
+    },
+    {
+      "name": "opensearch",
+      "label": "OpenSearch",
+      "description": "OpenSearch single-node search and analytics engine",
+      "category": "search",
+      "icon": "search",
+      "color": "#005eb8",
+      "versions": [
+        {
+          "tag": "2",
+          "label": "2 (default)",
+          "image": "docker.io/opensearchproject/opensearch:2.19.5",
+          "canonical": true,
+          "host_port": 9201
+        },
+        {
+          "tag": "3",
+          "label": "3",
+          "image": "docker.io/opensearchproject/opensearch:3.9.0",
+          "host_port": 9201
+        }
+      ],
+      "default_version": "2"
+    },
+    {
+      "name": "opensearch-dashboards",
+      "label": "OpenSearch Dashboards",
+      "description": "OpenSearch Dashboards web UI for the lerd OpenSearch service",
+      "dashboard": "http://localhost:8086",
+      "depends_on": [
+        "opensearch"
+      ],
+      "image": "docker.io/opensearchproject/opensearch-dashboards:2.19.5",
+      "category": "admin",
+      "icon": "search",
+      "admin_for": [
+        "opensearch"
+      ]
+    },
+    {
+      "name": "pgadmin",
+      "label": "pgAdmin",
+      "description": "pgAdmin web UI for the lerd Postgres service",
+      "dashboard": "http://localhost:8081",
+      "image": "docker.io/dpage/pgadmin4:latest",
+      "category": "admin",
+      "icon": "elephant",
+      "admin_for": [
+        "postgres",
+        "postgres-pgvector",
+        "postgres-timescaledb"
+      ],
+      "depends_on": [
+        "postgres"
+      ]
+    },
+    {
+      "name": "phpmyadmin",
+      "label": "phpMyAdmin",
+      "description": "phpMyAdmin web UI for every installed lerd MySQL service",
+      "dashboard": "http://localhost:8080",
+      "image": "docker.io/library/phpmyadmin:latest",
+      "category": "admin",
+      "icon": "database",
+      "color": "#6c78af",
+      "admin_for": [
+        "mysql",
+        "mariadb"
+      ],
+      "depends_on": [
+        "mysql"
+      ]
+    },
+    {
+      "name": "postgres-pgvector",
+      "label": "PostgreSQL + pgvector",
+      "description": "PostgreSQL with pgvector (vector embeddings, no PostGIS)",
+      "family": "postgres",
+      "versions": [
+        {
+          "tag": "18",
+          "label": "18 (default)",
+          "image": "docker.io/pgvector/pgvector:pg18",
+          "host_port": 5432,
+          "canonical": true
+        },
+        {
+          "tag": "17",
+          "label": "17",
+          "image": "docker.io/pgvector/pgvector:pg17",
+          "host_port": 5432
+        },
+        {
+          "tag": "16",
+          "label": "16",
+          "image": "docker.io/pgvector/pgvector:pg16",
+          "host_port": 5432
+        }
+      ],
+      "default_version": "18",
+      "category": "databases",
+      "icon": "elephant",
+      "color": "#4169e1"
+    },
+    {
+      "name": "postgres-timescaledb",
+      "label": "PostgreSQL + TimescaleDB",
+      "description": "PostgreSQL with TimescaleDB (time-series extension)",
+      "family": "postgres",
+      "versions": [
+        {
+          "tag": "17",
+          "label": "17 (default)",
+          "image": "docker.io/timescale/timescaledb:latest-pg17",
+          "host_port": 5432,
+          "canonical": true
+        },
+        {
+          "tag": "18",
+          "label": "18",
+          "image": "docker.io/timescale/timescaledb:latest-pg18",
+          "host_port": 5432
+        },
+        {
+          "tag": "16",
+          "label": "16",
+          "image": "docker.io/timescale/timescaledb:latest-pg16",
+          "host_port": 5432
+        }
+      ],
+      "default_version": "17",
+      "category": "databases",
+      "icon": "elephant",
+      "color": "#4169e1"
+    },
+    {
+      "name": "rabbitmq",
+      "label": "RabbitMQ",
+      "description": "RabbitMQ message broker with management UI",
+      "dashboard": "http://localhost:15672",
+      "category": "messaging",
+      "icon": "queue",
+      "color": "#ff6600",
+      "versions": [
+        {
+          "tag": "3",
+          "label": "3 (default)",
+          "image": "docker.io/library/rabbitmq:3-management-alpine",
+          "canonical": true,
+          "host_port": 5672
+        },
+        {
+          "tag": "4",
+          "label": "4",
+          "image": "docker.io/library/rabbitmq:4-management-alpine",
+          "host_port": 5672
+        }
+      ],
+      "default_version": "3"
+    },
+    {
+      "name": "redisinsight",
+      "label": "RedisInsight",
+      "description": "RedisInsight web UI for every installed lerd Redis and Valkey service",
+      "dashboard": "http://localhost:8085",
+      "image": "docker.io/redis/redisinsight:latest",
+      "category": "admin",
+      "icon": "database",
+      "admin_for": [
+        "redis",
+        "valkey"
+      ],
+      "depends_on": [
+        "redis"
+      ]
+    },
+    {
+      "name": "selenium",
+      "label": "Selenium",
+      "description": "Selenium + Chromium for browser testing (Laravel Dusk, Symfony Panther, etc.)",
+      "dashboard": "http://localhost:7900/?autoconnect=1&resize=scale",
+      "image": "docker.io/selenium/standalone-chromium:latest",
+      "category": "testing",
+      "icon": "browserPlay",
+      "color": "#43b02a"
+    },
+    {
+      "name": "soketi",
+      "label": "Soketi",
+      "description": "Soketi realtime WebSocket server (Pusher-compatible)",
+      "image": "quay.io/soketi/soketi:1.6-16-alpine",
+      "category": "messaging",
+      "icon": "broadcast"
+    },
+    {
+      "name": "solr",
+      "label": "Solr",
+      "description": "Apache Solr search platform, used by Drupal and TYPO3",
+      "family": "solr",
+      "dashboard": "http://localhost:{{host_port}}/solr/",
+      "category": "search",
+      "icon": "search",
+      "color": "#d9411e",
+      "versions": [
+        {
+          "tag": "9",
+          "label": "9 (default)",
+          "image": "docker.io/library/solr:9",
+          "canonical": true,
+          "host_port": 8983
+        },
+        {
+          "tag": "10",
+          "label": "10",
+          "image": "docker.io/library/solr:10",
+          "host_port": 8983
+        }
+      ],
+      "default_version": "9"
+    },
+    {
+      "name": "stripe-mock",
+      "label": "Stripe Mock",
+      "description": "Local Stripe API mock for Cashier and webhook testing",
+      "image": "docker.io/stripemock/stripe-mock:latest",
+      "category": "testing",
+      "icon": "card",
+      "color": "#635bff"
+    },
+    {
+      "name": "typesense",
+      "label": "Typesense",
+      "description": "Typesense search engine",
+      "family": "typesense",
+      "image": "docker.io/typesense/typesense:30.2",
+      "category": "search",
+      "icon": "search"
+    },
+    {
+      "name": "typesense-dashboard",
+      "label": "Typesense Dashboard",
+      "description": "Typesense Dashboard web UI for the lerd Typesense service",
+      "dashboard": "http://localhost:8084",
+      "depends_on": [
+        "typesense"
+      ],
+      "image": "docker.io/bfritscher/typesense-dashboard:latest",
+      "category": "admin",
+      "icon": "search",
+      "admin_for": [
+        "typesense"
+      ]
+    },
+    {
+      "name": "valkey",
+      "label": "Valkey",
+      "description": "Valkey in-memory store (Redis-compatible)",
+      "family": "valkey",
+      "image": "docker.io/valkey/valkey:9-alpine",
+      "category": "cache",
+      "icon": "bolt",
+      "color": "#123678",
+      "env_role": "redis"
+    },
+    {
+      "name": "floci",
+      "label": "Floci",
+      "description": "Floci, the open-source AWS emulator (SQS, SES, DynamoDB, S3) with no auth token",
+      "image": "docker.io/floci/floci:2.2.0",
+      "category": "testing",
+      "icon": "cube",
+      "color": "#6368c2"
+    },
+    {
+      "name": "dragonfly",
+      "label": "Dragonfly",
+      "description": "Dragonfly in-memory store (Redis-compatible)",
+      "family": "dragonfly",
+      "category": "cache",
+      "icon": "bolt",
+      "color": "#5a3ee0",
+      "versions": [
+        {
+          "tag": "2.0",
+          "label": "2.0 (default)",
+          "image": "ghcr.io/dragonflydb/dragonfly:v2.0.2",
+          "canonical": true,
+          "host_port": 6381
+        },
+        {
+          "tag": "2.1",
+          "label": "2.1",
+          "image": "ghcr.io/dragonflydb/dragonfly:v2.1.0",
+          "host_port": 6381
+        }
+      ],
+      "default_version": "2.0",
+      "env_role": "redis"
+    },
+    {
+      "name": "umami",
+      "label": "Umami",
+      "description": "Umami privacy-focused web analytics, backed by the lerd Postgres service (login: admin / umami)",
+      "dashboard": "http://localhost:3002",
+      "image": "ghcr.io/umami-software/umami:3.4",
+      "category": "other",
+      "icon": "bolt",
+      "color": "#000000",
+      "depends_on": [
+        "postgres"
+      ]
+    },
+    {
+      "name": "mosparo",
+      "label": "mosparo",
+      "description": "mosparo spam protection for forms, installed unattended on SQLite (login: admin@lerd.test / lerd)",
+      "dashboard": "http://localhost:8088",
+      "image": "docker.io/mosparo/mosparo:v1.5.12-alpine",
+      "category": "other",
+      "icon": "bolt",
+      "color": "#206bc4"
+    },
+    {
+      "name": "smocker",
+      "label": "Smocker",
+      "description": "Smocker HTTP mock server for webhooks and outgoing requests, with scripted responses, delays and request history",
+      "dashboard": "http://localhost:8082",
+      "image": "ghcr.io/smocker-dev/smocker:1.0.0",
+      "category": "testing",
+      "icon": "bolt",
+      "color": "#b31729"
+    },
+    {
+      "name": "spamassassin",
+      "label": "SpamAssassin",
+      "description": "SpamAssassin scoring backend for the Mailpit catcher",
+      "family": "spamassassin",
+      "image": "docker.io/axllent/spamassassin:3",
+      "category": "mail",
+      "icon": "mail",
+      "color": "#cc0000",
+      "suggest_for": [
+        "mailpit"
+      ]
+    }
+  ]
+}

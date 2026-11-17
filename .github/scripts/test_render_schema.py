@@ -13,6 +13,8 @@ import subprocess
 import sys
 import tempfile
 
+import yaml
+
 SCRIPT = pathlib.Path(__file__).resolve()
 
 
@@ -111,6 +113,65 @@ def case_guarded_drop_reads_the_source():
         low = (root / "services" / "thing.yaml").read_text()
         assert "dashboard" not in low, \
             "a guarded drop must fire even when an earlier rule removed the key it reads"
+
+
+def case_versions_collapse_to_the_canonical_image():
+    """A preset that gained versions reads, to an older binary, as the single image it was."""
+    versioned = ("name: {n}\nlabel: L\ndescription: d\ncategory: c\nicon: i\n"
+                 "default_version: \"7\"\nversions:\n"
+                 "  - tag: \"7\"\n    image: img:7\n    canonical: true\n    host_port: 27017\n"
+                 "  - tag: \"9\"\n    image: img:9\n    host_port: 27017\n"
+                 "ports:\n  - \"{{{{host_port}}}}:27017\"\n"
+                 "env_vars:\n  - HOST=lerd-{{{{name}}}}\n"
+                 "connection_url: db://127.0.0.1:{{{{host_port}}}}/\n")
+    with tempfile.TemporaryDirectory() as tmp:
+        root = pathlib.Path(tmp)
+        build(root,
+              "schema: 2\nsince_lerd: \"1.36.0\"\nchanges:\n"
+              "  - path: versions\n    downgrade: collapse_versions\n",
+              top={"thing": versioned.format(n="thing")})
+        low = yaml.safe_load((root / "services" / "thing.yaml").read_text())
+        assert low["image"] == "img:7", "the older tree pins the canonical image"
+        assert "versions" not in low and "default_version" not in low, "and carries no version list"
+        assert low["ports"] == ["27017:27017"], "placeholders resolve to the canonical port"
+        assert low["env_vars"] == ["HOST=lerd-thing"], "and to the bare service name"
+        assert low["connection_url"] == "db://127.0.0.1:27017/"
+        index = {e["name"]: e for e in json.loads((root / "services" / "index.json").read_text())["services"]}
+        assert index["thing"]["image"] == "img:7" and "versions" not in index["thing"], \
+            "the older index lists the single image too"
+        high = yaml.safe_load((root / "schema" / "2" / "services" / "thing.yaml").read_text())
+        assert len(high["versions"]) == 2, "the introducing tree keeps every version"
+
+
+def case_collapse_needs_a_canonical_version():
+    """Without a canonical version the bare name would move, so the render refuses."""
+    with tempfile.TemporaryDirectory() as tmp:
+        root = pathlib.Path(tmp)
+        try:
+            build(root,
+                  "schema: 2\nsince_lerd: \"1.36.0\"\nchanges:\n"
+                  "  - path: versions\n    downgrade: collapse_versions\n",
+                  top={"thing": "name: thing\nlabel: L\ndescription: d\ncategory: c\nicon: i\n"
+                                "default_version: \"7\"\nversions:\n  - tag: \"7\"\n    image: img:7\n"})
+        except SystemExit as err:
+            assert "canonical" in str(err), err
+            return
+        raise AssertionError("a version list with no canonical version must not render")
+
+
+def case_a_newer_schema_leaves_lower_definitions_alone():
+    """Schema 3's rules never reach a definition authored in schema 2, with versions or without."""
+    with tempfile.TemporaryDirectory() as tmp:
+        root = pathlib.Path(tmp)
+        build_multi(root,
+                    {2: "schema: 2\nsince_lerd: \"1.36.0\"\n",
+                     3: "schema: 3\nsince_lerd: \"1.40.0\"\nchanges:\n"
+                        "  - path: versions\n    downgrade: collapse_versions\n"},
+                    trees={2: {"listed": "name: listed\nlabel: L\ndescription: d\ncategory: c\nicon: i\n"
+                                         "default_version: \"1\"\nversions:\n  - tag: \"1\"\n    image: img:1\n",
+                               "plain": "name: plain\nlabel: L\nimage: img:2\ndescription: d\ncategory: c\nicon: i\n"}})
+        low = yaml.safe_load((root / "services" / "listed.yaml").read_text())
+        assert "versions" in low, "a version list authored in schema 2 reaches the oldest tree intact"
 
 
 def case_a_definition_authored_below_the_top_survives():
