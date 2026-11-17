@@ -47,6 +47,9 @@ jobs:
           mkdir -p "$RUNNER_TEMP/published"
           git archive "origin/${{ github.base_ref }}" | tar -x -C "$RUNNER_TEMP/published"
 
+      - name: Check the guard
+        run: python3 .github/scripts/test_schema_guard.py
+
       - name: Compare this pull request against it
         run: python3 .github/scripts/schema_guard.py "$RUNNER_TEMP/published" .
 

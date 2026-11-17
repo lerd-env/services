@@ -95,6 +95,12 @@ def schema_dropped_paths(root):
     return dropped
 
 
+def removal_allowed(path, new_types):
+    """A top-level image may give way to versions: every lerd that reads the
+    store (1.9.0 and later) takes a version list and refuses both together."""
+    return path == "image" and "versions" in new_types
+
+
 def closed_sets(profiles):
     """Union every file's observed values per path, keeping the small ones."""
     merged = {}
@@ -132,6 +138,8 @@ def main():
         for path, kinds in sorted(old_types.items()):
             if path not in new_types:
                 if path.split("[]")[0] in by_design:
+                    continue
+                if removal_allowed(path, new_types):
                     continue
                 failures.append(f"{rel}: key `{path}` was removed, an older lerd still reads it")
                 continue
