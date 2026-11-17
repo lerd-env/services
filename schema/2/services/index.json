@@ -109,8 +109,14 @@
       "family": "mariadb",
       "versions": [
         {
+          "tag": "13",
+          "label": "13 (latest)",
+          "image": "docker.io/library/mariadb:13",
+          "host_port": 3306
+        },
+        {
           "tag": "12",
-          "label": "12 (latest)",
+          "label": "12",
           "image": "docker.io/library/mariadb:12",
           "host_port": 3306
         },
@@ -294,6 +300,12 @@
           "image": "docker.io/timescale/timescaledb:latest-pg17",
           "host_port": 5432,
           "canonical": true
+        },
+        {
+          "tag": "18",
+          "label": "18",
+          "image": "docker.io/timescale/timescaledb:latest-pg18",
+          "host_port": 5432
         },
         {
           "tag": "16",
