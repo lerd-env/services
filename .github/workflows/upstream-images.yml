@@ -1,0 +1,55 @@
+name: Upstream images
+
+on:
+  schedule:
+    - cron: "0 7 * * 1"
+  workflow_dispatch:
+
+# Opens one issue per newer image version than the presets pin. An issue with
+# the same title, open or closed, is never opened twice. A registry that cannot
+# be read fails the run, after the issues for the others are opened.
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pyyaml
+
+      - name: Check the checker
+        run: python3 .github/scripts/test_check_upstream_images.py
+
+      - name: Find newer images
+        id: find
+        shell: bash {0}
+        run: |
+          python3 .github/scripts/check_upstream_images.py > "$RUNNER_TEMP/found.json"
+          echo "rc=$?" >> "$GITHUB_OUTPUT"
+
+      - name: Open issues
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          jq -c '.[]' "$RUNNER_TEMP/found.json" | while read -r img; do
+            repo=$(jq -r .repo <<<"$img")
+            services=$(jq -r '.services | join(", ")' <<<"$img")
+            pinned=$(jq -r '.pinned | join(", ")' <<<"$img")
+            version=$(jq -r .version <<<"$img")
+            tag=$(jq -r .tag <<<"$img")
+            title="$repo:$version is out"
+            if gh issue list --state all --search "\"$title\" in:title" --json title --jq '.[].title' | grep -qxF "$title"; then
+              echo "Already tracked: $title"
+              continue
+            fi
+            gh issue create --title "$title" --body "The registry has $repo:$tag, newer than every tag the presets pin ($pinned). It is used by $services. Add it as a new version beside the existing ones, never by moving a pin, and test it starts and serves before it ships. Edit the preset in the highest schema tree that carries it and render the trees below."
+          done
+
+      - name: Fail if a registry could not be read
+        if: steps.find.outputs.rc != '0'
+        run: exit 1
