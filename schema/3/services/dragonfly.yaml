@@ -1,0 +1,37 @@
+name: dragonfly
+label: "Dragonfly"
+description: Dragonfly in-memory store (Redis-compatible)
+family: dragonfly
+env_role: redis
+default_version: "2.0"
+versions:
+  - tag: "2.0"
+    label: "2.0 (default)"
+    image: ghcr.io/dragonflydb/dragonfly:v2.0.2
+    canonical: true
+    host_port: 6381
+  - tag: "2.1"
+    label: "2.1"
+    image: ghcr.io/dragonflydb/dragonfly:v2.1.0
+    host_port: 6381
+update_strategy: minor
+# Dragonfly starts one io thread per core and refuses to run unless it has
+# 256MiB for each, so a many-core machine exits at start; two threads and a
+# 1GiB cap are plenty for local work. The entrypoint prepends the binary.
+exec: --proactor_threads=2 --maxmemory=1gb
+# Dragonfly speaks the Redis protocol on 6379 inside the container; it is
+# published on 6381 so it can coexist with the redis and valkey presets.
+ports:
+  - "{{host_port}}:6379"
+data_dir: /data
+env_vars:
+  - REDIS_HOST=lerd-{{name}}
+  - REDIS_PORT=6379
+  - REDIS_PASSWORD=null
+  - CACHE_STORE=redis
+  - SESSION_DRIVER=redis
+  - QUEUE_CONNECTION=redis
+connection_url: redis://127.0.0.1:{{host_port}}
+category: cache
+color: "#5a3ee0"
+icon: bolt

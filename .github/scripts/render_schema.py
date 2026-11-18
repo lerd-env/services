@@ -72,6 +72,44 @@ def drop(doc, path):
         node.pop(parts[-1], None)
 
 
+# The fields lerd fills placeholders into when it materialises a version.
+TEMPLATED = ("ports", "env_vars", "connection_url", "dashboard")
+
+
+def collapse_versions(doc):
+    """Turn a version list back into the single image an older binary installed.
+
+    That binary refuses to reinstall a service with no recorded version once its
+    preset has versions, so it has to keep seeing the canonical image alone,
+    with every placeholder resolved the way it resolved them before.
+    """
+    if not doc.get("versions"):
+        return
+    versions = doc.pop("versions")
+    doc.pop("default_version", None)
+    # The canonical version keeps the bare service name an old install carries.
+    picked = next((v for v in versions if v.get("canonical")), None)
+    if picked is None:
+        raise SystemExit(f"{doc.get('name')}: a version list needs a canonical version to render down")
+    subs = {"{{host_port}}": str(picked.get("host_port", "")), "{{name}}": doc["name"]}
+
+    def fill(value):
+        for key, sub in subs.items():
+            value = value.replace(key, sub)
+        return value
+
+    for key in TEMPLATED:
+        if isinstance(doc.get(key), list):
+            doc[key] = [fill(str(v)) for v in doc[key]]
+        elif isinstance(doc.get(key), str):
+            doc[key] = fill(doc[key])
+    items = list(doc.items())
+    at = next((i + 1 for i, (k, _) in enumerate(items) if k == "label"), 1)
+    items.insert(at, ("image", picked["image"]))
+    doc.clear()
+    doc.update(items)
+
+
 def apply_change(doc, change, guard):
     """Render one change backwards, newer schema to older.
 
@@ -84,6 +122,8 @@ def apply_change(doc, change, guard):
     path, how = change["path"], change["downgrade"]
     if how == "drop":
         drop(doc, path)
+    elif how == "collapse_versions":
+        collapse_versions(doc)
     elif isinstance(how, dict) and "join" in how:
         value = resolve(doc, path)
         if isinstance(value, list):
@@ -101,10 +141,14 @@ def apply_change(doc, change, guard):
         raise SystemExit(f"unknown downgrade {how!r} for {path}")
 
 
-def render_to(doc, target, specs):
+def render_to(doc, target, specs, authored):
+    """Render a definition authored at schema `authored` down to `target`.
+
+    Only the schemas between the two apply: a rule a newer schema adds never
+    reaches a definition written before it."""
     out = copy.deepcopy(doc)
     for version, spec in sorted(specs, reverse=True):
-        if version <= target:
+        if version <= target or version > authored:
             continue
         guard = copy.deepcopy(out)
         for change in spec.get("changes", []):
@@ -197,14 +241,14 @@ def main():
             withheld.append(name)
             (LEGACY / f"{name}.yaml").unlink(missing_ok=True)
             continue
-        low = render_to(doc, oldest, specs)
+        low = render_to(doc, oldest, specs, authored_at[name])
         dump(low, LEGACY / f"{name}.yaml")
         if low == doc:
             inert.append(name)
 
     write_index(LEGACY / "index.json", LEGACY / "index.json",
                 list(plain.values())
-                + [render_to(d, oldest, specs) for n, d in sources.items() if visible_at(n, oldest)],
+                + [render_to(d, oldest, specs, authored_at[n]) for n, d in sources.items() if visible_at(n, oldest)],
                 set(sources), drop={n for n in sources if not visible_at(n, oldest)})
     print(f"schema {oldest}: {len(plain)} authored in place, "
           f"{len(sources) - len(withheld)} rendered -> services")
@@ -221,15 +265,15 @@ def main():
                 continue
             # The tree a definition is authored in keeps its bytes.
             if version < authored_at.get(name, newest):
-                high = render_to(doc, version, specs)
-                if high != render_to(doc, oldest, specs):
+                high = render_to(doc, version, specs, authored_at[name])
+                if high != render_to(doc, oldest, specs, authored_at[name]):
                     dump(high, out_dir / f"{name}.yaml")
                     carried += 1
             else:
                 carried += 1
         write_index(out_dir / "index.json", LEGACY / "index.json",
                     list(plain.values())
-                    + [render_to(d, version, specs) for n, d in sources.items() if visible_at(n, version)],
+                    + [render_to(d, version, specs, authored_at[n]) for n, d in sources.items() if visible_at(n, version)],
                     set(sources), drop={n for n in sources if not visible_at(n, version)})
         print(f"schema {version}: {carried} definition(s) -> {out_dir.relative_to(ROOT)}")
 
