@@ -39,6 +39,10 @@ versions:
     host_port: 3306
 ports:
   - "{{host_port}}:3306"
+# Ubuntu's mariadb-server AppArmor profile attaches by path to /usr/sbin/mariadbd,
+# even inside rootless containers. The entrypoint finds this copy first on PATH,
+# and --basedir keeps its plugins and messages on /usr.
+exec: sh -c "cp -f /usr/sbin/mariadbd /usr/local/sbin/mariadbd && exec docker-entrypoint.sh mariadbd --basedir=/usr"
 data_dir: /var/lib/mysql
 files:
   - target: /etc/mysql/conf.d/lerd.cnf
