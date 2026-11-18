@@ -110,6 +110,13 @@ def collapse_versions(doc):
     doc.update(items)
 
 
+def guard_holds(doc, when):
+    """A `when` is a path that must be set, or {path, equals} for one value."""
+    if isinstance(when, dict):
+        return resolve(doc, when["path"]) == when["equals"]
+    return bool(resolve(doc, when))
+
+
 def apply_change(doc, change, guard):
     """Render one change backwards, newer schema to older.
 
@@ -117,7 +124,7 @@ def apply_change(doc, change, guard):
     half-rendered one: a rule commonly depends on a key an earlier rule in the
     same step has already dropped.
     """
-    if "when" in change and not resolve(guard, change["when"]):
+    if "when" in change and not guard_holds(guard, change["when"]):
         return
     path, how = change["path"], change["downgrade"]
     if how == "drop":

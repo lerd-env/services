@@ -115,6 +115,23 @@ def case_guarded_drop_reads_the_source():
             "a guarded drop must fire even when an earlier rule removed the key it reads"
 
 
+def case_guard_can_match_one_definition_by_value():
+    """A `when` guard with `equals` drops a key from one definition, not every one."""
+    with tempfile.TemporaryDirectory() as tmp:
+        root = pathlib.Path(tmp)
+        build(root,
+              "schema: 2\nsince_lerd: \"1.36.0\"\nchanges:\n"
+              "  - path: exec\n    downgrade: drop\n    when:\n      path: name\n      equals: target\n",
+              top={"target": "name: target\nimage: t\ndescription: d\ncategory: c\nicon: i\nexec: sh -c \"a b\"\n",
+                   "other": "name: other\nimage: o\ndescription: d\ncategory: c\nicon: i\nexec: --flag\n"})
+        assert "exec" not in (root / "services" / "target.yaml").read_text(), \
+            "the matching definition loses the key below its schema"
+        assert "exec: --flag" in (root / "services" / "other.yaml").read_text(), \
+            "every other definition keeps it"
+        assert "exec:" in (root / "schema" / "2" / "services" / "target.yaml").read_text(), \
+            "the authored tree keeps it"
+
+
 def case_versions_collapse_to_the_canonical_image():
     """A preset that gained versions reads, to an older binary, as the single image it was."""
     versioned = ("name: {n}\nlabel: L\ndescription: d\ncategory: c\nicon: i\n"

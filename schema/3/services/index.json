@@ -152,6 +152,9 @@
       "label": "MariaDB",
       "description": "MariaDB (MySQL-compatible) versions",
       "family": "mariadb",
+      "category": "databases",
+      "icon": "database",
+      "color": "#003545",
       "versions": [
         {
           "tag": "13",
@@ -197,9 +200,6 @@
         }
       ],
       "default_version": "11.8",
-      "category": "databases",
-      "icon": "database",
-      "color": "#003545",
       "env_role": "mysql"
     },
     {

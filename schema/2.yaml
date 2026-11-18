@@ -17,6 +17,14 @@ introduces:
   - spamassassin
 
 changes:
+  # mariadb starts through `sh -c "..."`, which macOS lerd before 1.25.0 splits on
+  # spaces, quotes and all, so the server never starts there. Below this schema it
+  # keeps its old start command; other presets' exec is untouched.
+  - path: exec
+    downgrade: drop
+    when:
+      path: name
+      equals: mariadb
   # Keys schema 1 has no field for. An old binary ignores them, so dropping is
   # about publishing a tree that means what it says rather than about safety.
   - path: admin_rank
