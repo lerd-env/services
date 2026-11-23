@@ -286,6 +286,12 @@
           "label": "3",
           "image": "docker.io/opensearchproject/opensearch:3.9.0",
           "host_port": 9201
+        },
+        {
+          "tag": "3.10",
+          "label": "3.10",
+          "image": "docker.io/opensearchproject/opensearch:3.10.0",
+          "host_port": 9201
         }
       ],
       "default_version": "2"
@@ -345,6 +351,12 @@
       "description": "PostgreSQL with pgvector (vector embeddings, no PostGIS)",
       "family": "postgres",
       "versions": [
+        {
+          "tag": "19",
+          "label": "19",
+          "image": "docker.io/pgvector/pgvector:pg19",
+          "host_port": 5432
+        },
         {
           "tag": "18",
           "label": "18 (default)",
