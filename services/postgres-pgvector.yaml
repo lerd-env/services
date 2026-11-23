@@ -7,6 +7,10 @@ family: postgres
 stop_timeout: 60
 default_version: "18"
 versions:
+  - tag: "19"
+    label: "19"
+    image: docker.io/pgvector/pgvector:pg19
+    host_port: 5432
   - tag: "18"
     label: "18 (default)"
     image: docker.io/pgvector/pgvector:pg18
