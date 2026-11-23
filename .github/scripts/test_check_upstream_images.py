@@ -7,7 +7,7 @@ import unittest
 
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
-from check_upstream_images import newer_versions, parse_tag  # noqa: E402
+from check_upstream_images import ROOT, newer_versions, parse_tag, pinned_images  # noqa: E402
 
 
 class ParseTagTest(unittest.TestCase):
@@ -46,6 +46,22 @@ class NewerVersionsTest(unittest.TestCase):
 
     def test_latest_pins_are_skipped(self):
         self.assertEqual(newer_versions(["latest"], ["latest", "9"]), [])
+
+    def test_a_pin_lerd_updates_by_minor_stays_quiet_within_its_major(self):
+        self.assertEqual(newer_versions(["2.2.0"], ["2.2.0", "2.5.0"], follows={"2.2.0"}), [])
+
+    def test_a_pin_lerd_updates_by_minor_still_reports_a_new_major(self):
+        found = newer_versions(["2.2.0"], ["2.5.0", "3.0.0"], follows={"2.2.0"})
+        self.assertEqual(found, [("3.0", "3.0.0")])
+
+
+class PinnedImagesTest(unittest.TestCase):
+    def test_minor_update_strategy_marks_the_pins_it_follows(self):
+        floci = pinned_images(ROOT)["docker.io/floci/floci"]
+        self.assertEqual(floci["follows"], floci["tags"])
+
+    def test_unwatched_repositories_are_left_out(self):
+        self.assertNotIn("docker.io/localstack/localstack", pinned_images(ROOT))
 
 
 if __name__ == "__main__":

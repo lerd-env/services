@@ -26,6 +26,11 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 TAG = re.compile(r"^(\D*)(\d+(?:\.\d+)*)(.*)$")
 # The OCI API answers on these hosts, not on the names images are written with.
 REGISTRY_HOSTS = {"docker.io": "registry-1.docker.io"}
+# Repositories whose newer tags are never a version worth adding.
+UNWATCHED = {
+    # Tags past 4.x are a licensed build that quits on start without an auth token.
+    "docker.io/localstack/localstack",
+}
 
 
 def parse_tag(tag):
@@ -36,8 +41,10 @@ def parse_tag(tag):
     return (m.group(1), len(nums), m.group(3)), nums
 
 
-def newer_versions(pinned, upstream):
-    """Return (version, newest tag) for each pinned shape the registry has outgrown."""
+def newer_versions(pinned, upstream, follows=()):
+    """Return (version, newest tag) for each pinned shape the registry has outgrown.
+
+    `follows` names the pins lerd already updates to newer minors on its own."""
     newest_pin, majors = {}, set()
     for tag in pinned:
         parsed = parse_tag(tag)
@@ -45,7 +52,7 @@ def newer_versions(pinned, upstream):
             shape, nums = parsed
             newest_pin[shape] = max(newest_pin.get(shape, nums), nums)
             # A bare major tag such as `13` already follows every 13.x release.
-            if len(nums) == 1:
+            if len(nums) == 1 or tag in follows:
                 majors.add((shape[0], shape[2], nums[0]))
 
     found = []
@@ -75,9 +82,13 @@ def pinned_images(root):
         refs = [preset.get("image")] + [v.get("image") for v in preset.get("versions") or []]
         for ref in filter(None, refs):
             repo, _, tag = ref.rpartition(":")
-            entry = images.setdefault(repo, {"services": set(), "tags": set()})
+            if repo in UNWATCHED:
+                continue
+            entry = images.setdefault(repo, {"services": set(), "tags": set(), "follows": set()})
             entry["services"].add(preset.get("label") or preset["name"])
             entry["tags"].add(tag)
+            if preset.get("update_strategy") == "minor":
+                entry["follows"].add(tag)
     return images
 
 
@@ -125,7 +136,7 @@ def main():
         except (urllib.error.URLError, OSError) as err:
             failed.append(f"{repo} ({err})")
             continue
-        for version, tag in newer_versions(entry["tags"], upstream):
+        for version, tag in newer_versions(entry["tags"], upstream, entry["follows"]):
             found.append({"repo": repo, "services": sorted(entry["services"]),
                           "pinned": sorted(entry["tags"]), "version": version, "tag": tag})
 
